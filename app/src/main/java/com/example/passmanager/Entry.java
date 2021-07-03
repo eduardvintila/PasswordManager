@@ -11,13 +11,13 @@ import androidx.room.PrimaryKey;
  *    about a service (an app or a website).
  * </p>
  */
-@Entity(tableName = "Entry")
+@Entity(tableName = "Entries")
 public class Entry {
 
     /**
      * Entry number in the Password Manager.
      */
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "entryNo")
     public int entryNo;
 
@@ -62,5 +62,4 @@ public class Entry {
      */
     @ColumnInfo(name = "passwordSalt")
     public String passwordSalt;
-
 }
