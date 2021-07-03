@@ -62,4 +62,15 @@ public class Entry {
      */
     @ColumnInfo(name = "passwordSalt")
     public String passwordSalt;
+
+    public Entry(String entryName, String entryDescription, String entryPicPath,
+                 String serviceLink, String userId, String userPassword, String passwordSalt) {
+        this.entryName = entryName;
+        this.entryDescription = entryDescription;
+        this.entryPicPath = entryPicPath;
+        this.serviceLink = serviceLink;
+        this.userId = userId;
+        this.userPassword = userPassword;
+        this.passwordSalt = passwordSalt;
+    }
 }

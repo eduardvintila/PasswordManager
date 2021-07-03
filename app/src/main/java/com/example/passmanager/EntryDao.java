@@ -1,9 +1,12 @@
 package com.example.passmanager;
 
 import androidx.lifecycle.LiveData;
+import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+
+import com.google.common.util.concurrent.ListenableFuture;
 
 import java.util.List;
 
@@ -12,12 +15,15 @@ import java.util.List;
  *
  * <p>This DAO interface is used for specifying SQL queries on the "Entry" table and for associating
  * them with method calls.
+ *    ListenableFuture and LiveData are used in order to make asynchronous queries.
+ *    More details here: https://developer.android.com/training/data-storage/room/async-queries
  * </p>
  */
+@Dao
 public interface EntryDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    void insert(Entry e);
+    ListenableFuture<Long> insert(Entry e);
 
     @Query("DELETE FROM entries;")
     void deleteAllEntries();
