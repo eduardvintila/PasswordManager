@@ -34,6 +34,12 @@ public class Entry {
     public String entryDescription;
 
     /**
+     * Filesystem path to a picture associated with the entry.
+     */
+    @ColumnInfo(name = "entryPicPath")
+    public String entryPicPath;
+
+    /**
      * Link/URL/URI of the service.
      */
     @ColumnInfo(name = "serviceLink")
