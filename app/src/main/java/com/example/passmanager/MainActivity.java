@@ -3,10 +3,13 @@ package com.example.passmanager;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import java.io.File;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -23,6 +26,11 @@ public class MainActivity extends AppCompatActivity {
         masterPassField = findViewById(R.id.editTextPassword);
 
         entryVm = new ViewModelProvider(this).get(EntryViewModel.class);
+
+        File databaseFile = getDatabasePath(EntryRoomDatabase.TABLE_NAME);
+        if (!databaseFile.exists()) {
+            goToCreate(null);
+        }
     }
 
     public void auth(View view) {
@@ -34,5 +42,10 @@ public class MainActivity extends AppCompatActivity {
         } else {
             validationMsg.setText(R.string.validPassMsg);
         }
+    }
+
+    public void goToCreate(View view) {
+        Intent intent = new Intent(this, CreateActivity.class);
+        startActivity(intent);
     }
 }

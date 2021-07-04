@@ -41,7 +41,6 @@ public abstract class EntryRoomDatabase extends RoomDatabase {
             // a race condition.
             synchronized (EntryRoomDatabase.class) {
                 if (INSTANCE == null) {
-
                     SQLiteDatabaseHook hook = new SQLiteDatabaseHook() {
                         @Override
                         public void preKey(SQLiteDatabase database) {
@@ -68,8 +67,7 @@ public abstract class EntryRoomDatabase extends RoomDatabase {
                         // throws an exception if the key is not valid.
                         INSTANCE.getOpenHelper().getReadableDatabase();
                     } catch (SQLiteException e) {
-                        INSTANCE.close();
-                        INSTANCE = null;
+                        closeDatabase();
                         throw e;
                     } finally {
                         // Clear the plaintext password from memory.
@@ -80,5 +78,10 @@ public abstract class EntryRoomDatabase extends RoomDatabase {
             }
         }
         return INSTANCE;
+    }
+
+    public static void closeDatabase() {
+        INSTANCE.close();
+        INSTANCE = null;
     }
 }

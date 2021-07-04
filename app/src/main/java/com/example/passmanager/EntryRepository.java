@@ -6,8 +6,10 @@ import androidx.lifecycle.LiveData;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
+import net.sqlcipher.database.SQLiteDatabase;
 import net.sqlcipher.database.SQLiteException;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -15,6 +17,7 @@ import java.util.List;
  */
 public class EntryRepository {
 
+    private EntryRoomDatabase db;
     private EntryDao entryDao;
 
     /**
@@ -32,13 +35,27 @@ public class EntryRepository {
      * master password is invalid).
      */
     public void open(Application application, char[] masterPass) throws SQLiteException {
-        EntryRoomDatabase db = EntryRoomDatabase.getDatabase(application, masterPass);
+        db = EntryRoomDatabase.getDatabase(application, masterPass);
         entryDao = db.entryDao();
         allEntries = entryDao.getAllEntries();
+    }
+
+    public void create(Application application, char[] masterPass) {
+        // SQLiteDatabase.loadLibs(application);
+        File databaseFile = application.getDatabasePath(EntryRoomDatabase.TABLE_NAME);
+        databaseFile.mkdirs();
+        databaseFile.delete();
+
+        open(application, masterPass);
     }
 
     public LiveData<List<Entry>> getAllEntries() { return allEntries; }
 
     public ListenableFuture<Long> insert(Entry e) { return entryDao.insert(e); }
 
+
+    public void close() {
+        EntryRoomDatabase.closeDatabase();
+        db = null;
+    }
 }

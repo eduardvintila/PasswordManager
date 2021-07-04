@@ -47,9 +47,17 @@ public class EntryViewModel extends AndroidViewModel {
         }
     }
 
+    public void create(@NonNull Application application, char[] masterPass) {
+        entryRep.create(application, masterPass);
+    }
+
     public boolean isValidMasterPass() { return validMasterPass; }
 
     public LiveData<List<Entry>> getAllEntries() { return allEntries; }
 
     public ListenableFuture<Long> insert(Entry e) { return entryRep.insert(e); }
+
+    public void close() {
+        entryRep.close();
+    }
 }
