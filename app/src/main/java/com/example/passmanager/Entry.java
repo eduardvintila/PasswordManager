@@ -12,7 +12,7 @@ import androidx.room.PrimaryKey;
  *    about a service (an app or a website).
  * </p>
  */
-@Entity(tableName = "Entries")
+@Entity(tableName = EntryRoomDatabase.TABLE_NAME)
 public class Entry {
 
     /**

@@ -6,6 +6,8 @@ import androidx.lifecycle.LiveData;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
+import net.sqlcipher.database.SQLiteException;
+
 import java.util.List;
 
 /**
@@ -20,8 +22,17 @@ public class EntryRepository {
      */
     private LiveData<List<Entry>> allEntries;
 
-    public EntryRepository(Application application) {
-        EntryRoomDatabase db = EntryRoomDatabase.getDatabase(application);
+
+    /**
+     * Open the connection with the local database.
+     *
+     * @param application Current application context
+     * @param masterPass Master password for decrypting the database.
+     * @throws SQLiteException if the connection with the database fails (most likely because the
+     * master password is invalid).
+     */
+    public void open(Application application, char[] masterPass) throws SQLiteException {
+        EntryRoomDatabase db = EntryRoomDatabase.getDatabase(application, masterPass);
         entryDao = db.entryDao();
         allEntries = entryDao.getAllEntries();
     }

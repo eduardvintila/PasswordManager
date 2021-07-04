@@ -8,6 +8,8 @@ import androidx.lifecycle.LiveData;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
+import net.sqlcipher.database.SQLiteException;
+
 import java.util.List;
 
 /**
@@ -16,17 +18,36 @@ import java.util.List;
 public class EntryViewModel extends AndroidViewModel {
 
     private EntryRepository entryRep;
+    private boolean validMasterPass;
 
     /**
      * Cache all entries.
      */
     private LiveData<List<Entry>> allEntries;
 
+
     public EntryViewModel(@NonNull Application application) {
         super(application);
-        entryRep = new EntryRepository(application);
-        allEntries = entryRep.getAllEntries();
+        entryRep = new EntryRepository();
     }
+
+    /**
+     * Open a connection with the data repository.
+     *
+     * @param application Current application context.
+     * @param masterPass Master password for decrypting the repository data.
+     */
+    public void open(@NonNull Application application, char[] masterPass) {
+        try {
+            entryRep.open(application, masterPass);
+            allEntries = entryRep.getAllEntries();
+            validMasterPass = true;
+        } catch (SQLiteException e) {
+            validMasterPass = false;
+        }
+    }
+
+    public boolean isValidMasterPass() { return validMasterPass; }
 
     public LiveData<List<Entry>> getAllEntries() { return allEntries; }
 
