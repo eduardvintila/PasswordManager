@@ -2,6 +2,7 @@ package com.example.passmanager;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 /**
@@ -65,6 +66,19 @@ public class Entry {
 
     public Entry(String entryName, String entryDescription, String entryPicPath,
                  String serviceLink, String userId, String userPassword, String passwordSalt) {
+        this.entryName = entryName;
+        this.entryDescription = entryDescription;
+        this.entryPicPath = entryPicPath;
+        this.serviceLink = serviceLink;
+        this.userId = userId;
+        this.userPassword = userPassword;
+        this.passwordSalt = passwordSalt;
+    }
+
+    @Ignore
+    public Entry(int entryNo, String entryName, String entryDescription, String entryPicPath,
+                 String serviceLink, String userId, String userPassword, String passwordSalt) {
+        this.entryNo = entryNo;
         this.entryName = entryName;
         this.entryDescription = entryDescription;
         this.entryPicPath = entryPicPath;

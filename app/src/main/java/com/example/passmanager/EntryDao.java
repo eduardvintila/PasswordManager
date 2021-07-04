@@ -26,9 +26,19 @@ public interface EntryDao {
     ListenableFuture<Long> insert(Entry e);
 
     @Query("DELETE FROM entries;")
-    void deleteAllEntries();
+    ListenableFuture<Integer> deleteAllEntries();
 
     @Query("SELECT * FROM entries;")
     LiveData<List<Entry>> getAllEntries();
+
+
+
+    // These methods are used for testing and they do not implicitly create an asynchronous thread.
+    // They must be explicitly called from a background thread.
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    void simpleInsert(Entry e);
+
+    @Query("SELECT * FROM entries;")
+    List<Entry> simpleGetAllEntries();
 
 }
