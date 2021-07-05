@@ -20,15 +20,9 @@ public class EntryViewModel extends AndroidViewModel {
     private EntryRepository entryRep;
     private boolean validMasterPass;
 
-    /**
-     * Cache all entries.
-     */
-    private LiveData<List<Entry>> allEntries;
-
-
     public EntryViewModel(@NonNull Application application) {
         super(application);
-        entryRep = new EntryRepository();
+        entryRep = EntryRepository.getRepository();
     }
 
     /**
@@ -40,24 +34,34 @@ public class EntryViewModel extends AndroidViewModel {
     public void open(@NonNull Application application, char[] masterPass) {
         try {
             entryRep.open(application, masterPass);
-            allEntries = entryRep.getAllEntries();
             validMasterPass = true;
         } catch (SQLiteException e) {
             validMasterPass = false;
         }
     }
 
+    /**
+     * Close the connection with the data repository.
+     */
+    public void close() {
+        entryRep.close();
+    }
+
+    /**
+     * Create a new data repository.
+     *
+     * @param application Current application context.
+     * @param masterPass Master password for encrypting the data repository
+     */
     public void create(@NonNull Application application, char[] masterPass) {
         entryRep.create(application, masterPass);
     }
 
     public boolean isValidMasterPass() { return validMasterPass; }
 
-    public LiveData<List<Entry>> getAllEntries() { return allEntries; }
+    public LiveData<List<Entry>> getAllEntries() { return entryRep.getAllEntries(); }
 
     public ListenableFuture<Long> insert(Entry e) { return entryRep.insert(e); }
 
-    public void close() {
-        entryRep.close();
-    }
+
 }

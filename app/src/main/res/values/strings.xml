@@ -1,12 +1,14 @@
 <resources>
     <string name="app_name">PassManager</string>
     <string name="msg_insert_master_pass">Introdu parola master</string>
-    <string name="authBtnMsg">Autentifica</string>
-    <string name="invalidPassMsg">Parola invalida sau baza de date inexistenta!</string>
-    <string name="validPassMsg">Parola valida!</string>
-    <string name="goToCreateBtnMsg">Creeaza o noua baza</string>
+    <string name="authBtnMsg">Autentifică-te</string>
+    <string name="invalidPassMsg">Parolă invalidă sau bază de date inexistentă!</string>
+    <string name="validPassMsg">Parolă valida!</string>
+    <string name="goToCreateBtnMsg">Creează o noua bază</string>
     <string name="firstPassMsg">Alege o parolă master</string>
     <string name="secondPassMsg">Introdu din nou parola</string>
-    <string name="createBtnMsg">Creeaza</string>
+    <string name="createBtnMsg">Creează</string>
     <string name="notMatchingMsg">Parolele nu se potrivesc!</string>
+    <string name="title_activity_entries_menu">EntriesMenuActivity</string>
+    <string name="create_entry_label">Creează o nouă înregistrare</string>
 </resources>

@@ -33,6 +33,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Authenticate using the master password.
+     */
     public void auth(View view) {
         char[] pass = masterPassField.getText().toString().toCharArray();
         entryVm.open(getApplication(), pass);
@@ -40,10 +43,15 @@ public class MainActivity extends AppCompatActivity {
         if (!entryVm.isValidMasterPass()) {
             validationMsg.setText(R.string.invalidPassMsg);
         } else {
-            validationMsg.setText(R.string.validPassMsg);
+            Intent intent = new Intent(this, EntriesMenuActivity.class);
+            startActivity(intent);
+            finish();
         }
     }
 
+    /**
+     * Switch to the create database menu.
+     */
     public void goToCreate(View view) {
         Intent intent = new Intent(this, CreateActivity.class);
         startActivity(intent);

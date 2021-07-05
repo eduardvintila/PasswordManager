@@ -4,9 +4,11 @@ import android.content.Context;
 import android.os.Debug;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import net.sqlcipher.database.SQLiteDatabase;
 import net.sqlcipher.database.SQLiteDatabaseHook;
@@ -30,8 +32,15 @@ public abstract class EntryRoomDatabase extends RoomDatabase {
      */
     public abstract EntryDao entryDao();
 
+    /*private static final RoomDatabase.Callback callback = new RoomDatabase.Callback() {
+        @Override
+        public void onCreate(@NonNull SupportSQLiteDatabase db) {
+            super.onCreate(db);
+        }
+    };*/
+
     /**
-     * Get a handle to the RoomDatabase. Creates one if it isn't instantiated.
+     * Get a handle to the RoomDatabase. Creates the database if it doesn't exist.
      * @param context The current application context.
      */
     public static EntryRoomDatabase getDatabase(final Context context, char[] masterPass)
@@ -41,24 +50,13 @@ public abstract class EntryRoomDatabase extends RoomDatabase {
             // a race condition.
             synchronized (EntryRoomDatabase.class) {
                 if (INSTANCE == null) {
-                    SQLiteDatabaseHook hook = new SQLiteDatabaseHook() {
-                        @Override
-                        public void preKey(SQLiteDatabase database) {
-                            Log.d("EntryRoomDatabase", "Inainte de deschidere");
-                        }
-
-                        @Override
-                        public void postKey(SQLiteDatabase database) {
-                            Log.d("EntryRoomDatabase", "Dupa deschidere");
-                        }
-                    };
-
                     final byte[] masterPassBytes = SQLiteDatabase.getBytes(masterPass);
-                    final SupportFactory factory = new SupportFactory(masterPassBytes, hook);
+                    final SupportFactory factory = new SupportFactory(masterPassBytes);
 
                     INSTANCE = Room.databaseBuilder(context, EntryRoomDatabase.class, TABLE_NAME)
                             .fallbackToDestructiveMigration()
                             .openHelperFactory(factory)
+                            // .addCallback(callback)
                             .build();
 
                     try {
@@ -71,7 +69,7 @@ public abstract class EntryRoomDatabase extends RoomDatabase {
                         throw e;
                     } finally {
                         // Clear the plaintext password from memory.
-                        Arrays.fill(masterPass, '0');
+                        Arrays.fill(masterPass, (char) 0);
                         Arrays.fill(masterPassBytes, (byte) 0);
                     }
                 }

@@ -13,9 +13,11 @@ import java.io.File;
 import java.util.List;
 
 /**
- * Repository to access the "Entries" table database operations.
+ * Singleton repository to access the "Entries" table database operations.
  */
 public class EntryRepository {
+
+    private static EntryRepository INSTANCE;
 
     private EntryRoomDatabase db;
     private EntryDao entryDao;
@@ -25,9 +27,18 @@ public class EntryRepository {
      */
     private LiveData<List<Entry>> allEntries;
 
+    private EntryRepository() {}
+
+    public static EntryRepository getRepository() {
+        if (INSTANCE == null) {
+            INSTANCE = new EntryRepository();
+        }
+        return INSTANCE;
+    }
+
 
     /**
-     * Open the connection with the local database.
+     * Open a connection with the local database.
      *
      * @param application Current application context
      * @param masterPass Master password for decrypting the database.
@@ -40,8 +51,22 @@ public class EntryRepository {
         allEntries = entryDao.getAllEntries();
     }
 
+    /**
+     * Close the connection with the local database.
+     */
+    public void close() {
+        EntryRoomDatabase.closeDatabase();
+        db = null;
+    }
+
+
+    /**
+     * Create a new local database. Deletes the previous one if it exists.
+     *
+     * @param application Current application context.
+     * @param masterPass Master password for encrypting the database
+     */
     public void create(Application application, char[] masterPass) {
-        // SQLiteDatabase.loadLibs(application);
         File databaseFile = application.getDatabasePath(EntryRoomDatabase.TABLE_NAME);
         databaseFile.mkdirs();
         databaseFile.delete();
@@ -53,9 +78,4 @@ public class EntryRepository {
 
     public ListenableFuture<Long> insert(Entry e) { return entryDao.insert(e); }
 
-
-    public void close() {
-        EntryRoomDatabase.closeDatabase();
-        db = null;
-    }
 }
