@@ -74,8 +74,9 @@ public class EntryRepository {
         open(application, masterPass);
     }
 
+    // Queries
     public LiveData<List<Entry>> getAllEntries() { return allEntries; }
-
     public ListenableFuture<Long> insert(Entry e) { return entryDao.insert(e); }
+    public LiveData<Entry> getEntry(int id) { return entryDao.getEntry(id); }
 
 }

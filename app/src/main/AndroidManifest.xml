@@ -9,6 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.PassManager">
+        <activity android:name=".EntryActivity"></activity>
+        <activity android:name=".CreateEntryActivity" />
         <activity
             android:name=".EntriesMenuActivity"
             android:label="@string/title_activity_entries_menu"

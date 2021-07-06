@@ -1,15 +1,13 @@
 package com.example.passmanager;
 
+import android.content.Intent;
 import android.os.Bundle;
-
-import com.google.android.material.snackbar.Snackbar;
+import android.util.Log;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.view.View;
-
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -22,11 +20,15 @@ import com.example.passmanager.databinding.ActivityEntriesMenuBinding;
 
 import java.util.List;
 
-public class EntriesMenuActivity extends AppCompatActivity {
+public class EntriesMenuActivity extends AppCompatActivity implements EntryListAdapter.OnEntryListener {
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityEntriesMenuBinding binding;
     private EntryViewModel entryVm;
+
+    // TODO: Remove the hardcoded package name.
+    public static final String EXTRA_ENTRY_ID = "com.example.passmanager.ENTRY_ID";
+    private List<Entry> entriesList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,20 +43,33 @@ public class EntriesMenuActivity extends AppCompatActivity {
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
-        binding.fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show());
+        binding.fab.setOnClickListener(view -> {
+            Intent intent = new Intent(this, CreateEntryActivity.class);
+            startActivity(intent);
+        });
 
         RecyclerView recyclerView = findViewById(R.id.recyclerview);
-        final EntryListAdapter adapter = new EntryListAdapter(this);
+        final EntryListAdapter adapter = new EntryListAdapter(this, this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         entryVm = new ViewModelProvider(this).get(EntryViewModel.class);
         LiveData<List<Entry>> entries = entryVm.getAllEntries();
         if (entries != null) {
-            entries.observe(this, adapter::setEntries);
+            entries.observe(this, entries1 -> {
+                adapter.setEntries(entries1);
+                entriesList = entries1;
+            });
         }
 
+    }
+
+    @Override
+    public void onEntryClick(int position) {
+        int entryId = entriesList.get(position).entryNo;
+        Intent intent = new Intent(this, EntryActivity.class);
+        intent.putExtra(EXTRA_ENTRY_ID, entryId);
+        startActivity(intent);
     }
 
     @Override

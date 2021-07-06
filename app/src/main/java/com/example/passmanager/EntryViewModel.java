@@ -59,9 +59,9 @@ public class EntryViewModel extends AndroidViewModel {
 
     public boolean isValidMasterPass() { return validMasterPass; }
 
+    // Queries
     public LiveData<List<Entry>> getAllEntries() { return entryRep.getAllEntries(); }
-
     public ListenableFuture<Long> insert(Entry e) { return entryRep.insert(e); }
-
+    public LiveData<Entry> getEntry(int id) { return entryRep.getEntry(id); }
 
 }

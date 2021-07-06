@@ -15,7 +15,7 @@ import java.util.List;
  *
  * <p>This DAO interface is used for specifying SQL queries on the "Entry" table and for associating
  * them with method calls.
- *    ListenableFuture and LiveData are used in order to make asynchronous queries.
+ *    ListenableFuture and LiveData are used in order to make implicit asynchronous queries.
  *    More details here: https://developer.android.com/training/data-storage/room/async-queries
  * </p>
  */
@@ -25,11 +25,16 @@ public interface EntryDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     ListenableFuture<Long> insert(Entry e);
 
+    // TODO: Refactor hardcoded table name.
+
     @Query("DELETE FROM entries;")
     ListenableFuture<Integer> deleteAllEntries();
 
     @Query("SELECT * FROM entries;")
     LiveData<List<Entry>> getAllEntries();
+
+    @Query("SELECT * FROM entries WHERE entryNo = :id")
+    LiveData<Entry> getEntry(int id);
 
 
 

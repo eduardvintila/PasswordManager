@@ -10,5 +10,10 @@
     <string name="createBtnMsg">Creează</string>
     <string name="notMatchingMsg">Parolele nu se potrivesc!</string>
     <string name="title_activity_entries_menu">EntriesMenuActivity</string>
-    <string name="create_entry_label">Creează o nouă înregistrare</string>
+    <string name="entries_label">Înregistrări</string>
+    <string name="usernameMsg">Nume de utilizator/E-mail</string>
+    <string name="passwordMsg">Parolă</string>
+    <string name="descriptionMsg">Descriere</string>
+    <string name="linkMsg">Link</string>
+    <string name="entryNameMsg">Denumire</string>
 </resources>
