@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import java.io.File;
+import java.security.KeyStore;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -17,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText masterPassField;
     private EntryViewModel entryVm;
 
+    public static final String EXTRA_ENCRYPTED_MASTER = "com.example.passmanager.ENCRYPTED_MASTER";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,13 +39,17 @@ public class MainActivity extends AppCompatActivity {
      * Authenticate using the master password.
      */
     public void auth(View view) {
-        char[] pass = masterPassField.getText().toString().toCharArray();
+        // TODO: Make sure to clean the plaintext pass from memory.
+        String passStr = masterPassField.getText().toString();
+        char[] pass = passStr.toCharArray();
         entryVm.open(getApplication(), pass);
 
         if (!entryVm.isValidMasterPass()) {
             validationMsg.setText(R.string.invalidPassMsg);
         } else {
+            String encrypted = CryptoHelper.encryptMasterPassword(passStr);
             Intent intent = new Intent(this, EntriesMenuActivity.class);
+            intent.putExtra(EXTRA_ENCRYPTED_MASTER, encrypted);
             startActivity(intent);
             finish();
         }

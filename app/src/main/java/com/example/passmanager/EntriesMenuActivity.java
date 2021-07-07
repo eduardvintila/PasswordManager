@@ -28,6 +28,8 @@ public class EntriesMenuActivity extends AppCompatActivity implements EntryListA
 
     // TODO: Remove the hardcoded package name.
     public static final String EXTRA_ENTRY_ID = "com.example.passmanager.ENTRY_ID";
+
+    // TODO: This probably isn't necessary, could just access the adapter list.
     private List<Entry> entriesList;
 
     @Override
@@ -44,10 +46,15 @@ public class EntriesMenuActivity extends AppCompatActivity implements EntryListA
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
         binding.fab.setOnClickListener(view -> {
+            // Go to the create entry menu.
+            Intent prevIntent = getIntent();
+            String encryptedMaster = prevIntent.getStringExtra(MainActivity.EXTRA_ENCRYPTED_MASTER);
             Intent intent = new Intent(this, CreateEntryActivity.class);
+            intent.putExtra(MainActivity.EXTRA_ENCRYPTED_MASTER, encryptedMaster);
             startActivity(intent);
         });
 
+        // Setup the recycler view and it's adapter for populating entries
         RecyclerView recyclerView = findViewById(R.id.recyclerview);
         final EntryListAdapter adapter = new EntryListAdapter(this, this);
         recyclerView.setAdapter(adapter);
@@ -57,18 +64,25 @@ public class EntriesMenuActivity extends AppCompatActivity implements EntryListA
         LiveData<List<Entry>> entries = entryVm.getAllEntries();
         if (entries != null) {
             entries.observe(this, entries1 -> {
+                // Update the entries in the adapter when a new change is observed.
                 adapter.setEntries(entries1);
                 entriesList = entries1;
             });
         }
 
+
     }
 
     @Override
     public void onEntryClick(int position) {
+        // View entry details.
         int entryId = entriesList.get(position).entryNo;
+        Intent prevIntent = getIntent();
+        String encryptedMaster = prevIntent.getStringExtra(MainActivity.EXTRA_ENCRYPTED_MASTER);
         Intent intent = new Intent(this, EntryActivity.class);
+
         intent.putExtra(EXTRA_ENTRY_ID, entryId);
+        intent.putExtra(MainActivity.EXTRA_ENCRYPTED_MASTER, encryptedMaster);
         startActivity(intent);
     }
 

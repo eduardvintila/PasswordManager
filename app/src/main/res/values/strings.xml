@@ -1,4 +1,5 @@
 <resources>
+    <!-- TODO: Refactor string names. -->
     <string name="app_name">PassManager</string>
     <string name="msg_insert_master_pass">Introdu parola master</string>
     <string name="authBtnMsg">Autentifică-te</string>
@@ -16,4 +17,8 @@
     <string name="descriptionMsg">Descriere</string>
     <string name="linkMsg">Link</string>
     <string name="entryNameMsg">Denumire</string>
+    <string name="dialogClose">Închide</string>
+    <string name="enterPasswordTitleDialog">Introdu parola master</string>
+    <string name="masterPassInvalidMsg">Parolă master invalidă!</string>
+    <string name="userPassDecryptedMsg">Parolă decriptată cu succes!</string>
 </resources>
