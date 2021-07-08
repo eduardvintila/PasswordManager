@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class EntryViewModel extends AndroidViewModel {
 
-    private EntryRepository entryRep;
+    private final EntryRepository entryRep;
     private boolean validMasterPass;
 
     public EntryViewModel(@NonNull Application application) {

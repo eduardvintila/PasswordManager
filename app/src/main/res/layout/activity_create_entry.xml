@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="@string/entryNameMsg"
+        android:hint="@string/entry_name_prompt"
         android:inputType="textPersonName" />
 
     <EditText
@@ -21,7 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="@string/usernameMsg"
+        android:hint="@string/username_prompt"
         android:inputType="textPersonName" />
 
     <com.google.android.material.textfield.TextInputLayout
@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         app:passwordToggleEnabled="true"
         android:ems="10"
-        android:hint="@string/passwordMsg">
+        android:hint="@string/password_prompt">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/userPassEditText"
@@ -44,7 +44,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="@string/descriptionMsg"
+        android:hint="@string/description_prompt"
         android:inputType="textPersonName" />
 
     <EditText
@@ -52,7 +52,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="@string/linkMsg"
+        android:hint="@string/link_prompt"
         android:inputType="textPersonName" />
 
     <Button
@@ -60,13 +60,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="generatePassword"
-        android:text="@string/generatePassMsg" />
+        android:text="@string/generate_password" />
 
     <Button
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="createEntry"
-        android:text="Creează" />
+        android:text="@string/create_entry" />
 
 </LinearLayout>

@@ -15,6 +15,9 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
+/**
+ * Helper class used for various cryptographic/random operations.
+ */
 public class CryptoHelper {
     public static final int SALT_LENGTH = 16;
     public static final int IV_LENGTH = 16;
@@ -34,6 +37,11 @@ public class CryptoHelper {
     // clear the plaintext passwords from memory.
 
 
+    /**
+     * Generate a random salt for password-based encryption.
+     *
+     * @return the salt bytes.
+     */
     public static byte[] generateSalt() {
         // TODO: Maybe use an explicit seed?
         SecureRandom secureRandom = new SecureRandom();
@@ -43,6 +51,11 @@ public class CryptoHelper {
         return salt;
     }
 
+    /**
+     * Generate a random Initialisation Vector for encryption/decryption.
+     *
+     * @return the IV bytes.
+     */
     public static byte[] generateIv() {
         // TODO: Maybe use an explicit seed?
         SecureRandom secureRandom = new SecureRandom();
@@ -52,6 +65,13 @@ public class CryptoHelper {
         return iv;
     }
 
+    /**
+     * Use password-based encryption to generate a key for symmetric encryption.
+     *
+     * @param password Plaintext password used in key generation.
+     * @param salt Random salt used in key generation.
+     * @return The symmetric key.
+     */
     public static SecretKey createPbeKey(String password, byte[] salt) {
         try {
             PBEKeySpec pbeKeySpec = new PBEKeySpec(password.toCharArray(), salt,
@@ -65,6 +85,11 @@ public class CryptoHelper {
         }
     }
 
+    /**
+     * Encrypt a text using a symmetric-key algorithm.
+     *
+     * @return The encrypted text formatted as a string of hex digits.
+     */
     public static String encrypt(SecretKey key, String text) {
         try {
             byte[] iv = generateIv();
@@ -75,6 +100,7 @@ public class CryptoHelper {
             cipher.init(Cipher.ENCRYPT_MODE, key, ivParameterSpec);
             byte[] encryptedBytes = cipher.doFinal(text.getBytes(StandardCharsets.UTF_8));
 
+            // Attach the Initialisation Vector to the beginning of the encrypted text.
             return ivHex + bytesToHexString(encryptedBytes);
         } catch (Exception e) {
             e.printStackTrace();
@@ -82,8 +108,14 @@ public class CryptoHelper {
         }
     }
 
+    /**
+     * Decrypt a text using a symmetric-key algorithm.
+     *
+     * @return The decrypted text.
+     */
     public static String decrypt(SecretKey key, String encrypted) {
         try {
+            // Extract the Initialisation Vector from the beginning of the encrypted string.
             String ivHex = encrypted.substring(0, IV_LENGTH * 2);
             byte[] iv = hexStringToBytes(ivHex);
             IvParameterSpec ivParameterSpec = new IvParameterSpec(iv);
@@ -100,6 +132,15 @@ public class CryptoHelper {
         }
     }
 
+    /**
+     * Generate a symmetric key and use AndroidKeyStore to securely store it.
+     *
+     * TODO: Make sure that the key is only stored while the application runs and that
+     * other apps cannot access it.
+     *
+     * @param alias Used for identifying the key in the storage.
+     * @return The symmetric key.
+     */
     public static SecretKey generateKeyForKeyStore(String alias) {
         try {
             final KeyGenerator keyGenerator = KeyGenerator.getInstance(KEY_SPEC_ALGORITHM,
@@ -119,6 +160,12 @@ public class CryptoHelper {
         }
     }
 
+    /**
+     * Extract a key from AndroidKeyStore.
+     *
+     * @param alias Used for identifying the key in the storage.
+     * @return The key.
+     */
     public static SecretKey getKeyFromKeyStore(String alias) {
         // TODO: Maybe use a protection parameter?
         try {
@@ -133,23 +180,44 @@ public class CryptoHelper {
         }
     }
 
+    /**
+     * Encrypt the master password with a random key.
+     *
+     * @param masterPass plaintext master password
+     * @return The encrypted password formatted as a string of hex digits.
+     */
     public static String encryptMasterPassword(String masterPass) {
         SecretKey key = generateKeyForKeyStore("masterKey");
         return encrypt(key, masterPass);
     }
 
+    /**
+     * Decrypt the master password with the securely stored key.
+     *
+     * @param encrypted master password
+     * @return The decrypted master password.
+     */
     public static String decryptMasterPassword(String encrypted) {
         final SecretKey key = getKeyFromKeyStore("masterKey");
         return decrypt(key, encrypted);
     }
 
+    /**
+     * Generate a strong random password matching certain criteria.
+     *
+     * @param passLen Length of the password.
+     * @return The plaintext password.
+     */
     public static String generatePassword(int passLen) {
+        // Password characters to choose from.
         char[] passChrs = (ALPHA_LOWER + ALPHA_UPPER + NUMERIC + SPECIAL).toCharArray();
 
+        // Generate passLen bytes.
         SecureRandom secureRandom = new SecureRandom();
         byte[] passBytes = new byte[passLen];
         secureRandom.nextBytes(passBytes);
 
+        // Use each generated byte as an index in the password characters array.
         StringBuilder pass = new StringBuilder(passLen);
         for (byte passByte : passBytes) {
             int val = passByte & 0xFF;
@@ -159,6 +227,12 @@ public class CryptoHelper {
         return pass.toString();
     }
 
+    /**
+     * Convert bytes to a string of hex digits.
+     *
+     * @param bytes to be converted.
+     * @return The string representation.
+     */
     public static String bytesToHexString(byte[] bytes) {
         StringBuilder sb = new StringBuilder(bytes.length * 2);
         for (byte aByte : bytes) {
@@ -172,9 +246,16 @@ public class CryptoHelper {
         return sb.toString();
     }
 
+    /**
+     * Convert a string of hex digits to the corresponding bytes.
+     *
+     * @param hexString string to be converted.
+     * @return The bytes after conversion.
+     */
     public static byte[] hexStringToBytes(String hexString) {
         byte[] bytes = new byte[hexString.length() / 2];
         for (int i = 0; i < bytes.length; i++) {
+            // 2 hex digits represent a byte.
             int index = i * 2;
             int val = Integer.parseInt(hexString.substring(index, index + 2), 16);
             bytes[i] = (byte) val;

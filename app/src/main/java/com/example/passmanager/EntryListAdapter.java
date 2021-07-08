@@ -12,12 +12,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 /**
- *  Adapter for populating the RecyclerView with entries.
+ *  Adapter for populating a RecyclerView with entries.
  */
 public class EntryListAdapter extends RecyclerView.Adapter<EntryListAdapter.EntryViewHolder> {
     private final LayoutInflater inflater;
     private List<Entry> entries;
-    private OnEntryListener onEntryListener;
+
+    // Listener used for handling click events on the entries in the list.
+    private final OnEntryListener onEntryListener;
 
     EntryListAdapter(Context context, OnEntryListener onEntryListener) {
         inflater = LayoutInflater.from(context);
@@ -41,10 +43,13 @@ public class EntryListAdapter extends RecyclerView.Adapter<EntryListAdapter.Entr
         }
     }
 
-
     void setEntries(List<Entry> entries) {
         this.entries = entries;
         notifyDataSetChanged();
+    }
+
+    public List<Entry> getEntries() {
+        return entries;
     }
 
     @Override

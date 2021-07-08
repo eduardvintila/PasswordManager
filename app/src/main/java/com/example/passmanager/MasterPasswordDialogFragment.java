@@ -13,6 +13,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
+/**
+ * Dialog Fragment which prompts the user for a password.
+ */
 public class MasterPasswordDialogFragment extends DialogFragment {
 
     public interface DialogListener {
@@ -42,10 +45,11 @@ public class MasterPasswordDialogFragment extends DialogFragment {
         final AlertDialog dialog = builder.setView(inflatedView)
                 .setCancelable(false)
                 .setPositiveButton("Ok", null)
-                .setNegativeButton(R.string.dialogClose, null)
-                .setTitle(R.string.enterPasswordTitleDialog)
+                .setNegativeButton(R.string.dialog_close, null)
+                .setTitle(R.string.dialog_enter_password)
                 .create();
 
+        // Listener for handling a click event on the "OK" button
         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialogInterface) {

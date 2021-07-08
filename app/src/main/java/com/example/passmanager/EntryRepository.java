@@ -60,7 +60,7 @@ public class EntryRepository {
 
 
     /**
-     * Create a new local database. Deletes the previous one if it exists.
+     * Create a new local database. Delete the previous one if it exists.
      *
      * @param application Current application context.
      * @param masterPass Master password for encrypting the database

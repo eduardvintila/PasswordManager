@@ -28,9 +28,6 @@ public interface EntryDao {
 
     // TODO: Refactor hardcoded table name.
 
-    @Query("DELETE FROM entries;")
-    ListenableFuture<Integer> deleteAllEntries();
-
     @Query("SELECT * FROM entries;")
     LiveData<List<Entry>> getAllEntries();
 

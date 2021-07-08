@@ -20,17 +20,19 @@ import com.example.passmanager.databinding.ActivityEntriesMenuBinding;
 
 import java.util.List;
 
+/**
+ * Activity where each entry in the Password Manager is listed.
+ */
 public class EntriesMenuActivity extends AppCompatActivity implements EntryListAdapter.OnEntryListener {
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityEntriesMenuBinding binding;
     private EntryViewModel entryVm;
 
-    // TODO: Remove the hardcoded package name.
+    // TODO: Refactor the hardcoded package name.
     public static final String EXTRA_ENTRY_ID = "com.example.passmanager.ENTRY_ID";
 
-    // TODO: This probably isn't necessary, could just access the adapter list.
-    private List<Entry> entriesList;
+    private EntryListAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,14 +43,18 @@ public class EntriesMenuActivity extends AppCompatActivity implements EntryListA
 
         setSupportActionBar(binding.toolbar);
 
+        // Navigation support.
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_entries_menu);
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
+        // FAB Listener for adding an entry.
         binding.fab.setOnClickListener(view -> {
-            // Go to the create entry menu.
+            // Get the encrypted master password from the authentication menu.
             Intent prevIntent = getIntent();
             String encryptedMaster = prevIntent.getStringExtra(MainActivity.EXTRA_ENCRYPTED_MASTER);
+
+            // Go to the create entry menu and pass the encrypted master password.
             Intent intent = new Intent(this, CreateEntryActivity.class);
             intent.putExtra(MainActivity.EXTRA_ENCRYPTED_MASTER, encryptedMaster);
             startActivity(intent);
@@ -56,31 +62,34 @@ public class EntriesMenuActivity extends AppCompatActivity implements EntryListA
 
         // Setup the recycler view and it's adapter for populating entries
         RecyclerView recyclerView = findViewById(R.id.recyclerview);
-        final EntryListAdapter adapter = new EntryListAdapter(this, this);
+        adapter = new EntryListAdapter(this, this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        // Get the entries from the ViewModel.
         entryVm = new ViewModelProvider(this).get(EntryViewModel.class);
         LiveData<List<Entry>> entries = entryVm.getAllEntries();
         if (entries != null) {
-            entries.observe(this, entries1 -> {
-                // Update the entries in the adapter when a new change is observed.
-                adapter.setEntries(entries1);
-                entriesList = entries1;
-            });
+            entries.observe(this, adapter::setEntries);
         }
-
-
     }
 
+    /**
+     * Called when an entry from the RecyclerView adapter list has been clicked.
+     *
+     * @param position of the entry in the list.
+     */
     @Override
     public void onEntryClick(int position) {
-        // View entry details.
-        int entryId = entriesList.get(position).entryNo;
+        // Get the encrypted master password from the authentication menu.
         Intent prevIntent = getIntent();
         String encryptedMaster = prevIntent.getStringExtra(MainActivity.EXTRA_ENCRYPTED_MASTER);
-        Intent intent = new Intent(this, EntryActivity.class);
 
+        // Get the entry id.
+        int entryId = adapter.getEntries().get(position).entryNo;
+
+        // Go to the view entry details menu and pass the encrypted master password.
+        Intent intent = new Intent(this, EntryActivity.class);
         intent.putExtra(EXTRA_ENTRY_ID, entryId);
         intent.putExtra(MainActivity.EXTRA_ENCRYPTED_MASTER, encryptedMaster);
         startActivity(intent);
@@ -95,6 +104,8 @@ public class EntriesMenuActivity extends AppCompatActivity implements EntryListA
 
     @Override
     protected void onDestroy() {
+        // Close the connection with the data repository, since (most likely?) this activity is
+        // destroyed when the application is terminated.
         super.onDestroy();
         entryVm.close();
     }

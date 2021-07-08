@@ -32,15 +32,9 @@ public abstract class EntryRoomDatabase extends RoomDatabase {
      */
     public abstract EntryDao entryDao();
 
-    /*private static final RoomDatabase.Callback callback = new RoomDatabase.Callback() {
-        @Override
-        public void onCreate(@NonNull SupportSQLiteDatabase db) {
-            super.onCreate(db);
-        }
-    };*/
-
     /**
      * Get a handle to the RoomDatabase. Creates the database if it doesn't exist.
+     *
      * @param context The current application context.
      */
     public static EntryRoomDatabase getDatabase(final Context context, char[] masterPass)
@@ -56,9 +50,7 @@ public abstract class EntryRoomDatabase extends RoomDatabase {
                     INSTANCE = Room.databaseBuilder(context, EntryRoomDatabase.class, TABLE_NAME)
                             .fallbackToDestructiveMigration()
                             .openHelperFactory(factory)
-                            // .addCallback(callback)
                             .build();
-
                     try {
                         // SQLCipher doesn't check if the master password is valid until a command is
                         // issued against the database. The statement below forces this validation and

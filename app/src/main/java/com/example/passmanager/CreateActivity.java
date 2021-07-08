@@ -10,6 +10,9 @@ import android.widget.TextView;
 
 import java.util.Arrays;
 
+/**
+ * Activity for creating a new database of entries.
+ */
 public class CreateActivity extends AppCompatActivity {
 
     private EntryViewModel entryVm;
@@ -33,7 +36,7 @@ public class CreateActivity extends AppCompatActivity {
         char[] pass2 = secondPassField.getText().toString().toCharArray();
 
         if (!Arrays.equals(pass1, pass2)) {
-            notMatchingTextView.setText(R.string.notMatchingMsg);
+            notMatchingTextView.setText(R.string.passwords_not_matching);
         } else {
             entryVm.create(getApplication(), pass1);
             entryVm.close();

@@ -10,7 +10,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import java.io.File;
-import java.security.KeyStore;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -45,8 +44,10 @@ public class MainActivity extends AppCompatActivity {
         entryVm.open(getApplication(), pass);
 
         if (!entryVm.isValidMasterPass()) {
-            validationMsg.setText(R.string.invalidPassMsg);
+            validationMsg.setText(R.string.invalid_pass);
         } else {
+            // Encrypt the master password and pass it to the next activities in order to use it
+            // for encrypting/decrypting passwords in the entries.
             String encrypted = CryptoHelper.encryptMasterPassword(passStr);
             Intent intent = new Intent(this, EntriesMenuActivity.class);
             intent.putExtra(EXTRA_ENCRYPTED_MASTER, encrypted);

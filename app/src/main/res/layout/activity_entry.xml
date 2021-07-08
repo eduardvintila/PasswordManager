@@ -12,7 +12,7 @@
         android:id="@+id/textView13"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/entryNameMsg" />
+        android:text="@string/entry_name_prompt" />
 
     <TextView
         android:id="@+id/entryNameTextView"
@@ -24,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="@string/usernameMsg" />
+        android:text="@string/username_prompt" />
 
     <TextView
         android:id="@+id/userIdTextView"
@@ -36,7 +36,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="@string/passwordMsg" />
+        android:text="@string/password_prompt" />
 
     <TextView
         android:id="@+id/userPassTextView"
@@ -48,7 +48,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="@string/descriptionMsg" />
+        android:text="@string/description_prompt" />
 
     <TextView
         android:id="@+id/entryDescriptionTextView"
@@ -60,24 +60,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="@string/linkMsg" />
+        android:text="@string/link_prompt" />
 
     <TextView
         android:id="@+id/serviceLinkTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <ImageButton
-        android:id="@+id/imageButton"
+    <Button
+        android:id="@+id/loadDialogBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="loadDialog"
-        app:srcCompat="?attr/actionModeSelectAllDrawable" />
+        android:text="@string/decrypt_password" />
 
     <Button
         android:id="@+id/deleteBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="deleteEntry"
-        android:text="@string/deleteMsg" />
+        android:text="@string/delete" />
 </LinearLayout>
