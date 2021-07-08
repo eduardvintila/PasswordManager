@@ -24,13 +24,20 @@
         android:hint="@string/usernameMsg"
         android:inputType="textPersonName" />
 
-    <EditText
-        android:id="@+id/userPassEditText"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/userPassTextLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:passwordToggleEnabled="true"
         android:ems="10"
-        android:hint="@string/passwordMsg"
-        android:inputType="textPassword" />
+        android:hint="@string/passwordMsg">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/userPassEditText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="textPassword" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <EditText
         android:id="@+id/entryDescriptionEditText"
@@ -47,6 +54,13 @@
         android:ems="10"
         android:hint="@string/linkMsg"
         android:inputType="textPersonName" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="generatePassword"
+        android:text="@string/generatePassMsg" />
 
     <Button
         android:id="@+id/button"

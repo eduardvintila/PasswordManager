@@ -73,4 +73,11 @@
         android:layout_height="wrap_content"
         android:onClick="loadDialog"
         app:srcCompat="?attr/actionModeSelectAllDrawable" />
+
+    <Button
+        android:id="@+id/deleteBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="deleteEntry"
+        android:text="@string/deleteMsg" />
 </LinearLayout>

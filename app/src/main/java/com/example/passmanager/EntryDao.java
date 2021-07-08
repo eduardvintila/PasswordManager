@@ -2,6 +2,7 @@ package com.example.passmanager;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
@@ -36,6 +37,8 @@ public interface EntryDao {
     @Query("SELECT * FROM entries WHERE entryNo = :id")
     LiveData<Entry> getEntry(int id);
 
+    @Delete
+    ListenableFuture<Integer> deleteEntry(Entry e);
 
 
     // These methods are used for testing and they do not implicitly create an asynchronous thread.

@@ -16,13 +16,18 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
 public class CryptoHelper {
-    public static int SALT_LENGTH = 16;
-    public static int IV_LENGTH = 16;
-    public static int KEY_LENGTH = 256;
-    public static String PBE_ALGORITHM = "PBEwithSHA256AND256BITAES-CBC-BC";
-    public static int PBE_ITERATIONS = 126;
-    public static String KEY_SPEC_ALGORITHM = "AES";
-    public static String CIPHER_ALGORITHM = "AES/CBC/PKCS7Padding";
+    public static final int SALT_LENGTH = 16;
+    public static final int IV_LENGTH = 16;
+    public static final int KEY_LENGTH = 256;
+    public static final String PBE_ALGORITHM = "PBEwithSHA256AND256BITAES-CBC-BC";
+    public static final int PBE_ITERATIONS = 126;
+    public static final String KEY_SPEC_ALGORITHM = "AES";
+    public static final String CIPHER_ALGORITHM = "AES/CBC/PKCS7Padding";
+
+    public static final String ALPHA_LOWER = "abcdefghijklmnopqrstuvwxyz";
+    public static final String ALPHA_UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    public static final String NUMERIC = "0123456789";
+    public static final String SPECIAL = " !#$%&'()*+,-./:;<=>?@[]^_`{|}~"; // missing " and \
 
 
     // TODO: Try to avoid "String" as much as possible, use char[] (or StringBuilder) in order to
@@ -136,6 +141,22 @@ public class CryptoHelper {
     public static String decryptMasterPassword(String encrypted) {
         final SecretKey key = getKeyFromKeyStore("masterKey");
         return decrypt(key, encrypted);
+    }
+
+    public static String generatePassword(int passLen) {
+        char[] passChrs = (ALPHA_LOWER + ALPHA_UPPER + NUMERIC + SPECIAL).toCharArray();
+
+        SecureRandom secureRandom = new SecureRandom();
+        byte[] passBytes = new byte[passLen];
+        secureRandom.nextBytes(passBytes);
+
+        StringBuilder pass = new StringBuilder(passLen);
+        for (byte passByte : passBytes) {
+            int val = passByte & 0xFF;
+            pass.append(passChrs[val % passChrs.length]);
+        }
+
+        return pass.toString();
     }
 
     public static String bytesToHexString(byte[] bytes) {

@@ -5,8 +5,11 @@ import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+
+import com.google.android.material.textfield.TextInputLayout;
 
 import javax.crypto.SecretKey;
 
@@ -18,6 +21,7 @@ public class CreateEntryActivity extends AppCompatActivity {
     private EditText entryDescriptionField;
     private EditText serviceLinkField;
     private EntryViewModel entryVm;
+    private TextInputLayout userPasswordLayout;
     // TODO: Implement Picture path field
 
     @Override
@@ -28,6 +32,7 @@ public class CreateEntryActivity extends AppCompatActivity {
         entryNameField = findViewById(R.id.entryNameEditText);
         userIdField = findViewById(R.id.userIdEditText);
         userPasswordField = findViewById(R.id.userPassEditText);
+        userPasswordLayout = findViewById(R.id.userPassTextLayout);
         entryDescriptionField = findViewById(R.id.entryDescriptionEditText);
         serviceLinkField = findViewById(R.id.serviceLinkEditText);
 
@@ -59,4 +64,8 @@ public class CreateEntryActivity extends AppCompatActivity {
     }
 
 
+    public void generatePassword(View view) {
+        String pass = CryptoHelper.generatePassword(16);
+        userPasswordField.setText(pass);
+    }
 }

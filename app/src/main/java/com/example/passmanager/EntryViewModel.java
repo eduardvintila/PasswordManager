@@ -63,5 +63,6 @@ public class EntryViewModel extends AndroidViewModel {
     public LiveData<List<Entry>> getAllEntries() { return entryRep.getAllEntries(); }
     public ListenableFuture<Long> insert(Entry e) { return entryRep.insert(e); }
     public LiveData<Entry> getEntry(int id) { return entryRep.getEntry(id); }
+    public ListenableFuture<Integer> deleteEntry(Entry e) { return entryRep.deleteEntry(e); }
 
 }

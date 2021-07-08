@@ -14,6 +14,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.concurrent.ExecutionException;
+
 import javax.crypto.SecretKey;
 
 public class EntryActivity extends AppCompatActivity
@@ -47,13 +49,15 @@ public class EntryActivity extends AppCompatActivity
         if (intent != null) {
             int entryId = intent.getIntExtra(EntriesMenuActivity.EXTRA_ENTRY_ID, 1);
             entryVm.getEntry(entryId).observe(this, entry -> {
-                this.entry = entry; // Save the entry information.
-                entryNameField.setText(entry.entryName);
-                userIdField.setText(entry.userId);
-                userPasswordField.setText(entry.userPassword);
-                entryDescriptionField.setText(entry.entryDescription);
-                serviceLinkField.setText(entry.serviceLink);
-                encryptedMaster = intent.getStringExtra(MainActivity.EXTRA_ENCRYPTED_MASTER);
+                if (entry != null) {
+                    this.entry = entry; // Save the entry information.
+                    entryNameField.setText(entry.entryName);
+                    userIdField.setText(entry.userId);
+                    userPasswordField.setText(entry.userPassword);
+                    entryDescriptionField.setText(entry.entryDescription);
+                    serviceLinkField.setText(entry.serviceLink);
+                    encryptedMaster = intent.getStringExtra(MainActivity.EXTRA_ENCRYPTED_MASTER);
+                }
             });
         } else {
             // Kill the activity if it hasn't received an entry.
@@ -87,9 +91,15 @@ public class EntryActivity extends AppCompatActivity
                     Toast.LENGTH_SHORT).show();
             dialog.dismiss();
         } else {
-            // TODO: Show a message that the password is invalid.
             Toast.makeText(getApplicationContext(), R.string.masterPassInvalidMsg,
                     Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void deleteEntry(View view) {
+        entryVm.deleteEntry(entry);
+        entry = null;
+        Toast.makeText(this, R.string.entryDeletedMsg, Toast.LENGTH_SHORT).show();
+        finish();
     }
 }

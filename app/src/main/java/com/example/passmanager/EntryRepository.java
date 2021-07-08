@@ -6,7 +6,6 @@ import androidx.lifecycle.LiveData;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
-import net.sqlcipher.database.SQLiteDatabase;
 import net.sqlcipher.database.SQLiteException;
 
 import java.io.File;
@@ -78,5 +77,6 @@ public class EntryRepository {
     public LiveData<List<Entry>> getAllEntries() { return allEntries; }
     public ListenableFuture<Long> insert(Entry e) { return entryDao.insert(e); }
     public LiveData<Entry> getEntry(int id) { return entryDao.getEntry(id); }
+    public ListenableFuture<Integer> deleteEntry(Entry e) { return entryDao.deleteEntry(e); }
 
 }
