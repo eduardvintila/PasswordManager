@@ -67,12 +67,32 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <TextView
+        android:id="@+id/textView23"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/last_modified" />
+
+    <TextView
+        android:id="@+id/lastModifiedTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <Button
         android:id="@+id/loadDialogBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:onClick="loadDialog"
         android:text="@string/decrypt_password" />
+
+    <Button
+        android:id="@+id/modifyBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="modifyEntry"
+        android:text="@string/modify_entry" />
 
     <Button
         android:id="@+id/deleteBtn"

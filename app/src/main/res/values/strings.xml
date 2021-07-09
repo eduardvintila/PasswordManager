@@ -8,7 +8,8 @@
     <string name="first_pass_master">Alege o parolă master</string>
     <string name="second_pass_master">Introdu din nou parola</string>
     <string name="create_database">Creează</string>
-    <string name="passwords_not_matching">Parolele nu se potrivesc!</string>
+    <string name="passwords_not_matching">Parolele nu se potrivesc sau nu sunt destul de
+        puternice!</string>
     <string name="title_activity_entries_menu">EntriesMenuActivity</string>
     <string name="entries_label">Înregistrări</string>
     <string name="username_prompt">Nume de utilizator/E-mail</string>
@@ -23,6 +24,9 @@
     <string name="delete">Șterge</string>
     <string name="entry_deleted">Înregistrarea a fost ștearsă.</string>
     <string name="generate_password">Generează parolă</string>
-    <string name="create_entry">Creează</string>
+    <string name="save_entry">Salvează</string>
     <string name="decrypt_password">Decriptează parola</string>
+    <string name="last_modified">Ultima modificare</string>
+    <string name="modify_entry">Modifică</string>
+    <string name="decrypt_password_first">Parola trebuie decriptată mai întâi!</string>
 </resources>

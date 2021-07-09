@@ -40,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
     public void auth(View view) {
         // TODO: Make sure to clean the plaintext pass from memory.
         String passStr = masterPassField.getText().toString();
+        if (passStr.isEmpty())
+            return;
         char[] pass = passStr.toCharArray();
         entryVm.open(getApplication(), pass);
 

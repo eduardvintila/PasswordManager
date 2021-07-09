@@ -78,5 +78,5 @@ public class EntryRepository {
     public ListenableFuture<Long> insert(Entry e) { return entryDao.insert(e); }
     public LiveData<Entry> getEntry(int id) { return entryDao.getEntry(id); }
     public ListenableFuture<Integer> deleteEntry(Entry e) { return entryDao.deleteEntry(e); }
-
+    public ListenableFuture<Integer> updateEntry(Entry e) { return entryDao.updateEntry(e); }
 }

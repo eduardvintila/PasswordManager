@@ -6,6 +6,7 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
@@ -14,8 +15,8 @@ import java.util.List;
 /**
  * DAO interface for SQL Queries.
  *
- * <p>This DAO interface is used for specifying SQL queries on the "Entry" table and for associating
- * them with method calls.
+ * <p>This DAO interface is used for specifying SQL queries on the "Entries" table and for
+ * associating them with method calls.
  *    ListenableFuture and LiveData are used in order to make implicit asynchronous queries.
  *    More details here: https://developer.android.com/training/data-storage/room/async-queries
  * </p>
@@ -36,6 +37,9 @@ public interface EntryDao {
 
     @Delete
     ListenableFuture<Integer> deleteEntry(Entry e);
+
+    @Update
+    ListenableFuture<Integer> updateEntry(Entry e);
 
 
     // These methods are used for testing and they do not implicitly create an asynchronous thread.

@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,16 +22,23 @@ import javax.crypto.SecretKey;
 public class EntryActivity extends AppCompatActivity
         implements MasterPasswordDialogFragment.DialogListener {
 
+    public static final String EXTRA_ENTRY_PASSWORD = "com.example.passmanager.ENTRY_PASSWORD";
+
     private TextView entryNameField;
     private TextView userIdField;
     private TextView userPasswordField;
     private TextView entryDescriptionField;
     private TextView serviceLinkField;
+    private TextView entryLastModifiedField;
+    private Button decryptBtn;
+
     private EntryViewModel entryVm;
 
     private String encryptedMaster;
 
     private Entry entry;
+
+    private boolean userPasswordDecrypted = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +52,8 @@ public class EntryActivity extends AppCompatActivity
         userPasswordField = findViewById(R.id.userPassTextView);
         entryDescriptionField = findViewById(R.id.entryDescriptionTextView);
         serviceLinkField = findViewById(R.id.serviceLinkTextView);
+        entryLastModifiedField = findViewById(R.id.lastModifiedTextView);
+        decryptBtn = findViewById(R.id.loadDialogBtn);
 
         Intent intent = getIntent();
         if (intent != null) {
@@ -57,7 +67,11 @@ public class EntryActivity extends AppCompatActivity
                     userPasswordField.setText(entry.userPassword);
                     entryDescriptionField.setText(entry.entryDescription);
                     serviceLinkField.setText(entry.serviceLink);
+                    entryLastModifiedField.setText(entry.lastModified.toString());
                     encryptedMaster = intent.getStringExtra(MainActivity.EXTRA_ENCRYPTED_MASTER);
+
+                    decryptBtn.setVisibility(View.VISIBLE);
+                    userPasswordDecrypted = false;
                 }
             });
         } else {
@@ -106,7 +120,8 @@ public class EntryActivity extends AppCompatActivity
 
             userPasswordField.setText(decryptedUserPassword);
             // Since the password has been decrypted, hide the "decrypt password" button.
-            findViewById(R.id.loadDialogBtn).setVisibility(View.INVISIBLE);
+            decryptBtn.setVisibility(View.INVISIBLE);
+            userPasswordDecrypted = true;
 
             Toast.makeText(getApplicationContext(), R.string.user_pass_decrypted,
                     Toast.LENGTH_SHORT).show();
@@ -127,5 +142,25 @@ public class EntryActivity extends AppCompatActivity
         entry = null;
         Toast.makeText(this, R.string.entry_deleted, Toast.LENGTH_SHORT).show();
         finish();
+    }
+
+    /**
+     * Modify the entry in the repository.
+     *
+     * @param view The clicked button.
+     */
+    public void modifyEntry(View view) {
+        /*// Load the dialog which prompts the user for the master password.
+        loadDialog(view);*/
+        if (userPasswordDecrypted) {
+            // Load the activity where the user can edit the entry information.
+            Intent intent = new Intent(this, CreateOrUpdateEntryActivity.class);
+            intent.putExtra(EntriesMenuActivity.EXTRA_ENTRY_ID, entry.entryNo);
+            intent.putExtra(EntryActivity.EXTRA_ENTRY_PASSWORD, userPasswordField.getText().toString());
+            intent.putExtra(MainActivity.EXTRA_ENCRYPTED_MASTER, encryptedMaster);
+            startActivity(intent);
+        } else {
+            Toast.makeText(this, R.string.decrypt_password_first, Toast.LENGTH_SHORT).show();
+        }
     }
 }

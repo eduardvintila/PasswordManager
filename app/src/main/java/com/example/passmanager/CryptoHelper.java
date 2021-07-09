@@ -228,6 +228,27 @@ public class CryptoHelper {
     }
 
     /**
+     * Calculate password strongness.
+     *
+     * @param pass The plaintext password.
+     * @return The level of strongness.
+     */
+    public static int passwordStrongness(String pass) {
+        int strongness = 0;
+
+        if (pass.length() >= 12)
+            strongness++;
+        if (pass.chars().anyMatch(c -> ALPHA_UPPER.indexOf(c) != -1))
+            strongness++;
+        if (pass.chars().anyMatch(c -> NUMERIC.indexOf(c) != -1))
+            strongness++;
+        if (pass.chars().anyMatch(c -> SPECIAL.indexOf(c) != -1))
+            strongness++;
+
+        return strongness;
+    }
+
+    /**
      * Convert bytes to a string of hex digits.
      *
      * @param bytes to be converted.

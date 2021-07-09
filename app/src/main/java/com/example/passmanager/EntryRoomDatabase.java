@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.TypeConverters;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import net.sqlcipher.database.SQLiteDatabase;
@@ -22,6 +23,7 @@ import java.util.Locale;
  * Room singleton class for establishing connection with the SQLCipher database.
  */
 @Database(entities = {Entry.class}, version = 1, exportSchema = false)
+@TypeConverters({Converters.class})
 public abstract class EntryRoomDatabase extends RoomDatabase {
 
     private static EntryRoomDatabase INSTANCE;

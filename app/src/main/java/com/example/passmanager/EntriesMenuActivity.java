@@ -2,8 +2,6 @@ package com.example.passmanager;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -55,7 +53,7 @@ public class EntriesMenuActivity extends AppCompatActivity implements EntryListA
             String encryptedMaster = prevIntent.getStringExtra(MainActivity.EXTRA_ENCRYPTED_MASTER);
 
             // Go to the create entry menu and pass the encrypted master password.
-            Intent intent = new Intent(this, CreateEntryActivity.class);
+            Intent intent = new Intent(this, CreateOrUpdateEntryActivity.class);
             intent.putExtra(MainActivity.EXTRA_ENCRYPTED_MASTER, encryptedMaster);
             startActivity(intent);
         });

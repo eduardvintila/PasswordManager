@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="10dp"
-    tools:context=".CreateEntryActivity">
+    tools:context=".CreateOrUpdateEntryActivity">
 
     <EditText
         android:id="@+id/entryNameEditText"
@@ -66,7 +66,7 @@
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="createEntry"
-        android:text="@string/create_entry" />
+        android:onClick="saveEntry"
+        android:text="@string/save_entry" />
 
 </LinearLayout>

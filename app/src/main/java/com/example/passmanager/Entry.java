@@ -5,6 +5,8 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import java.sql.Date;
+
 /**
  * Entry in the Password Manager.
  *
@@ -64,8 +66,12 @@ public class Entry {
     @ColumnInfo(name = "passwordSalt")
     public String passwordSalt;
 
+    @ColumnInfo(name = "lastModified")
+    public Date lastModified;
+
     public Entry(String entryName, String entryDescription, String entryPicPath,
-                 String serviceLink, String userId, String userPassword, String passwordSalt) {
+                 String serviceLink, String userId, String userPassword, String passwordSalt,
+                 Date lastModified) {
         this.entryName = entryName;
         this.entryDescription = entryDescription;
         this.entryPicPath = entryPicPath;
@@ -73,6 +79,7 @@ public class Entry {
         this.userId = userId;
         this.userPassword = userPassword;
         this.passwordSalt = passwordSalt;
+        this.lastModified = lastModified;
     }
 
     @Ignore
