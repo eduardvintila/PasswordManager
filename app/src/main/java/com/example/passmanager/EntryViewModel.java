@@ -30,10 +30,11 @@ public class EntryViewModel extends AndroidViewModel {
      *
      * @param application Current application context.
      * @param masterPass Master password for decrypting the repository data.
+     * @param clearPass If true, clear the password from memory after opening the connection.
      */
-    public void open(@NonNull Application application, char[] masterPass) {
+    public void open(@NonNull Application application, char[] masterPass, boolean clearPass) {
         try {
-            entryRep.open(application, masterPass);
+            entryRep.open(application, masterPass, clearPass);
             validMasterPass = true;
         } catch (SQLiteException e) {
             validMasterPass = false;
@@ -51,10 +52,11 @@ public class EntryViewModel extends AndroidViewModel {
      * Create a new data repository.
      *
      * @param application Current application context.
-     * @param masterPass Master password for encrypting the data repository
+     * @param masterPass Master password for encrypting the data repository.
+     * @param clearPass If true, clear the password from memory after opening the connection.
      */
-    public void create(@NonNull Application application, char[] masterPass) {
-        entryRep.create(application, masterPass);
+    public void create(@NonNull Application application, char[] masterPass, boolean clearPass) {
+        entryRep.create(application, masterPass, clearPass);
     }
 
     public boolean isValidMasterPass() { return validMasterPass; }

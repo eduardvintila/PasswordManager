@@ -39,7 +39,8 @@ public abstract class EntryRoomDatabase extends RoomDatabase {
      *
      * @param context The current application context.
      */
-    public static EntryRoomDatabase getDatabase(final Context context, char[] masterPass)
+    public static EntryRoomDatabase getDatabase(final Context context, char[] masterPass,
+                                                boolean clearPass)
             throws SQLiteException {
         if (INSTANCE == null) {
             // Make sure that only one thread creates the handle to the database in order to prevent
@@ -62,9 +63,11 @@ public abstract class EntryRoomDatabase extends RoomDatabase {
                         closeDatabase();
                         throw e;
                     } finally {
-                        // Clear the plaintext password from memory.
-                        Arrays.fill(masterPass, (char) 0);
-                        Arrays.fill(masterPassBytes, (byte) 0);
+                        if (clearPass) {
+                            // Clear the plaintext password from memory.
+                            Arrays.fill(masterPass, (char) 0);
+                            Arrays.fill(masterPassBytes, (byte) 0);
+                        }
                     }
                 }
             }

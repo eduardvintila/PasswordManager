@@ -8,11 +8,14 @@ import androidx.lifecycle.ViewModelProvider;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.Arrays;
 
 import javax.crypto.SecretKey;
 
@@ -107,18 +110,26 @@ public class EntryActivity extends AppCompatActivity
         // Get the password entered by the user.
         AlertDialog dialog = (AlertDialog) dialogInterface;
         EditText passwordField = dialog.findViewById(R.id.editTextMasterPassword);
-        String inputPass = passwordField.getText().toString();
+
+        // Get the password from the input field.
+        Editable editable = passwordField.getText();
+        char[] inputPass = new char[editable.length()];
+        editable.getChars(0, editable.length(), inputPass, 0);
 
         // Check that it matches with the master password.
-        String plaintextMaster = CryptoHelper.decryptMasterPassword(encryptedMaster);
-        if (inputPass.equals(plaintextMaster)) {
+        char[] plaintextMaster = CryptoHelper.decryptMasterPassword(encryptedMaster);
+        if (Arrays.equals(inputPass, plaintextMaster)) {
+            Arrays.fill(inputPass, (char) 0);
+
             // Decrypt the password in the entry.
             String encryptedUserPassword = entry.userPassword;
             byte[] saltBytes = CryptoHelper.hexStringToBytes(entry.passwordSalt);
             SecretKey key = CryptoHelper.createPbeKey(plaintextMaster, saltBytes);
-            String decryptedUserPassword = CryptoHelper.decrypt(key, encryptedUserPassword);
+            char[] decryptedUserPassword = CryptoHelper.decrypt(key, encryptedUserPassword);
 
-            userPasswordField.setText(decryptedUserPassword);
+            if (decryptedUserPassword != null){
+                userPasswordField.setText(decryptedUserPassword, 0, decryptedUserPassword.length);
+            }
             // Since the password has been decrypted, hide the "decrypt password" button.
             decryptBtn.setVisibility(View.INVISIBLE);
             userPasswordDecrypted = true;
@@ -138,9 +149,11 @@ public class EntryActivity extends AppCompatActivity
      * @param view The clicked button.
      */
     public void deleteEntry(View view) {
+        // TODO: Delete entry only if master password is provided?
         entryVm.deleteEntry(entry);
         entry = null;
         Toast.makeText(this, R.string.entry_deleted, Toast.LENGTH_SHORT).show();
+        // TODO: Find a way to clear the password from memory.
         finish();
     }
 

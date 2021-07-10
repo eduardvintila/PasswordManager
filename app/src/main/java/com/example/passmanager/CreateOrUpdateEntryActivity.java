@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider;
 import android.content.Intent;
 import android.icu.util.Calendar;
 import android.os.Bundle;
+import android.text.Editable;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -74,11 +75,14 @@ public class CreateOrUpdateEntryActivity extends AppCompatActivity {
      */
     public void saveEntry(View view) {
         // TODO: Validations
-        String plainTextMaster = CryptoHelper.decryptMasterPassword(encryptedMaster);
+        char[] plainTextMaster = CryptoHelper.decryptMasterPassword(encryptedMaster);
 
-        // TODO: Maybe wrap these lines in a function in CryptoHelper?
         // Use the master password and a random salt to encrypt the password for the entry.
-        String userPassword = userPasswordField.getText().toString();
+        Editable editable = userPasswordField.getText();
+        char[] userPassword = new char[editable.length()];
+        editable.getChars(0, editable.length(), userPassword, 0);
+
+        // String userPassword = userPasswordField.getText().toString();
         byte[] saltBytes = CryptoHelper.generateSalt();
         SecretKey key = CryptoHelper.createPbeKey(plainTextMaster, saltBytes);
         String encryptedUserPassword = CryptoHelper.encrypt(key, userPassword);

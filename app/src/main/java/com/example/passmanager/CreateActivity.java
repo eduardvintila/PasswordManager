@@ -67,12 +67,15 @@ public class CreateActivity extends AppCompatActivity {
         });
     }
 
-    public void goToCreate(View view) {
+    /**
+     * Create a new database.
+     */
+    public void create(View view) {
         char[] pass1 = firstPassField.getText().toString().toCharArray();
         char[] pass2 = secondPassField.getText().toString().toCharArray();
 
         if (equalPasswords && passStrongness == 4) {
-            entryVm.create(getApplication(), pass1);
+            entryVm.create(getApplication(), pass1, true);
             entryVm.close();
             finish();
         } else {

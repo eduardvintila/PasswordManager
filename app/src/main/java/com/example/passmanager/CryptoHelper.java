@@ -3,9 +3,13 @@ package com.example.passmanager;
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyProperties;
 
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyStore;
 import java.security.SecureRandom;
+import java.util.Arrays;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
@@ -66,19 +70,23 @@ public class CryptoHelper {
     }
 
     /**
-     * Use password-based encryption to generate a key for symmetric encryption.
+     * Use password-based encryption to generate a key for symmetric encryption. The plaintext
+     * password array is cleared from memory after creating the key.
      *
      * @param password Plaintext password used in key generation.
      * @param salt Random salt used in key generation.
      * @return The symmetric key.
      */
-    public static SecretKey createPbeKey(String password, byte[] salt) {
+    public static SecretKey createPbeKey(char[] password, byte[] salt) {
         try {
-            PBEKeySpec pbeKeySpec = new PBEKeySpec(password.toCharArray(), salt,
+            PBEKeySpec pbeKeySpec = new PBEKeySpec(password, salt,
                     PBE_ITERATIONS, KEY_LENGTH);
             SecretKeyFactory factory = SecretKeyFactory.getInstance(PBE_ALGORITHM);
-            return new SecretKeySpec(factory.generateSecret(pbeKeySpec).getEncoded(),
+            SecretKey key = new SecretKeySpec(factory.generateSecret(pbeKeySpec).getEncoded(),
                     KEY_SPEC_ALGORITHM);
+            Arrays.fill(password, (char) 0);
+
+            return key;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -86,11 +94,12 @@ public class CryptoHelper {
     }
 
     /**
-     * Encrypt a text using a symmetric-key algorithm.
+     * Encrypt a text using a symmetric-key algorithm. The text array is cleared from memory
+     * after the encryption.
      *
      * @return The encrypted text formatted as a string of hex digits.
      */
-    public static String encrypt(SecretKey key, String text) {
+    public static String encrypt(SecretKey key, char[] text) {
         try {
             byte[] iv = generateIv();
             String ivHex = bytesToHexString(iv);
@@ -98,7 +107,14 @@ public class CryptoHelper {
 
             Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM);
             cipher.init(Cipher.ENCRYPT_MODE, key, ivParameterSpec);
-            byte[] encryptedBytes = cipher.doFinal(text.getBytes(StandardCharsets.UTF_8));
+
+            ByteBuffer buffer =
+                    StandardCharsets.UTF_8.encode(CharBuffer.wrap(text));
+            byte[] textBytes = new byte[buffer.remaining()];
+            buffer.get(textBytes);
+            byte[] encryptedBytes = cipher.doFinal(textBytes);
+            Arrays.fill(textBytes, (byte) 0);
+            Arrays.fill(buffer.array(), (byte) 0);
 
             // Attach the Initialisation Vector to the beginning of the encrypted text.
             return ivHex + bytesToHexString(encryptedBytes);
@@ -111,9 +127,9 @@ public class CryptoHelper {
     /**
      * Decrypt a text using a symmetric-key algorithm.
      *
-     * @return The decrypted text.
+     * @return The decrypted text, in a char array.
      */
-    public static String decrypt(SecretKey key, String encrypted) {
+    public static char[] decrypt(SecretKey key, String encrypted) {
         try {
             // Extract the Initialisation Vector from the beginning of the encrypted string.
             String ivHex = encrypted.substring(0, IV_LENGTH * 2);
@@ -125,7 +141,13 @@ public class CryptoHelper {
             cipher.init(Cipher.DECRYPT_MODE, key, ivParameterSpec);
             byte[] decryptedBytes = cipher.doFinal(hexStringToBytes(encryptedText));
 
-            return new String(decryptedBytes, StandardCharsets.UTF_8);
+            ByteBuffer buffer = ByteBuffer.wrap(decryptedBytes);
+            CharBuffer charBuffer = StandardCharsets.UTF_8.decode(buffer);
+            char[] decryptedPass = new char[charBuffer.remaining()];
+            charBuffer.get(decryptedPass);
+         //   Arrays.fill(charBuffer.array(), (char) 0); // TODO: Remove this comment.
+
+            return decryptedPass;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -181,12 +203,13 @@ public class CryptoHelper {
     }
 
     /**
-     * Encrypt the master password with a random key.
+     * Encrypt the master password with a random key. The plaintext master password is cleared
+     * from memory after the encryption.
      *
      * @param masterPass plaintext master password
      * @return The encrypted password formatted as a string of hex digits.
      */
-    public static String encryptMasterPassword(String masterPass) {
+    public static String encryptMasterPassword(char[] masterPass) {
         SecretKey key = generateKeyForKeyStore("masterKey");
         return encrypt(key, masterPass);
     }
@@ -197,7 +220,7 @@ public class CryptoHelper {
      * @param encrypted master password
      * @return The decrypted master password.
      */
-    public static String decryptMasterPassword(String encrypted) {
+    public static char[] decryptMasterPassword(String encrypted) {
         final SecretKey key = getKeyFromKeyStore("masterKey");
         return decrypt(key, encrypted);
     }

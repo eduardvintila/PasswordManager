@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -39,18 +40,22 @@ public class MainActivity extends AppCompatActivity {
      */
     public void auth(View view) {
         // TODO: Make sure to clean the plaintext pass from memory.
-        String passStr = masterPassField.getText().toString();
-        if (passStr.isEmpty())
-            return;
-        char[] pass = passStr.toCharArray();
-        entryVm.open(getApplication(), pass);
 
+        // Get the password from the input field.
+        Editable editable = masterPassField.getText();
+        char[] pass = new char[editable.length()];
+        editable.getChars(0, editable.length(), pass, 0);
+
+        if (pass.length == 0)
+            return;
+
+        entryVm.open(getApplication(), pass, false);
         if (!entryVm.isValidMasterPass()) {
             validationMsg.setText(R.string.invalid_pass);
         } else {
             // Encrypt the master password and pass it to the next activities in order to use it
             // for encrypting/decrypting passwords in the entries.
-            String encrypted = CryptoHelper.encryptMasterPassword(passStr);
+            String encrypted = CryptoHelper.encryptMasterPassword(pass);
             Intent intent = new Intent(this, EntriesMenuActivity.class);
             intent.putExtra(EXTRA_ENCRYPTED_MASTER, encrypted);
             startActivity(intent);

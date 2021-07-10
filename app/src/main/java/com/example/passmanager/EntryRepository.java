@@ -41,11 +41,12 @@ public class EntryRepository {
      *
      * @param application Current application context
      * @param masterPass Master password for decrypting the database.
+     * @param clearPass If true, clear the password from memory after opening the connection.
      * @throws SQLiteException if the connection with the database fails (most likely because the
      * master password is invalid).
      */
-    public void open(Application application, char[] masterPass) throws SQLiteException {
-        db = EntryRoomDatabase.getDatabase(application, masterPass);
+    public void open(Application application, char[] masterPass, boolean clearPass) throws SQLiteException {
+        db = EntryRoomDatabase.getDatabase(application, masterPass, clearPass);
         entryDao = db.entryDao();
         allEntries = entryDao.getAllEntries();
     }
@@ -64,13 +65,14 @@ public class EntryRepository {
      *
      * @param application Current application context.
      * @param masterPass Master password for encrypting the database
+     * @param clearPass If true, clear the password from memory after opening the connection.
      */
-    public void create(Application application, char[] masterPass) {
+    public void create(Application application, char[] masterPass, boolean clearPass) {
         File databaseFile = application.getDatabasePath(EntryRoomDatabase.TABLE_NAME);
         databaseFile.mkdirs();
         databaseFile.delete();
 
-        open(application, masterPass);
+        open(application, masterPass, clearPass);
     }
 
     // Queries
