@@ -6,11 +6,13 @@ import androidx.lifecycle.ViewModelProvider;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.util.Base64;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -18,7 +20,8 @@ public class MainActivity extends AppCompatActivity {
     private EditText masterPassField;
     private EntryViewModel entryVm;
 
-    public static final String EXTRA_ENCRYPTED_MASTER = "com.example.passmanager.ENCRYPTED_MASTER";
+    public static final String EXTRA_ENCRYPTED_MASTER = BuildConfig.APPLICATION_ID +
+        ".ENCRYPTED_MASTER";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +42,6 @@ public class MainActivity extends AppCompatActivity {
      * Authenticate using the master password.
      */
     public void auth(View view) {
-        // TODO: Make sure to clean the plaintext pass from memory.
-
         // Get the password from the input field.
         Editable editable = masterPassField.getText();
         char[] pass = new char[editable.length()];

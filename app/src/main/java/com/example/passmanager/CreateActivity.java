@@ -74,7 +74,7 @@ public class CreateActivity extends AppCompatActivity {
         char[] pass1 = firstPassField.getText().toString().toCharArray();
         char[] pass2 = secondPassField.getText().toString().toCharArray();
 
-        if (equalPasswords && passStrongness == 4) {
+        if (equalPasswords && passStrongness == CryptoHelper.PASS_MAX_STRONGNESS) {
             entryVm.create(getApplication(), pass1, true);
             entryVm.close();
             finish();

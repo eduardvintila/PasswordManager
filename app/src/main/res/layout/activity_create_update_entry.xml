@@ -28,9 +28,9 @@
         android:id="@+id/userPassTextLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:passwordToggleEnabled="true"
         android:ems="10"
-        android:hint="@string/password_prompt">
+        android:hint="@string/password_prompt"
+        app:passwordToggleEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/userPassEditText"
@@ -39,10 +39,18 @@
             android:inputType="textPassword" />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <TextView
+        android:id="@+id/passNotStrongTextView"
+        android:visibility="invisible"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/password_not_strong" />
+
     <EditText
         android:id="@+id/entryDescriptionEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:ems="10"
         android:hint="@string/description_prompt"
         android:inputType="textPersonName" />

@@ -25,7 +25,8 @@ import javax.crypto.SecretKey;
 public class EntryActivity extends AppCompatActivity
         implements MasterPasswordDialogFragment.DialogListener {
 
-    public static final String EXTRA_ENTRY_PASSWORD = "com.example.passmanager.ENTRY_PASSWORD";
+    public static final String EXTRA_ENTRY_PASSWORD = BuildConfig.APPLICATION_ID +
+            ".ENTRY_PASSWORD";
 
     private TextView entryNameField;
     private TextView userIdField;
@@ -123,7 +124,7 @@ public class EntryActivity extends AppCompatActivity
 
             // Decrypt the password in the entry.
             String encryptedUserPassword = entry.userPassword;
-            byte[] saltBytes = CryptoHelper.hexStringToBytes(entry.passwordSalt);
+            byte[] saltBytes = CryptoHelper.decode(entry.passwordSalt);
             SecretKey key = CryptoHelper.createPbeKey(plaintextMaster, saltBytes);
             char[] decryptedUserPassword = CryptoHelper.decrypt(key, encryptedUserPassword);
 
@@ -153,7 +154,6 @@ public class EntryActivity extends AppCompatActivity
         entryVm.deleteEntry(entry);
         entry = null;
         Toast.makeText(this, R.string.entry_deleted, Toast.LENGTH_SHORT).show();
-        // TODO: Find a way to clear the password from memory.
         finish();
     }
 

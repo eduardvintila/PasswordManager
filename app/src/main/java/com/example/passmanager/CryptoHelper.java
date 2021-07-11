@@ -2,10 +2,10 @@ package com.example.passmanager;
 
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyProperties;
+import android.util.Base64;
 
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyStore;
 import java.security.SecureRandom;
@@ -36,10 +36,7 @@ public class CryptoHelper {
     public static final String NUMERIC = "0123456789";
     public static final String SPECIAL = " !#$%&'()*+,-./:;<=>?@[]^_`{|}~"; // missing " and \
 
-
-    // TODO: Try to avoid "String" as much as possible, use char[] (or StringBuilder) in order to
-    // clear the plaintext passwords from memory.
-
+    public static final int PASS_MAX_STRONGNESS = 4;
 
     /**
      * Generate a random salt for password-based encryption.
@@ -47,7 +44,6 @@ public class CryptoHelper {
      * @return the salt bytes.
      */
     public static byte[] generateSalt() {
-        // TODO: Maybe use an explicit seed?
         SecureRandom secureRandom = new SecureRandom();
         byte[] salt = new byte[SALT_LENGTH];
         secureRandom.nextBytes(salt);
@@ -61,7 +57,6 @@ public class CryptoHelper {
      * @return the IV bytes.
      */
     public static byte[] generateIv() {
-        // TODO: Maybe use an explicit seed?
         SecureRandom secureRandom = new SecureRandom();
         byte[] iv = new byte[IV_LENGTH];
         secureRandom.nextBytes(iv);
@@ -97,12 +92,12 @@ public class CryptoHelper {
      * Encrypt a text using a symmetric-key algorithm. The text array is cleared from memory
      * after the encryption.
      *
-     * @return The encrypted text formatted as a string of hex digits.
+     * @return The encrypted text encoded with Base64.
      */
     public static String encrypt(SecretKey key, char[] text) {
         try {
             byte[] iv = generateIv();
-            String ivHex = bytesToHexString(iv);
+            String encodedIv = encode(iv);
             IvParameterSpec ivParameterSpec = new IvParameterSpec(iv);
 
             Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM);
@@ -113,11 +108,13 @@ public class CryptoHelper {
             byte[] textBytes = new byte[buffer.remaining()];
             buffer.get(textBytes);
             byte[] encryptedBytes = cipher.doFinal(textBytes);
+
             Arrays.fill(textBytes, (byte) 0);
             Arrays.fill(buffer.array(), (byte) 0);
+            Arrays.fill(text, (char) 0);
 
             // Attach the Initialisation Vector to the beginning of the encrypted text.
-            return ivHex + bytesToHexString(encryptedBytes);
+            return encodedIv + encode(encryptedBytes);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -132,20 +129,21 @@ public class CryptoHelper {
     public static char[] decrypt(SecretKey key, String encrypted) {
         try {
             // Extract the Initialisation Vector from the beginning of the encrypted string.
-            String ivHex = encrypted.substring(0, IV_LENGTH * 2);
-            byte[] iv = hexStringToBytes(ivHex);
+            int encodedIvLength = encodingLength(IV_LENGTH);
+            String encodedIv = encrypted.substring(0, encodedIvLength);
+            byte[] iv = decode(encodedIv);
             IvParameterSpec ivParameterSpec = new IvParameterSpec(iv);
-            String encryptedText = encrypted.substring(IV_LENGTH * 2);
+            String encryptedText = encrypted.substring(encodedIvLength);
 
             Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM);
             cipher.init(Cipher.DECRYPT_MODE, key, ivParameterSpec);
-            byte[] decryptedBytes = cipher.doFinal(hexStringToBytes(encryptedText));
+            byte[] decryptedBytes = cipher.doFinal(decode(encryptedText));
 
             ByteBuffer buffer = ByteBuffer.wrap(decryptedBytes);
             CharBuffer charBuffer = StandardCharsets.UTF_8.decode(buffer);
             char[] decryptedPass = new char[charBuffer.remaining()];
             charBuffer.get(decryptedPass);
-         //   Arrays.fill(charBuffer.array(), (char) 0); // TODO: Remove this comment.
+            Arrays.fill(charBuffer.array(), (char) 0);
 
             return decryptedPass;
         } catch (Exception e) {
@@ -207,7 +205,7 @@ public class CryptoHelper {
      * from memory after the encryption.
      *
      * @param masterPass plaintext master password
-     * @return The encrypted password formatted as a string of hex digits.
+     * @return The encrypted password encoded with Base64.
      */
     public static String encryptMasterPassword(char[] masterPass) {
         SecretKey key = generateKeyForKeyStore("masterKey");
@@ -227,6 +225,8 @@ public class CryptoHelper {
 
     /**
      * Generate a strong random password matching certain criteria.
+     *
+     * TODO: Make sure that the generated password matches all criteria.
      *
      * @param passLen Length of the password.
      * @return The plaintext password.
@@ -272,40 +272,32 @@ public class CryptoHelper {
     }
 
     /**
-     * Convert bytes to a string of hex digits.
+     * Encode bytes to a string representation using Base64.
      *
      * @param bytes to be converted.
      * @return The string representation.
      */
-    public static String bytesToHexString(byte[] bytes) {
-        StringBuilder sb = new StringBuilder(bytes.length * 2);
-        for (byte aByte : bytes) {
-            int val = aByte & 0xFF;
-            if (val < 16) {
-                // Add a leading '0' if the byte value is represented with one hex digit.
-                sb.append('0');
-            }
-            sb.append(Integer.toHexString(val));
-        }
-        return sb.toString();
+    public static String encode(byte[] bytes) {
+        return Base64.encodeToString(bytes, Base64.NO_WRAP);
     }
 
     /**
-     * Convert a string of hex digits to the corresponding bytes.
+     * Decode a string to the corresponding bytes using Base64.
      *
-     * @param hexString string to be converted.
+     * @param base64Str string to be converted.
      * @return The bytes after conversion.
      */
-    public static byte[] hexStringToBytes(String hexString) {
-        byte[] bytes = new byte[hexString.length() / 2];
-        for (int i = 0; i < bytes.length; i++) {
-            // 2 hex digits represent a byte.
-            int index = i * 2;
-            int val = Integer.parseInt(hexString.substring(index, index + 2), 16);
-            bytes[i] = (byte) val;
-        }
-        return bytes;
+    public static byte[] decode(String base64Str) {
+        return Base64.decode(base64Str, Base64.NO_WRAP);
     }
 
-
+    /**
+     * Calculate the length of a Base64 encoded string.
+     *
+     * @param length number of bytes encoded.
+     * @return number of characters in the encoding.
+     */
+    public static int encodingLength(int length) {
+        return (int) (Math.ceil((double) length / 3) * 4);
+    }
 }

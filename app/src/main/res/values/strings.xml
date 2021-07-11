@@ -29,4 +29,5 @@
     <string name="last_modified">Ultima modificare</string>
     <string name="modify_entry">Modifică</string>
     <string name="decrypt_password_first">Parola trebuie decriptată mai întâi!</string>
+    <string name="password_not_strong">Atenție! Parola nu este suficient de puternică!</string>
 </resources>

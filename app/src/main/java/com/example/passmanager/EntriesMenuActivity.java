@@ -27,8 +27,7 @@ public class EntriesMenuActivity extends AppCompatActivity implements EntryListA
     private ActivityEntriesMenuBinding binding;
     private EntryViewModel entryVm;
 
-    // TODO: Refactor the hardcoded package name.
-    public static final String EXTRA_ENTRY_ID = "com.example.passmanager.ENTRY_ID";
+    public static final String EXTRA_ENTRY_ID = BuildConfig.APPLICATION_ID + ".ENTRY_ID";
 
     private EntryListAdapter adapter;
 
