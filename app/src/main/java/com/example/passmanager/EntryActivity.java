@@ -5,6 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +15,7 @@ import android.text.Editable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +39,8 @@ public class EntryActivity extends AppCompatActivity
     private TextView serviceLinkField;
     private TextView entryLastModifiedField;
     private Button decryptBtn;
+    private ImageButton copyPassBtn;
+    private ImageButton copyUserBtn;
 
     private EntryViewModel entryVm;
 
@@ -58,6 +64,8 @@ public class EntryActivity extends AppCompatActivity
         serviceLinkField = findViewById(R.id.serviceLinkTextView);
         entryLastModifiedField = findViewById(R.id.lastModifiedTextView);
         decryptBtn = findViewById(R.id.loadDialogBtn);
+        copyPassBtn = findViewById(R.id.copyPassBtn);
+        copyUserBtn = findViewById(R.id.copyUserBtn);
 
         Intent intent = getIntent();
         if (intent != null) {
@@ -135,6 +143,9 @@ public class EntryActivity extends AppCompatActivity
             decryptBtn.setVisibility(View.INVISIBLE);
             userPasswordDecrypted = true;
 
+            // And make the copy password button visible.
+            copyPassBtn.setVisibility(View.VISIBLE);
+
             Toast.makeText(getApplicationContext(), R.string.user_pass_decrypted,
                     Toast.LENGTH_SHORT).show();
             dialog.dismiss();
@@ -175,5 +186,29 @@ public class EntryActivity extends AppCompatActivity
         } else {
             Toast.makeText(this, R.string.decrypt_password_first, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    /**
+     * Copy the password in the entry to clipboard.
+     */
+    public void copyPass(View view) {
+        ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText("user Password",
+                userPasswordField.getText().toString());
+        clipboard.setPrimaryClip(clip);
+
+        Toast.makeText(this, R.string.password_copied, Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * Copy user id to clipboard.
+     */
+    public void copyUser(View view) {
+        ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText("user ID",
+                userIdField.getText().toString());
+        clipboard.setPrimaryClip(clip);
+
+        Toast.makeText(this, R.string.user_copied, Toast.LENGTH_SHORT).show();
     }
 }

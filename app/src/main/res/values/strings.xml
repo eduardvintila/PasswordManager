@@ -30,4 +30,11 @@
     <string name="modify_entry">Modifică</string>
     <string name="decrypt_password_first">Parola trebuie decriptată mai întâi!</string>
     <string name="password_not_strong">Atenție! Parola nu este suficient de puternică!</string>
+    <string name="copy_password">Copiază parola</string>
+    <string name="placeholder_password">Aici este parola</string>
+    <string name="password_copied">Parolă copiată!</string>
+    <string name="placeholder_username">numeutilizator</string>
+    <string name="add_entry">Adaugă o înregistrare</string>
+    <string name="copy_user">Copiază numele</string>
+    <string name="user_copied">Nume utilizator copiat!</string>
 </resources>

@@ -292,7 +292,7 @@ public class CryptoHelper {
     }
 
     /**
-     * Calculate the length of a Base64 encoded string.
+     * Calculate the length of a Base64 encoded string (with padding enabled).
      *
      * @param length number of bytes encoded.
      * @return number of characters in the encoding.

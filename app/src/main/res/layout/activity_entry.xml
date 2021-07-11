@@ -26,10 +26,29 @@
         android:layout_marginTop="10dp"
         android:text="@string/username_prompt" />
 
-    <TextView
-        android:id="@+id/userIdTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/userIdTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="@string/placeholder_username" />
+
+        <ImageButton
+            android:id="@+id/copyUserBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_weight="1"
+            android:background="@android:color/white"
+            app:srcCompat="@drawable/ic_baseline_content_copy_24"
+            tools:visibility="invisible"
+            android:contentDescription="@string/copy_user"
+            android:onClick="copyUser"/>
+    </LinearLayout>
 
     <TextView
         android:id="@+id/textView17"
@@ -38,16 +57,35 @@
         android:layout_marginTop="10dp"
         android:text="@string/password_prompt" />
 
-    <TextView
-        android:id="@+id/userPassTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/userPassTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="@string/placeholder_password" />
+
+        <ImageButton
+            android:id="@+id/copyPassBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_weight="1"
+            android:background="@android:color/white"
+            android:contentDescription="@string/copy_password"
+            android:onClick="copyPass"
+            android:visibility="invisible"
+            app:srcCompat="@drawable/ic_baseline_content_copy_24" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/textView19"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="7dp"
         android:text="@string/description_prompt" />
 
     <TextView
