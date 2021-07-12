@@ -37,4 +37,8 @@
     <string name="add_entry">Adaugă o înregistrare</string>
     <string name="copy_user">Copiază numele</string>
     <string name="user_copied">Nume utilizator copiat!</string>
+    <string name="label_user_password">User Password</string>
+    <string name="password_type">Tip parolă:</string>
+    <string name="text_password">Text</string>
+    <string name="pin_password">PIN</string>
 </resources>

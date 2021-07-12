@@ -38,6 +38,7 @@ public class EntryActivity extends AppCompatActivity
     private TextView entryDescriptionField;
     private TextView serviceLinkField;
     private TextView entryLastModifiedField;
+
     private Button decryptBtn;
     private ImageButton copyPassBtn;
     private ImageButton copyUserBtn;
@@ -193,7 +194,7 @@ public class EntryActivity extends AppCompatActivity
      */
     public void copyPass(View view) {
         ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-        ClipData clip = ClipData.newPlainText("user Password",
+        ClipData clip = ClipData.newPlainText(getString(R.string.label_user_password),
                 userPasswordField.getText().toString());
         clipboard.setPrimaryClip(clip);
 
@@ -210,5 +211,18 @@ public class EntryActivity extends AppCompatActivity
         clipboard.setPrimaryClip(clip);
 
         Toast.makeText(this, R.string.user_copied, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        // When exiting the view entry menu, clear the password from the clipboard.
+        // Works good on a real device, doesn't seem to work with the emulator.
+        ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        String passLabel = getString(R.string.label_user_password);
+        if (clipboard.getPrimaryClipDescription().getLabel().equals(passLabel)) {
+            clipboard.setPrimaryClip(ClipData.newPlainText("", ""));
+        }
     }
 }

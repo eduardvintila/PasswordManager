@@ -7,9 +7,11 @@ import android.content.Intent;
 import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import java.sql.Date;
@@ -29,6 +31,11 @@ public class CreateOrUpdateEntryActivity extends AppCompatActivity {
     private EditText serviceLinkField;
     private TextView passNotStrongTextView;
     private EntryViewModel entryVm;
+
+    private int passTextType =
+            InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD;
+    private int passPinType =
+            InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD;
 
     // The encrypted master password used in encrypting the password in the entry.
     private String encryptedMaster;
@@ -82,8 +89,10 @@ public class CreateOrUpdateEntryActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                String pass = s.toString();
-                if (CryptoHelper.passwordStrongness(pass) < CryptoHelper.PASS_MAX_STRONGNESS) {
+                char[] pass = s.toString().toCharArray();
+                boolean isTextPassword = userPasswordField.getInputType() == passTextType;
+                if (isTextPassword &&
+                        CryptoHelper.passwordStrongness(pass) < CryptoHelper.PASS_MAX_STRONGNESS) {
                     passNotStrongTextView.setVisibility(View.VISIBLE);
                 } else {
                     passNotStrongTextView.setVisibility(View.INVISIBLE);
@@ -144,7 +153,37 @@ public class CreateOrUpdateEntryActivity extends AppCompatActivity {
      * @param view The clicked button.
      */
     public void generatePassword(View view) {
-        String pass = CryptoHelper.generatePassword(16);
-        userPasswordField.setText(pass);
+        String generatedPass;
+        if (userPasswordField.getInputType() == passTextType) {
+            generatedPass = CryptoHelper.generatePassword(16, CryptoHelper.ALL_SETS);
+        } else {
+            generatedPass = CryptoHelper.generatePassword(4, CryptoHelper.NUMERIC_SET);
+        }
+
+        userPasswordField.setText(generatedPass);
+    }
+
+    /**
+     * Called when one of the password type buttons has been pressed.
+     *
+     * @param view The corresponding radio button.
+     */
+    public void onRadioButtonClicked(View view) {
+        boolean checked = ((RadioButton) view).isChecked();
+
+        switch (view.getId()) {
+            case R.id.textRadioButton:
+                if (checked) {
+                    userPasswordField.setInputType(passTextType);
+                }
+                break;
+
+            case R.id.pinRadioButton:
+                if (checked) {
+                    userPasswordField.setText("");
+                    userPasswordField.setInputType(passPinType);
+                }
+                break;
+        }
     }
 }

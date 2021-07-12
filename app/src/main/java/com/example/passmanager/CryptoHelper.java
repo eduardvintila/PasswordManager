@@ -38,6 +38,13 @@ public class CryptoHelper {
 
     public static final int PASS_MAX_STRONGNESS = 4;
 
+    // Flags for generating passwords using specific character sets.
+    public static final int ALPHA_LOWER_SET = 0b0001;
+    public static final int ALPHA_UPPER_SET = 0b0010;
+    public static final int NUMERIC_SET = 0b0100;
+    public static final int SPECIAL_SET = 0b1000;
+    public static final int ALL_SETS = 0b1111;
+
     /**
      * Generate a random salt for password-based encryption.
      *
@@ -231,9 +238,16 @@ public class CryptoHelper {
      * @param passLen Length of the password.
      * @return The plaintext password.
      */
-    public static String generatePassword(int passLen) {
+    public static String generatePassword(int passLen, int flags) {
         // Password characters to choose from.
-        char[] passChrs = (ALPHA_LOWER + ALPHA_UPPER + NUMERIC + SPECIAL).toCharArray();
+        String passTypes = "";
+
+        if ((flags & ALPHA_LOWER_SET) != 0) { passTypes += ALPHA_LOWER; }
+        if ((flags & ALPHA_UPPER_SET) != 0) { passTypes += ALPHA_UPPER; }
+        if ((flags & NUMERIC_SET) != 0) { passTypes += NUMERIC; }
+        if ((flags & SPECIAL_SET) != 0) { passTypes += SPECIAL; }
+
+        char[] passChrs = passTypes.toCharArray();
 
         // Generate passLen bytes.
         SecureRandom secureRandom = new SecureRandom();
@@ -250,22 +264,30 @@ public class CryptoHelper {
         return pass.toString();
     }
 
+    public static boolean anyMatch(char[] text, String toBeSearched) {
+        for (char c : text) {
+            if (toBeSearched.indexOf(c) != -1) { return true; }
+        }
+
+        return false;
+    }
+
     /**
      * Calculate password strongness.
      *
      * @param pass The plaintext password.
      * @return The level of strongness.
      */
-    public static int passwordStrongness(String pass) {
+    public static int passwordStrongness(char[] pass) {
         int strongness = 0;
 
-        if (pass.length() >= 12)
+        if (pass.length >= 12)
             strongness++;
-        if (pass.chars().anyMatch(c -> ALPHA_UPPER.indexOf(c) != -1))
+        if (anyMatch(pass, ALPHA_UPPER))
             strongness++;
-        if (pass.chars().anyMatch(c -> NUMERIC.indexOf(c) != -1))
+        if (anyMatch(pass, NUMERIC))
             strongness++;
-        if (pass.chars().anyMatch(c -> SPECIAL.indexOf(c) != -1))
+        if (anyMatch(pass, SPECIAL))
             strongness++;
 
         return strongness;

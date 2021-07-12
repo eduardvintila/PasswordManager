@@ -23,6 +23,8 @@ public class CreateActivity extends AppCompatActivity {
     private EditText secondPassField;
     private TextView notMatchingTextView;
 
+    char[] pass1;
+
     private int passStrongness = 0;
     private boolean equalPasswords = false;
 
@@ -43,11 +45,17 @@ public class CreateActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) { }
 
             @Override
-            public void afterTextChanged(Editable s) {
-                String pass1 = s.toString();
-                String pass2 = secondPassField.getText().toString();
+            public void afterTextChanged(Editable e1) {
+                Editable e2 = secondPassField.getText();
+                if (pass1 != null) { Arrays.fill(pass1, (char) 0); } // Clear the previous password.
+                pass1 = new char[e1.length()];
+                char[] pass2 = new char[e2.length()];
+
+                e1.getChars(0, e1.length(), pass1, 0);
+                e2.getChars(0, e2.length(), pass2, 0);
                 passStrongness = CryptoHelper.passwordStrongness(pass1);
-                equalPasswords = pass1.equals(pass2);
+                equalPasswords = Arrays.equals(pass1, pass2);
+                Arrays.fill(pass2, (char) 0);
             }
         });
 
@@ -59,10 +67,12 @@ public class CreateActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) { }
 
             @Override
-            public void afterTextChanged(Editable s) {
-                String pass1 = firstPassField.getText().toString();
-                String pass2 = s.toString();
-                equalPasswords = pass1.equals(pass2);
+            public void afterTextChanged(Editable e2) {
+                char[] pass2 = new char[e2.length()];
+
+                e2.getChars(0, e2.length(), pass2, 0);
+                equalPasswords = Arrays.equals(pass1, pass2);
+                Arrays.fill(pass2, (char) 0);
             }
         });
     }
@@ -71,9 +81,6 @@ public class CreateActivity extends AppCompatActivity {
      * Create a new database.
      */
     public void create(View view) {
-        char[] pass1 = firstPassField.getText().toString().toCharArray();
-        char[] pass2 = secondPassField.getText().toString().toCharArray();
-
         if (equalPasswords && passStrongness == CryptoHelper.PASS_MAX_STRONGNESS) {
             entryVm.create(getApplication(), pass1, true);
             entryVm.close();
