@@ -31,10 +31,9 @@
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <Button
-        android:id="@+id/btnAuth"
+        android:id="@+id/authBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="auth"
         android:text="@string/auth"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -48,7 +47,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
-        app:layout_constraintBottom_toTopOf="@+id/btnAuth"
+        app:layout_constraintBottom_toTopOf="@+id/authBtn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
@@ -56,16 +55,15 @@
         app:layout_constraintVertical_bias="0.316" />
 
     <Button
-        android:id="@+id/btnGoToCreate"
+        android:id="@+id/goToCreateBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="goToCreate"
         android:text="@string/create_new_database"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnAuth"
+        app:layout_constraintTop_toBottomOf="@+id/authBtn"
         app:layout_constraintVertical_bias="0.211" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

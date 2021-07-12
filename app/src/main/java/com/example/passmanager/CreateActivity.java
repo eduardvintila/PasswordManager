@@ -6,8 +6,6 @@ import androidx.lifecycle.ViewModelProvider;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -35,7 +33,7 @@ public class CreateActivity extends AppCompatActivity {
         firstPassField = findViewById(R.id.firstPassEditText);
         secondPassField = findViewById(R.id.secondPassEditText);
         notMatchingTextView = findViewById(R.id.notMatchingTextView);
-        entryVm = new ViewModelProvider(this).get(EntryViewModel.class);
+        findViewById(R.id.btnCreate).setOnClickListener(view -> create());
 
         firstPassField.addTextChangedListener(new TextWatcher() {
             @Override
@@ -75,12 +73,14 @@ public class CreateActivity extends AppCompatActivity {
                 Arrays.fill(pass2, (char) 0);
             }
         });
+
+        entryVm = new ViewModelProvider(this).get(EntryViewModel.class);
     }
 
     /**
      * Create a new database.
      */
-    public void create(View view) {
+    public void create() {
         if (equalPasswords && passStrongness == CryptoHelper.PASS_MAX_STRONGNESS) {
             entryVm.create(getApplication(), pass1, true);
             entryVm.close();

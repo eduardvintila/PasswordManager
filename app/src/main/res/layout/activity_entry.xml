@@ -46,8 +46,7 @@
             android:background="@android:color/white"
             app:srcCompat="@drawable/ic_baseline_content_copy_24"
             tools:visibility="invisible"
-            android:contentDescription="@string/copy_user"
-            android:onClick="copyUser"/>
+            android:contentDescription="@string/copy_user" />
     </LinearLayout>
 
     <TextView
@@ -76,7 +75,6 @@
             android:layout_weight="1"
             android:background="@android:color/white"
             android:contentDescription="@string/copy_password"
-            android:onClick="copyPass"
             android:visibility="invisible"
             app:srcCompat="@drawable/ic_baseline_content_copy_24" />
     </LinearLayout>
@@ -122,20 +120,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:onClick="loadDialog"
         android:text="@string/decrypt_password" />
 
     <Button
         android:id="@+id/modifyBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="modifyEntry"
         android:text="@string/modify_entry" />
 
     <Button
         android:id="@+id/deleteBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="deleteEntry"
         android:text="@string/delete" />
 </LinearLayout>

@@ -13,6 +13,12 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.slider.Slider;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.sql.Date;
 
@@ -29,12 +35,21 @@ public class CreateOrUpdateEntryActivity extends AppCompatActivity {
     private EditText userPasswordField;
     private EditText entryDescriptionField;
     private EditText serviceLinkField;
-    private TextView passNotStrongTextView;
+    private TextInputLayout userPassLayout;
+
+    private ChipGroup chipGroup;
+    private Chip upperAlphaChip;
+    private Chip lowerAlphaChip;
+    private Chip numericChip;
+    private Chip specialChip;
+
+    private Slider passLengthSlider;
+
     private EntryViewModel entryVm;
 
-    private int passTextType =
+    private final int passTextType =
             InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD;
-    private int passPinType =
+    private final int passPinType =
             InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD;
 
     // The encrypted master password used in encrypting the password in the entry.
@@ -51,9 +66,35 @@ public class CreateOrUpdateEntryActivity extends AppCompatActivity {
         entryNameField = findViewById(R.id.entryNameEditText);
         userIdField = findViewById(R.id.userIdEditText);
         userPasswordField = findViewById(R.id.userPassEditText);
+        userPassLayout = findViewById(R.id.userPassTextLayout);
         entryDescriptionField = findViewById(R.id.entryDescriptionEditText);
         serviceLinkField = findViewById(R.id.serviceLinkEditText);
-        passNotStrongTextView = findViewById(R.id.passNotStrongTextView);
+        chipGroup = findViewById(R.id.chipGroup);
+        upperAlphaChip = findViewById(R.id.upperAlphaChip);
+        lowerAlphaChip = findViewById(R.id.lowerAlphaChip);
+        numericChip = findViewById(R.id.numericChip);
+        specialChip = findViewById(R.id.specialChip);
+        passLengthSlider = findViewById(R.id.passLengthSlider);
+
+
+        findViewById(R.id.saveEntryBtn).setOnClickListener(view -> saveEntry());
+        findViewById(R.id.generatePassBtn).setOnClickListener(view -> generatePassword());
+
+        // When the character set or password length has changed, generate a new password.
+        upperAlphaChip.setOnCheckedChangeListener((buttonView, isChecked) -> generatePassword());
+        lowerAlphaChip.setOnCheckedChangeListener((buttonView, isChecked) -> generatePassword());
+        numericChip.setOnCheckedChangeListener((buttonView, isChecked) -> generatePassword());
+        specialChip.setOnCheckedChangeListener((buttonView, isChecked) -> generatePassword());
+        passLengthSlider.addOnChangeListener((slider, value, fromUser) -> generatePassword());
+
+        findViewById(R.id.textRadioButton).setOnClickListener(view -> {
+            onRadioButtonClicked(view);
+            passLengthSlider.setValue(CryptoHelper.DEFAULT_TEXT_PASS_LENGTH);
+        });
+        findViewById(R.id.pinRadioButton).setOnClickListener(view -> {
+            onRadioButtonClicked(view);
+            passLengthSlider.setValue(CryptoHelper.DEFAULT_PIN_PASS_LENGTH);
+        });
 
         entryVm = new ViewModelProvider(this).get(EntryViewModel.class);
 
@@ -91,11 +132,12 @@ public class CreateOrUpdateEntryActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
                 char[] pass = s.toString().toCharArray();
                 boolean isTextPassword = userPasswordField.getInputType() == passTextType;
-                if (isTextPassword &&
+                if (isTextPassword && pass.length > 0 &&
                         CryptoHelper.passwordStrongness(pass) < CryptoHelper.PASS_MAX_STRONGNESS) {
-                    passNotStrongTextView.setVisibility(View.VISIBLE);
+                    userPassLayout.setErrorEnabled(true);
+                    userPassLayout.setError(getString(R.string.password_not_strong));
                 } else {
-                    passNotStrongTextView.setVisibility(View.INVISIBLE);
+                    userPassLayout.setErrorEnabled(false);
                 }
             }
         });
@@ -103,10 +145,8 @@ public class CreateOrUpdateEntryActivity extends AppCompatActivity {
 
     /**
      * Save an entry. Either modify an existing one or create a new one.
-     *
-     * @param view The clicked button.
      */
-    public void saveEntry(View view) {
+    public void saveEntry() {
         char[] plainTextMaster = CryptoHelper.decryptMasterPassword(encryptedMaster);
 
         // Use the master password and a random salt to encrypt the password for the entry.
@@ -148,16 +188,29 @@ public class CreateOrUpdateEntryActivity extends AppCompatActivity {
 
     /**
      * Generate a random password for the entry.
-     * TODO: Add options for custom password length, characters etc.
-     *
-     * @param view The clicked button.
      */
-    public void generatePassword(View view) {
+    public void generatePassword() {
         String generatedPass;
+        int passLen = (int) passLengthSlider.getValue();
+
         if (userPasswordField.getInputType() == passTextType) {
-            generatedPass = CryptoHelper.generatePassword(16, CryptoHelper.ALL_SETS);
+            // Generate a text password.
+            int flags = 0;
+            if (lowerAlphaChip.isChecked()) { flags |= CryptoHelper.ALPHA_LOWER_SET; }
+            if (upperAlphaChip.isChecked()) { flags |= CryptoHelper.ALPHA_UPPER_SET; }
+            if (numericChip.isChecked()) { flags |= CryptoHelper.NUMERIC_SET; }
+            if (specialChip.isChecked()) { flags |= CryptoHelper.SPECIAL_SET; }
+
+            if (flags == 0) {
+                // No character set selected, show a warning message and don't generate a password.
+                Toast.makeText(this, R.string.choose_character_set,
+                        Toast.LENGTH_SHORT).show();
+                return;
+            }
+            generatedPass = CryptoHelper.generatePassword(passLen, flags);
         } else {
-            generatedPass = CryptoHelper.generatePassword(4, CryptoHelper.NUMERIC_SET);
+            // Generate a PIN password.
+            generatedPass = CryptoHelper.generatePassword(passLen, CryptoHelper.NUMERIC_SET);
         }
 
         userPasswordField.setText(generatedPass);
@@ -175,6 +228,7 @@ public class CreateOrUpdateEntryActivity extends AppCompatActivity {
             case R.id.textRadioButton:
                 if (checked) {
                     userPasswordField.setInputType(passTextType);
+                    chipGroup.setVisibility(View.VISIBLE);
                 }
                 break;
 
@@ -182,6 +236,7 @@ public class CreateOrUpdateEntryActivity extends AppCompatActivity {
                 if (checked) {
                     userPasswordField.setText("");
                     userPasswordField.setInputType(passPinType);
+                    chipGroup.setVisibility(View.GONE);
                 }
                 break;
         }

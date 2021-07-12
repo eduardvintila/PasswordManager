@@ -5,5 +5,4 @@
     Use material.io to design the UI.
     Add categories for different types of password entries.
     In README, explain how some of the functions in CryptoHelper work (such as pasword generation).
-    Support for PIN passwords.
     Associate pictures not with entries, but with categories?

@@ -29,6 +29,7 @@ import javax.crypto.SecretKey;
 public class EntryActivity extends AppCompatActivity
         implements MasterPasswordDialogFragment.DialogListener {
 
+    // Identifier for passing the entry password in an intent to another activity.
     public static final String EXTRA_ENTRY_PASSWORD = BuildConfig.APPLICATION_ID +
             ".ENTRY_PASSWORD";
 
@@ -68,12 +69,18 @@ public class EntryActivity extends AppCompatActivity
         copyPassBtn = findViewById(R.id.copyPassBtn);
         copyUserBtn = findViewById(R.id.copyUserBtn);
 
+        decryptBtn.setOnClickListener(view -> loadDialog());
+        copyPassBtn.setOnClickListener(view -> copyPass());
+        copyUserBtn.setOnClickListener(view -> copyUser());
+        findViewById(R.id.modifyBtn).setOnClickListener(view -> modifyEntry());
+        findViewById(R.id.deleteBtn).setOnClickListener(view -> deleteEntry());
+
         Intent intent = getIntent();
         if (intent != null) {
             int entryId = intent.getIntExtra(EntriesMenuActivity.EXTRA_ENTRY_ID, 1);
             entryVm.getEntry(entryId).observe(this, entry -> {
                 if (entry != null) {
-                    // Save the entry information.
+                    // Populate the fields with the entry information.
                     this.entry = entry;
                     entryNameField.setText(entry.entryName);
                     userIdField.setText(entry.userId);
@@ -91,7 +98,6 @@ public class EntryActivity extends AppCompatActivity
             // Kill the activity if it hasn't received an entry.
             finish();
         }
-
     }
 
     /**
@@ -99,10 +105,8 @@ public class EntryActivity extends AppCompatActivity
      * decrypt the password stored in the entry.
      *
      * TODO: Make this optional.
-     *
-     * @param view The button pressed.
      */
-    public void loadDialog(View view) {
+    public void loadDialog() {
         // Check if the entry has been loaded.
         if (entry != null) {
             DialogFragment dialogFragment = new MasterPasswordDialogFragment();
@@ -158,10 +162,8 @@ public class EntryActivity extends AppCompatActivity
 
     /**
      * Delete the entry from the repository.
-     *
-     * @param view The clicked button.
      */
-    public void deleteEntry(View view) {
+    public void deleteEntry() {
         // TODO: Delete entry only if master password is provided?
         entryVm.deleteEntry(entry);
         entry = null;
@@ -171,12 +173,8 @@ public class EntryActivity extends AppCompatActivity
 
     /**
      * Modify the entry in the repository.
-     *
-     * @param view The clicked button.
      */
-    public void modifyEntry(View view) {
-        /*// Load the dialog which prompts the user for the master password.
-        loadDialog(view);*/
+    public void modifyEntry() {
         if (userPasswordDecrypted) {
             // Load the activity where the user can edit the entry information.
             Intent intent = new Intent(this, CreateOrUpdateEntryActivity.class);
@@ -192,7 +190,7 @@ public class EntryActivity extends AppCompatActivity
     /**
      * Copy the password in the entry to clipboard.
      */
-    public void copyPass(View view) {
+    public void copyPass() {
         ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clip = ClipData.newPlainText(getString(R.string.label_user_password),
                 userPasswordField.getText().toString());
@@ -204,7 +202,7 @@ public class EntryActivity extends AppCompatActivity
     /**
      * Copy user id to clipboard.
      */
-    public void copyUser(View view) {
+    public void copyUser() {
         ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clip = ClipData.newPlainText("user ID",
                 userIdField.getText().toString());

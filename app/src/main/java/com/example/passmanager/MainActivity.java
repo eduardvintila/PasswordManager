@@ -6,20 +6,21 @@ import androidx.lifecycle.ViewModelProvider;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
-import android.util.Base64;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import java.io.File;
-import java.nio.charset.StandardCharsets;
 
+/**
+ * Activity used for authenticating the user to the Password Manager.
+ */
 public class MainActivity extends AppCompatActivity {
 
     private TextView validationMsg;
     private EditText masterPassField;
     private EntryViewModel entryVm;
 
+    // Identifier for passing the encrypted master password in an intent to another activity.
     public static final String EXTRA_ENCRYPTED_MASTER = BuildConfig.APPLICATION_ID +
         ".ENCRYPTED_MASTER";
 
@@ -29,19 +30,22 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         validationMsg = findViewById(R.id.validationTextView);
         masterPassField = findViewById(R.id.editTextPassword);
+        findViewById(R.id.authBtn).setOnClickListener(view -> auth());
+        findViewById(R.id.goToCreateBtn).setOnClickListener(view -> goToCreate());
 
         entryVm = new ViewModelProvider(this).get(EntryViewModel.class);
 
         File databaseFile = getDatabasePath(EntryRoomDatabase.TABLE_NAME);
         if (!databaseFile.exists()) {
-            goToCreate(null);
+            // If a database doesn't exist, go to the creation menu.
+            goToCreate();
         }
     }
 
     /**
      * Authenticate using the master password.
      */
-    public void auth(View view) {
+    public void auth() {
         // Get the password from the input field.
         Editable editable = masterPassField.getText();
         char[] pass = new char[editable.length()];
@@ -67,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Switch to the create database menu.
      */
-    public void goToCreate(View view) {
+    public void goToCreate() {
         Intent intent = new Intent(this, CreateActivity.class);
         startActivity(intent);
     }

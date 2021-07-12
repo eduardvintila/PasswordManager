@@ -41,4 +41,9 @@
     <string name="password_type">Tip parolă:</string>
     <string name="text_password">Text</string>
     <string name="pin_password">PIN</string>
+    <string name="lower_alpha">Litere mici</string>
+    <string name="upper_alpha">Litere mari</string>
+    <string name="digits">Cifre</string>
+    <string name="special_characters">Special</string>
+    <string name="choose_character_set">Trebuie selectat cel puțin un set de caractere!</string>
 </resources>

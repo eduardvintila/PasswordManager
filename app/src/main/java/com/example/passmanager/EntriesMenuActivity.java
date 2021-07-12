@@ -27,6 +27,7 @@ public class EntriesMenuActivity extends AppCompatActivity implements EntryListA
     private ActivityEntriesMenuBinding binding;
     private EntryViewModel entryVm;
 
+    // Identifier for passing the entry id in an intent to another activity.
     public static final String EXTRA_ENTRY_ID = BuildConfig.APPLICATION_ID + ".ENTRY_ID";
 
     private EntryListAdapter adapter;
