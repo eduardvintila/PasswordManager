@@ -9,14 +9,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.PassManager">
-        <activity android:name=".EntryActivity"></activity>
+        <activity android:name=".CreateOrUpdateCategory"></activity>
+        <activity android:name=".EntryActivity" />
         <activity android:name=".CreateOrUpdateEntryActivity" />
         <activity
             android:name=".EntriesMenuActivity"
             android:label="@string/title_activity_entries_menu"
             android:theme="@style/Theme.PassManager.NoActionBar" />
         <activity android:name=".CreateActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".AuthActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

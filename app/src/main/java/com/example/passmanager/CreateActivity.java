@@ -16,7 +16,7 @@ import java.util.Arrays;
  */
 public class CreateActivity extends AppCompatActivity {
 
-    private EntryViewModel entryVm;
+    private ApplicationViewModel viewmodel;
     private EditText firstPassField;
     private EditText secondPassField;
     private TextView notMatchingTextView;
@@ -74,7 +74,7 @@ public class CreateActivity extends AppCompatActivity {
             }
         });
 
-        entryVm = new ViewModelProvider(this).get(EntryViewModel.class);
+        viewmodel = new ViewModelProvider(this).get(ApplicationViewModel.class);
     }
 
     /**
@@ -82,8 +82,8 @@ public class CreateActivity extends AppCompatActivity {
      */
     public void create() {
         if (equalPasswords && passStrongness == CryptoHelper.PASS_MAX_STRONGNESS) {
-            entryVm.create(getApplication(), pass1, true);
-            entryVm.close();
+            viewmodel.create(getApplication(), pass1, true);
+            viewmodel.close();
             finish();
         } else {
             // Passwords not matching or not strong enough.

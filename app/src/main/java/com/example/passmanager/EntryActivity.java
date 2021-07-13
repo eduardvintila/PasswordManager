@@ -44,7 +44,7 @@ public class EntryActivity extends AppCompatActivity
     private ImageButton copyPassBtn;
     private ImageButton copyUserBtn;
 
-    private EntryViewModel entryVm;
+    private ApplicationViewModel viewmodel;
 
     private String encryptedMaster;
 
@@ -57,7 +57,7 @@ public class EntryActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_entry);
 
-        entryVm = new ViewModelProvider(this).get(EntryViewModel.class);
+        viewmodel = new ViewModelProvider(this).get(ApplicationViewModel.class);
 
         entryNameField = findViewById(R.id.entryNameTextView);
         userIdField = findViewById(R.id.userIdTextView);
@@ -78,7 +78,7 @@ public class EntryActivity extends AppCompatActivity
         Intent intent = getIntent();
         if (intent != null) {
             int entryId = intent.getIntExtra(EntriesMenuActivity.EXTRA_ENTRY_ID, 1);
-            entryVm.getEntry(entryId).observe(this, entry -> {
+            viewmodel.getEntry(entryId).observe(this, entry -> {
                 if (entry != null) {
                     // Populate the fields with the entry information.
                     this.entry = entry;
@@ -88,7 +88,7 @@ public class EntryActivity extends AppCompatActivity
                     entryDescriptionField.setText(entry.entryDescription);
                     serviceLinkField.setText(entry.serviceLink);
                     entryLastModifiedField.setText(entry.lastModified.toString());
-                    encryptedMaster = intent.getStringExtra(MainActivity.EXTRA_ENCRYPTED_MASTER);
+                    encryptedMaster = intent.getStringExtra(AuthActivity.EXTRA_ENCRYPTED_MASTER);
 
                     decryptBtn.setVisibility(View.VISIBLE);
                     userPasswordDecrypted = false;
@@ -165,7 +165,7 @@ public class EntryActivity extends AppCompatActivity
      */
     public void deleteEntry() {
         // TODO: Delete entry only if master password is provided?
-        entryVm.deleteEntry(entry);
+        viewmodel.deleteEntry(entry);
         entry = null;
         Toast.makeText(this, R.string.entry_deleted, Toast.LENGTH_SHORT).show();
         finish();
@@ -180,7 +180,7 @@ public class EntryActivity extends AppCompatActivity
             Intent intent = new Intent(this, CreateOrUpdateEntryActivity.class);
             intent.putExtra(EntriesMenuActivity.EXTRA_ENTRY_ID, entry.entryNo);
             intent.putExtra(EntryActivity.EXTRA_ENTRY_PASSWORD, userPasswordField.getText().toString());
-            intent.putExtra(MainActivity.EXTRA_ENCRYPTED_MASTER, encryptedMaster);
+            intent.putExtra(AuthActivity.EXTRA_ENCRYPTED_MASTER, encryptedMaster);
             startActivity(intent);
         } else {
             Toast.makeText(this, R.string.decrypt_password_first, Toast.LENGTH_SHORT).show();

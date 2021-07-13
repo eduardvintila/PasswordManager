@@ -6,3 +6,4 @@
     Add categories for different types of password entries.
     In README, explain how some of the functions in CryptoHelper work (such as pasword generation).
     Associate pictures not with entries, but with categories?
+    Fix landscape orientation issues.

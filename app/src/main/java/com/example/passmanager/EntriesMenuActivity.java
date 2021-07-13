@@ -2,6 +2,8 @@ package com.example.passmanager;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -25,7 +27,7 @@ public class EntriesMenuActivity extends AppCompatActivity implements EntryListA
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityEntriesMenuBinding binding;
-    private EntryViewModel entryVm;
+    private ApplicationViewModel viewmodel;
 
     // Identifier for passing the entry id in an intent to another activity.
     public static final String EXTRA_ENTRY_ID = BuildConfig.APPLICATION_ID + ".ENTRY_ID";
@@ -50,11 +52,11 @@ public class EntriesMenuActivity extends AppCompatActivity implements EntryListA
         binding.fab.setOnClickListener(view -> {
             // Get the encrypted master password from the authentication menu.
             Intent prevIntent = getIntent();
-            String encryptedMaster = prevIntent.getStringExtra(MainActivity.EXTRA_ENCRYPTED_MASTER);
+            String encryptedMaster = prevIntent.getStringExtra(AuthActivity.EXTRA_ENCRYPTED_MASTER);
 
             // Go to the create entry menu and pass the encrypted master password.
             Intent intent = new Intent(this, CreateOrUpdateEntryActivity.class);
-            intent.putExtra(MainActivity.EXTRA_ENCRYPTED_MASTER, encryptedMaster);
+            intent.putExtra(AuthActivity.EXTRA_ENCRYPTED_MASTER, encryptedMaster);
             startActivity(intent);
         });
 
@@ -65,11 +67,18 @@ public class EntriesMenuActivity extends AppCompatActivity implements EntryListA
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // Get the entries from the ViewModel.
-        entryVm = new ViewModelProvider(this).get(EntryViewModel.class);
-        LiveData<List<Entry>> entries = entryVm.getAllEntries();
+        viewmodel = new ViewModelProvider(this).get(ApplicationViewModel.class);
+        LiveData<List<Entry>> entries = viewmodel.getAllEntries();
         if (entries != null) {
             entries.observe(this, adapter::setEntries);
         }
+
+        viewmodel.getAllCategories().observe(this, categories -> {
+            for (Category cat : categories) {
+                // TODO: Remove this test.
+                Log.d("CategoriesTest", cat.name);
+            }
+        });
     }
 
     /**
@@ -81,7 +90,7 @@ public class EntriesMenuActivity extends AppCompatActivity implements EntryListA
     public void onEntryClick(int position) {
         // Get the encrypted master password from the authentication menu.
         Intent prevIntent = getIntent();
-        String encryptedMaster = prevIntent.getStringExtra(MainActivity.EXTRA_ENCRYPTED_MASTER);
+        String encryptedMaster = prevIntent.getStringExtra(AuthActivity.EXTRA_ENCRYPTED_MASTER);
 
         // Get the entry id.
         int entryId = adapter.getEntries().get(position).entryNo;
@@ -89,7 +98,7 @@ public class EntriesMenuActivity extends AppCompatActivity implements EntryListA
         // Go to the view entry details menu and pass the encrypted master password.
         Intent intent = new Intent(this, EntryActivity.class);
         intent.putExtra(EXTRA_ENTRY_ID, entryId);
-        intent.putExtra(MainActivity.EXTRA_ENCRYPTED_MASTER, encryptedMaster);
+        intent.putExtra(AuthActivity.EXTRA_ENCRYPTED_MASTER, encryptedMaster);
         startActivity(intent);
     }
 
@@ -105,6 +114,11 @@ public class EntriesMenuActivity extends AppCompatActivity implements EntryListA
         // Close the connection with the data repository, since (most likely?) this activity is
         // destroyed when the application is terminated.
         super.onDestroy();
-        entryVm.close();
+        viewmodel.close();
+    }
+
+    public void goToCreateCategory(View view) {
+        Intent intent = new Intent(this, CreateOrUpdateCategory.class);
+        startActivity(intent);
     }
 }

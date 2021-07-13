@@ -12,25 +12,26 @@ import java.io.File;
 import java.util.List;
 
 /**
- * Singleton repository to access the "Entries" table database operations.
+ * Singleton repository to access the database operations.
  */
-public class EntryRepository {
+public class ApplicationRepository {
 
-    private static EntryRepository INSTANCE;
+    private static ApplicationRepository INSTANCE;
 
-    private EntryRoomDatabase db;
+    private ApplicationDatabase db;
     private EntryDao entryDao;
+    private CategoryDao categoryDao;
 
     /**
      * Cache all entries.
      */
     private LiveData<List<Entry>> allEntries;
 
-    private EntryRepository() {}
+    private ApplicationRepository() {}
 
-    public static EntryRepository getRepository() {
+    public static ApplicationRepository getRepository() {
         if (INSTANCE == null) {
-            INSTANCE = new EntryRepository();
+            INSTANCE = new ApplicationRepository();
         }
         return INSTANCE;
     }
@@ -46,8 +47,9 @@ public class EntryRepository {
      * master password is invalid).
      */
     public void open(Application application, char[] masterPass, boolean clearPass) throws SQLiteException {
-        db = EntryRoomDatabase.getDatabase(application, masterPass, clearPass);
+        db = ApplicationDatabase.getDatabase(application, masterPass, clearPass);
         entryDao = db.entryDao();
+        categoryDao = db.categoryDao();
         allEntries = entryDao.getAllEntries();
     }
 
@@ -55,7 +57,7 @@ public class EntryRepository {
      * Close the connection with the local database.
      */
     public void close() {
-        EntryRoomDatabase.closeDatabase();
+        ApplicationDatabase.closeDatabase();
         db = null;
     }
 
@@ -68,17 +70,21 @@ public class EntryRepository {
      * @param clearPass If true, clear the password from memory after opening the connection.
      */
     public void create(Application application, char[] masterPass, boolean clearPass) {
-        File databaseFile = application.getDatabasePath(EntryRoomDatabase.TABLE_NAME);
+        File databaseFile = application.getDatabasePath(ApplicationDatabase.DB_NAME);
         databaseFile.mkdirs();
         databaseFile.delete();
 
         open(application, masterPass, clearPass);
     }
 
-    // Queries
+    // Entries queries
     public LiveData<List<Entry>> getAllEntries() { return allEntries; }
-    public ListenableFuture<Long> insert(Entry e) { return entryDao.insert(e); }
+    public ListenableFuture<Long> insertEntry(Entry e) { return entryDao.insert(e); }
     public LiveData<Entry> getEntry(int id) { return entryDao.getEntry(id); }
     public ListenableFuture<Integer> deleteEntry(Entry e) { return entryDao.deleteEntry(e); }
     public ListenableFuture<Integer> updateEntry(Entry e) { return entryDao.updateEntry(e); }
+
+    // Categories queries
+    public ListenableFuture<List<Long>> insertCategories(Category... c) { return categoryDao.insertCategories(c); }
+    public LiveData<List<Category>> getAllCategories() { return categoryDao.getAllCategories(); }
 }

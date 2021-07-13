@@ -12,7 +12,6 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.chip.Chip;
@@ -45,7 +44,7 @@ public class CreateOrUpdateEntryActivity extends AppCompatActivity {
 
     private Slider passLengthSlider;
 
-    private EntryViewModel entryVm;
+    private ApplicationViewModel viewmodel;
 
     private final int passTextType =
             InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD;
@@ -96,14 +95,14 @@ public class CreateOrUpdateEntryActivity extends AppCompatActivity {
             passLengthSlider.setValue(CryptoHelper.DEFAULT_PIN_PASS_LENGTH);
         });
 
-        entryVm = new ViewModelProvider(this).get(EntryViewModel.class);
+        viewmodel = new ViewModelProvider(this).get(ApplicationViewModel.class);
 
         Intent prevIntent = getIntent();
-        encryptedMaster = prevIntent.getStringExtra(MainActivity.EXTRA_ENCRYPTED_MASTER);
+        encryptedMaster = prevIntent.getStringExtra(AuthActivity.EXTRA_ENCRYPTED_MASTER);
         // Check whether we are updating an existing entry or creating a new one
         if (prevIntent.hasExtra(EntriesMenuActivity.EXTRA_ENTRY_ID)) {
             int entryId = prevIntent.getIntExtra(EntriesMenuActivity.EXTRA_ENTRY_ID, 1);
-            entryVm.getEntry(entryId).observe(this, entry -> {
+            viewmodel.getEntry(entryId).observe(this, entry -> {
                 if (oldEntry == null && entry != null) {
                     oldEntry = entry;
                     // When updating an existing entry, load all text fields with the old
@@ -170,7 +169,7 @@ public class CreateOrUpdateEntryActivity extends AppCompatActivity {
             newEntry.passwordSalt = CryptoHelper.encode(saltBytes);
             newEntry.lastModified = new Date(Calendar.getInstance().getTimeInMillis());
 
-            entryVm.updateEntry(newEntry);
+            viewmodel.updateEntry(newEntry);
         } else {
             // Create a new entry.
             Entry entry = new Entry(entryNameField.getText().toString(),
@@ -179,7 +178,7 @@ public class CreateOrUpdateEntryActivity extends AppCompatActivity {
                     encryptedUserPassword, CryptoHelper.encode(saltBytes),
                     new Date(Calendar.getInstance().getTimeInMillis()));
 
-            entryVm.insert(entry);
+            viewmodel.insertEntry(entry);
         }
 
         finish();

@@ -14,15 +14,17 @@ import java.util.List;
 
 /**
  * ViewModel for passing data to the UI.
+ *
+ * TODO: Refactor the class name.
  */
-public class EntryViewModel extends AndroidViewModel {
+public class ApplicationViewModel extends AndroidViewModel {
 
-    private final EntryRepository entryRep;
+    private final ApplicationRepository repository;
     private boolean validMasterPass;
 
-    public EntryViewModel(@NonNull Application application) {
+    public ApplicationViewModel(@NonNull Application application) {
         super(application);
-        entryRep = EntryRepository.getRepository();
+        repository = ApplicationRepository.getRepository();
     }
 
     /**
@@ -34,7 +36,7 @@ public class EntryViewModel extends AndroidViewModel {
      */
     public void open(@NonNull Application application, char[] masterPass, boolean clearPass) {
         try {
-            entryRep.open(application, masterPass, clearPass);
+            repository.open(application, masterPass, clearPass);
             validMasterPass = true;
         } catch (SQLiteException e) {
             validMasterPass = false;
@@ -45,7 +47,7 @@ public class EntryViewModel extends AndroidViewModel {
      * Close the connection with the data repository.
      */
     public void close() {
-        entryRep.close();
+        repository.close();
     }
 
     /**
@@ -56,15 +58,19 @@ public class EntryViewModel extends AndroidViewModel {
      * @param clearPass If true, clear the password from memory after opening the connection.
      */
     public void create(@NonNull Application application, char[] masterPass, boolean clearPass) {
-        entryRep.create(application, masterPass, clearPass);
+        repository.create(application, masterPass, clearPass);
     }
 
     public boolean isValidMasterPass() { return validMasterPass; }
 
     // Queries
-    public LiveData<List<Entry>> getAllEntries() { return entryRep.getAllEntries(); }
-    public ListenableFuture<Long> insert(Entry e) { return entryRep.insert(e); }
-    public LiveData<Entry> getEntry(int id) { return entryRep.getEntry(id); }
-    public ListenableFuture<Integer> deleteEntry(Entry e) { return entryRep.deleteEntry(e); }
-    public ListenableFuture<Integer> updateEntry(Entry e) { return entryRep.updateEntry(e); }
+    public LiveData<List<Entry>> getAllEntries() { return repository.getAllEntries(); }
+    public ListenableFuture<Long> insertEntry(Entry e) { return repository.insertEntry(e); }
+    public LiveData<Entry> getEntry(int id) { return repository.getEntry(id); }
+    public ListenableFuture<Integer> deleteEntry(Entry e) { return repository.deleteEntry(e); }
+    public ListenableFuture<Integer> updateEntry(Entry e) { return repository.updateEntry(e); }
+
+    // Categories queries
+    public ListenableFuture<List<Long>> insertCategories(Category... c) { return repository.insertCategories(c); }
+    public LiveData<List<Category>> getAllCategories() { return repository.getAllCategories(); }
 }

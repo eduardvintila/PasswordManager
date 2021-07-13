@@ -1,16 +1,10 @@
 package com.example.passmanager;
 
-import android.app.Application;
 import android.content.Context;
 
 import androidx.room.Room;
-import androidx.test.annotation.UiThreadTest;
 import androidx.test.core.app.ApplicationProvider;
-import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
-
-import com.google.common.util.concurrent.ListenableFuture;
 
 import net.sqlcipher.database.SQLiteDatabase;
 import net.sqlcipher.database.SupportFactory;
@@ -18,14 +12,10 @@ import net.sqlcipher.database.SupportFactory;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Various tests which check the connectivity with the Database.
@@ -34,7 +24,7 @@ import java.util.concurrent.ExecutionException;
 public class DatabaseTests {
 
     private EntryDao entryDao;
-    private EntryRoomDatabase db;
+    private ApplicationDatabase db;
 
     @Before
     public void createDatabase() {
@@ -46,7 +36,7 @@ public class DatabaseTests {
         final SupportFactory factory = new SupportFactory(pass);
 
         // Create the database in memory.
-        db = Room.inMemoryDatabaseBuilder(context, EntryRoomDatabase.class)
+        db = Room.inMemoryDatabaseBuilder(context, ApplicationDatabase.class)
                 .openHelperFactory(factory)
                 .build();
         entryDao = db.entryDao();

@@ -238,7 +238,7 @@ public class CryptoHelper {
      * Generate a strong random password matching certain criteria.
      *
      * @param passLen Length of the password.
-     * @param flags For specifying which character sets should be used in generating the password.
+     * @param flags For specifying which character sets should be used in password generation.
      * @return The plaintext password.
      */
     public static String generatePassword(int passLen, int flags) {

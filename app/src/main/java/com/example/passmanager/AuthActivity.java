@@ -14,11 +14,11 @@ import java.io.File;
 /**
  * Activity used for authenticating the user to the Password Manager.
  */
-public class MainActivity extends AppCompatActivity {
+public class AuthActivity extends AppCompatActivity {
 
     private TextView validationMsg;
     private EditText masterPassField;
-    private EntryViewModel entryVm;
+    private ApplicationViewModel viewmodel;
 
     // Identifier for passing the encrypted master password in an intent to another activity.
     public static final String EXTRA_ENCRYPTED_MASTER = BuildConfig.APPLICATION_ID +
@@ -33,9 +33,9 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.authBtn).setOnClickListener(view -> auth());
         findViewById(R.id.goToCreateBtn).setOnClickListener(view -> goToCreate());
 
-        entryVm = new ViewModelProvider(this).get(EntryViewModel.class);
+        viewmodel = new ViewModelProvider(this).get(ApplicationViewModel.class);
 
-        File databaseFile = getDatabasePath(EntryRoomDatabase.TABLE_NAME);
+        File databaseFile = getDatabasePath(ApplicationDatabase.DB_NAME);
         if (!databaseFile.exists()) {
             // If a database doesn't exist, go to the creation menu.
             goToCreate();
@@ -54,8 +54,8 @@ public class MainActivity extends AppCompatActivity {
         if (pass.length == 0)
             return;
 
-        entryVm.open(getApplication(), pass, false);
-        if (!entryVm.isValidMasterPass()) {
+        viewmodel.open(getApplication(), pass, false);
+        if (!viewmodel.isValidMasterPass()) {
             validationMsg.setText(R.string.invalid_pass);
         } else {
             // Encrypt the master password and pass it to the next activities in order to use it

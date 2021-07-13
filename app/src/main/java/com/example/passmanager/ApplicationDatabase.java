@@ -1,8 +1,8 @@
 package com.example.passmanager;
 
 import android.content.Context;
-import android.os.Debug;
-import android.util.Log;
+import android.content.res.Resources;
+import android.net.Uri;
 
 import androidx.annotation.NonNull;
 import androidx.room.Database;
@@ -12,47 +12,69 @@ import androidx.room.TypeConverters;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import net.sqlcipher.database.SQLiteDatabase;
-import net.sqlcipher.database.SQLiteDatabaseHook;
 import net.sqlcipher.database.SQLiteException;
 import net.sqlcipher.database.SupportFactory;
 
 import java.util.Arrays;
-import java.util.Locale;
 
 /**
  * Room singleton class for establishing connection with the SQLCipher database.
  */
-@Database(entities = {Entry.class}, version = 1, exportSchema = false)
+@Database(entities = {Entry.class, Category.class}, version = 1, exportSchema = false)
 @TypeConverters({Converters.class})
-public abstract class EntryRoomDatabase extends RoomDatabase {
+public abstract class ApplicationDatabase extends RoomDatabase {
 
-    private static EntryRoomDatabase INSTANCE;
-    public static final String TABLE_NAME = "Entries";
+    private static ApplicationDatabase INSTANCE;
+
+    public static final String DB_NAME = "db";
 
     /**
-     * Get the DAO for the "Entries" table.
+     * DAO for the "Entries" table.
      */
     public abstract EntryDao entryDao();
+
+    /**
+     * DAO for the "Categories" table
+     */
+    public abstract CategoryDao categoryDao();
+
+    private static final Callback createCallback = new Callback() {
+        @Override
+        public void onCreate(@NonNull SupportSQLiteDatabase db) {
+            super.onCreate(db);
+
+            String uriHeader = "android.resource://com.example.passmanager/";
+            Category[] categories = {
+                    // TODO: Extract categories names string resources.
+                    new Category("Email", Uri.parse(uriHeader + R.drawable.ic_baseline_email_24)),
+                    new Category("Forum", Uri.parse(uriHeader + R.drawable.ic_baseline_forum_24)),
+                    new Category("Bank", Uri.parse(uriHeader + R.drawable.ic_baseline_bank_24))
+            };
+
+            INSTANCE.categoryDao().insertCategories(categories);
+        }
+    };
 
     /**
      * Get a handle to the RoomDatabase. Creates the database if it doesn't exist.
      *
      * @param context The current application context.
      */
-    public static EntryRoomDatabase getDatabase(final Context context, char[] masterPass,
-                                                boolean clearPass)
+    public static ApplicationDatabase getDatabase(final Context context, char[] masterPass,
+                                                  boolean clearPass)
             throws SQLiteException {
         if (INSTANCE == null) {
             // Make sure that only one thread creates the handle to the database in order to prevent
             // a race condition.
-            synchronized (EntryRoomDatabase.class) {
+            synchronized (ApplicationDatabase.class) {
                 if (INSTANCE == null) {
                     final byte[] masterPassBytes = SQLiteDatabase.getBytes(masterPass);
                     final SupportFactory factory = new SupportFactory(masterPassBytes);
 
-                    INSTANCE = Room.databaseBuilder(context, EntryRoomDatabase.class, TABLE_NAME)
+                    INSTANCE = Room.databaseBuilder(context, ApplicationDatabase.class, DB_NAME)
                             .fallbackToDestructiveMigration()
                             .openHelperFactory(factory)
+                            .addCallback(createCallback)
                             .build();
                     try {
                         // SQLCipher doesn't check if the master password is valid until a command is

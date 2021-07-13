@@ -14,7 +14,7 @@ import java.sql.Date;
  *    about a service (an app or a website).
  * </p>
  */
-@Entity(tableName = EntryRoomDatabase.TABLE_NAME)
+@Entity(tableName = "Entries")
 public class Entry {
 
     /**

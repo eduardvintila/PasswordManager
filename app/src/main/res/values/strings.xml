@@ -46,4 +46,9 @@
     <string name="digits">Cifre</string>
     <string name="special_characters">Special</string>
     <string name="choose_character_set">Trebuie selectat cel puțin un set de caractere!</string>
+    <string name="category_icon">Iconiță categorie</string>
+    <string name="choose_icon">Alege o iconiță</string>
+    <string name="category_name">Denumirea categoriei</string>
+    <string name="save_category">Salvează</string>
+    <string name="add_category">Adaugă o categorie nouă</string>
 </resources>
