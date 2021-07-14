@@ -23,7 +23,7 @@ import javax.crypto.spec.SecretKeySpec;
  * Helper class used for various cryptographic/random operations.
  */
 public class CryptoHelper {
-    public static final int SALT_LENGTH = 16; // TODO: Small salt size?
+    public static final int SALT_LENGTH = 24;
     public static final int IV_LENGTH = 16;
     public static final int KEY_LENGTH = 256;
     public static final String PBE_ALGORITHM = "PBEwithSHA256AND256BITAES-CBC-BC";
@@ -81,7 +81,7 @@ public class CryptoHelper {
      *
      * @param password Plaintext password used in key generation.
      * @param salt Random salt used in key generation.
-     * @param clearPass Clear the password after creating the key or not.
+     * @param clearPass Clear the plaintext password after creating the key or not.
      * @return The symmetric key.
      */
     public static SecretKey createPbeKey(char[] password, byte[] salt, boolean clearPass) {

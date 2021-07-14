@@ -98,6 +98,12 @@ public abstract class ApplicationDatabase extends RoomDatabase {
         return INSTANCE;
     }
 
+    /**
+     * Change the master password by making a query to the SQLCipher database. The database must
+     * have been opened previously.
+     *
+     * @param newMasterPassword The new master password.
+     */
     public void changeMasterPassword(char[] newMasterPassword) {
         SupportSQLiteDatabase db =  getOpenHelper().getWritableDatabase();
         String rekey = String.format("PRAGMA rekey='%s'", String.valueOf(newMasterPassword));
