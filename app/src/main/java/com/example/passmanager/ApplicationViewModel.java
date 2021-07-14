@@ -61,6 +61,10 @@ public class ApplicationViewModel extends AndroidViewModel {
         repository.create(application, masterPass, clearPass);
     }
 
+    public void changeMasterPassword(char[] newPassword) {
+        repository.changeMasterPassword(newPassword);
+    }
+
     public boolean isValidMasterPass() { return validMasterPass; }
 
     // Queries
@@ -69,6 +73,7 @@ public class ApplicationViewModel extends AndroidViewModel {
     public LiveData<Entry> getEntry(int id) { return repository.getEntry(id); }
     public ListenableFuture<Integer> deleteEntry(Entry e) { return repository.deleteEntry(e); }
     public ListenableFuture<Integer> updateEntry(Entry e) { return repository.updateEntry(e); }
+    public ListenableFuture<Integer> updateEntries(List<Entry> entries) { return repository.updateEntries(entries); }
 
     // Categories queries
     public ListenableFuture<List<Long>> insertCategories(Category... c) { return repository.insertCategories(c); }

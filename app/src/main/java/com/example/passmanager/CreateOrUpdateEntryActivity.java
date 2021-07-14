@@ -3,7 +3,9 @@ package com.example.passmanager;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.text.Editable;
@@ -60,7 +62,7 @@ public class CreateOrUpdateEntryActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_update_entry);
+        setContentView(R.layout.activity_create_or_update_entry);
 
         entryNameField = findViewById(R.id.entryNameEditText);
         userIdField = findViewById(R.id.userIdEditText);
@@ -98,7 +100,10 @@ public class CreateOrUpdateEntryActivity extends AppCompatActivity {
         viewmodel = new ViewModelProvider(this).get(ApplicationViewModel.class);
 
         Intent prevIntent = getIntent();
-        encryptedMaster = prevIntent.getStringExtra(AuthActivity.EXTRA_ENCRYPTED_MASTER);
+        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_file),
+                                                            Context.MODE_PRIVATE);
+        encryptedMaster = sharedPref.getString(getString(R.string.encrypted_master), null);
+
         // Check whether we are updating an existing entry or creating a new one
         if (prevIntent.hasExtra(EntriesMenuActivity.EXTRA_ENTRY_ID)) {
             int entryId = prevIntent.getIntExtra(EntriesMenuActivity.EXTRA_ENTRY_ID, 1);
@@ -155,7 +160,7 @@ public class CreateOrUpdateEntryActivity extends AppCompatActivity {
 
         // String userPassword = userPasswordField.getText().toString();
         byte[] saltBytes = CryptoHelper.generateSalt();
-        SecretKey key = CryptoHelper.createPbeKey(plainTextMaster, saltBytes);
+        SecretKey key = CryptoHelper.createPbeKey(plainTextMaster, saltBytes, true);
         String encryptedUserPassword = CryptoHelper.encrypt(key, userPassword);
 
         if (oldEntry != null) {

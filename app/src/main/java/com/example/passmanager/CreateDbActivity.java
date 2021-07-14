@@ -14,7 +14,7 @@ import java.util.Arrays;
 /**
  * Activity for creating a new database of entries.
  */
-public class CreateActivity extends AppCompatActivity {
+public class CreateDbActivity extends AppCompatActivity {
 
     private ApplicationViewModel viewmodel;
     private EditText firstPassField;
@@ -29,11 +29,11 @@ public class CreateActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create);
+        setContentView(R.layout.activity_create_db);
         firstPassField = findViewById(R.id.firstPassEditText);
         secondPassField = findViewById(R.id.secondPassEditText);
         notMatchingTextView = findViewById(R.id.notMatchingTextView);
-        findViewById(R.id.btnCreate).setOnClickListener(view -> create());
+        findViewById(R.id.updateMasterPassBtn).setOnClickListener(view -> create());
 
         firstPassField.addTextChangedListener(new TextWatcher() {
             @Override

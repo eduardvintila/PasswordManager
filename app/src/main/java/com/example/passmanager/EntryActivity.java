@@ -10,6 +10,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.View;
@@ -75,6 +76,10 @@ public class EntryActivity extends AppCompatActivity
         findViewById(R.id.modifyBtn).setOnClickListener(view -> modifyEntry());
         findViewById(R.id.deleteBtn).setOnClickListener(view -> deleteEntry());
 
+        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_file),
+                                                            Context.MODE_PRIVATE);
+        encryptedMaster = sharedPref.getString(getString(R.string.encrypted_master), null);
+
         Intent intent = getIntent();
         if (intent != null) {
             int entryId = intent.getIntExtra(EntriesMenuActivity.EXTRA_ENTRY_ID, 1);
@@ -88,7 +93,6 @@ public class EntryActivity extends AppCompatActivity
                     entryDescriptionField.setText(entry.entryDescription);
                     serviceLinkField.setText(entry.serviceLink);
                     entryLastModifiedField.setText(entry.lastModified.toString());
-                    encryptedMaster = intent.getStringExtra(AuthActivity.EXTRA_ENCRYPTED_MASTER);
 
                     decryptBtn.setVisibility(View.VISIBLE);
                     userPasswordDecrypted = false;
@@ -138,7 +142,7 @@ public class EntryActivity extends AppCompatActivity
             // Decrypt the password in the entry.
             String encryptedUserPassword = entry.userPassword;
             byte[] saltBytes = CryptoHelper.decode(entry.passwordSalt);
-            SecretKey key = CryptoHelper.createPbeKey(plaintextMaster, saltBytes);
+            SecretKey key = CryptoHelper.createPbeKey(plaintextMaster, saltBytes, true);
             char[] decryptedUserPassword = CryptoHelper.decrypt(key, encryptedUserPassword);
 
             if (decryptedUserPassword != null){
@@ -180,7 +184,6 @@ public class EntryActivity extends AppCompatActivity
             Intent intent = new Intent(this, CreateOrUpdateEntryActivity.class);
             intent.putExtra(EntriesMenuActivity.EXTRA_ENTRY_ID, entry.entryNo);
             intent.putExtra(EntryActivity.EXTRA_ENTRY_PASSWORD, userPasswordField.getText().toString());
-            intent.putExtra(AuthActivity.EXTRA_ENCRYPTED_MASTER, encryptedMaster);
             startActivity(intent);
         } else {
             Toast.makeText(this, R.string.decrypt_password_first, Toast.LENGTH_SHORT).show();

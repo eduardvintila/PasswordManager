@@ -7,3 +7,6 @@
     In README, explain how some of the functions in CryptoHelper work (such as pasword generation).
     Associate pictures not with entries, but with categories?
     Fix landscape orientation issues.
+    Update class names in README.
+    Rename "userPassword" names to "entryPassword".
+    Fix password strongness warning that hides the "show password" icon.

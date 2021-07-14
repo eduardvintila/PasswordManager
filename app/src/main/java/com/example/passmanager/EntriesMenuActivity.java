@@ -1,9 +1,10 @@
 package com.example.passmanager;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -33,6 +34,7 @@ public class EntriesMenuActivity extends AppCompatActivity implements EntryListA
     public static final String EXTRA_ENTRY_ID = BuildConfig.APPLICATION_ID + ".ENTRY_ID";
 
     private EntryListAdapter adapter;
+    private String encryptedMaster;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,17 +50,20 @@ public class EntriesMenuActivity extends AppCompatActivity implements EntryListA
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
+        // Get the encrypted master password.
+        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_file),
+                Context.MODE_PRIVATE);
+        encryptedMaster = sharedPref.getString(getString(R.string.encrypted_master), null);
+
         // FAB Listener for adding an entry.
         binding.fab.setOnClickListener(view -> {
-            // Get the encrypted master password from the authentication menu.
-            Intent prevIntent = getIntent();
-            String encryptedMaster = prevIntent.getStringExtra(AuthActivity.EXTRA_ENCRYPTED_MASTER);
-
             // Go to the create entry menu and pass the encrypted master password.
             Intent intent = new Intent(this, CreateOrUpdateEntryActivity.class);
-            intent.putExtra(AuthActivity.EXTRA_ENCRYPTED_MASTER, encryptedMaster);
             startActivity(intent);
         });
+
+        findViewById(R.id.addCategoryBtn).setOnClickListener(view -> goToCreateCategory());
+        findViewById(R.id.modifyMasterPassBtn).setOnClickListener(view -> modifyMasterPass());
 
         // Setup the recycler view and it's adapter for populating entries
         RecyclerView recyclerView = findViewById(R.id.recyclerview);
@@ -81,6 +86,11 @@ public class EntriesMenuActivity extends AppCompatActivity implements EntryListA
         });
     }
 
+    public void modifyMasterPass() {
+        Intent intent = new Intent(this, UpdateMasterPassActivity.class);
+        startActivity(intent);
+    }
+
     /**
      * Called when an entry from the RecyclerView adapter list has been clicked.
      *
@@ -88,17 +98,12 @@ public class EntriesMenuActivity extends AppCompatActivity implements EntryListA
      */
     @Override
     public void onEntryClick(int position) {
-        // Get the encrypted master password from the authentication menu.
-        Intent prevIntent = getIntent();
-        String encryptedMaster = prevIntent.getStringExtra(AuthActivity.EXTRA_ENCRYPTED_MASTER);
-
         // Get the entry id.
         int entryId = adapter.getEntries().get(position).entryNo;
 
         // Go to the view entry details menu and pass the encrypted master password.
         Intent intent = new Intent(this, EntryActivity.class);
         intent.putExtra(EXTRA_ENTRY_ID, entryId);
-        intent.putExtra(AuthActivity.EXTRA_ENCRYPTED_MASTER, encryptedMaster);
         startActivity(intent);
     }
 
@@ -117,8 +122,8 @@ public class EntriesMenuActivity extends AppCompatActivity implements EntryListA
         viewmodel.close();
     }
 
-    public void goToCreateCategory(View view) {
-        Intent intent = new Intent(this, CreateOrUpdateCategory.class);
+    public void goToCreateCategory() {
+        Intent intent = new Intent(this, CreateOrUpdateCategoryActivity.class);
         startActivity(intent);
     }
 }

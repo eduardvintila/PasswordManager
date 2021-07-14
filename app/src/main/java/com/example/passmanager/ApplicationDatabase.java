@@ -10,6 +10,7 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 import androidx.sqlite.db.SupportSQLiteDatabase;
+import androidx.sqlite.db.SupportSQLiteQuery;
 
 import net.sqlcipher.database.SQLiteDatabase;
 import net.sqlcipher.database.SQLiteException;
@@ -82,7 +83,7 @@ public abstract class ApplicationDatabase extends RoomDatabase {
                         // throws an exception if the key is not valid.
                         INSTANCE.getOpenHelper().getReadableDatabase();
                     } catch (SQLiteException e) {
-                        closeDatabase();
+                        INSTANCE.closeDatabase();
                         throw e;
                     } finally {
                         if (clearPass) {
@@ -97,7 +98,13 @@ public abstract class ApplicationDatabase extends RoomDatabase {
         return INSTANCE;
     }
 
-    public static void closeDatabase() {
+    public void changeMasterPassword(char[] newMasterPassword) {
+        SupportSQLiteDatabase db =  getOpenHelper().getWritableDatabase();
+        String rekey = String.format("PRAGMA rekey='%s'", String.valueOf(newMasterPassword));
+        db.query(rekey);
+    }
+
+    public void closeDatabase() {
         INSTANCE.close();
         INSTANCE = null;
     }

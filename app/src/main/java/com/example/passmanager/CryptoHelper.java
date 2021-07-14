@@ -81,16 +81,17 @@ public class CryptoHelper {
      *
      * @param password Plaintext password used in key generation.
      * @param salt Random salt used in key generation.
+     * @param clearPass Clear the password after creating the key or not.
      * @return The symmetric key.
      */
-    public static SecretKey createPbeKey(char[] password, byte[] salt) {
+    public static SecretKey createPbeKey(char[] password, byte[] salt, boolean clearPass) {
         try {
             PBEKeySpec pbeKeySpec = new PBEKeySpec(password, salt,
                     PBE_ITERATIONS, KEY_LENGTH);
             SecretKeyFactory factory = SecretKeyFactory.getInstance(PBE_ALGORITHM);
             SecretKey key = new SecretKeySpec(factory.generateSecret(pbeKeySpec).getEncoded(),
                     KEY_SPEC_ALGORITHM);
-            Arrays.fill(password, (char) 0);
+            if (clearPass) { Arrays.fill(password, (char) 0); }
 
             return key;
         } catch (Exception e) {

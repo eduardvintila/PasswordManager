@@ -19,11 +19,16 @@
             app:popupTheme="@style/Theme.PassManager.PopupOverlay" />
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/addCategoryBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="goToCreateCategory"
             android:text="@string/add_category" />
+
+        <Button
+            android:id="@+id/modifyMasterPassBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/modify_master_pass" />
 
     </com.google.android.material.appbar.AppBarLayout>
 

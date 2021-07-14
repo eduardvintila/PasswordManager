@@ -41,6 +41,9 @@ public interface EntryDao {
     @Update
     ListenableFuture<Integer> updateEntry(Entry e);
 
+    @Update
+    ListenableFuture<Integer> updateEntries(List<Entry> entries);
+
 
     // These methods are used for testing and they do not implicitly create an asynchronous thread.
     // They must be explicitly called from a background thread.

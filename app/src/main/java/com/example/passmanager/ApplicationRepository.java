@@ -57,8 +57,12 @@ public class ApplicationRepository {
      * Close the connection with the local database.
      */
     public void close() {
-        ApplicationDatabase.closeDatabase();
+        db.closeDatabase();
         db = null;
+    }
+
+    public void changeMasterPassword(char[] newPassword) {
+        db.changeMasterPassword(newPassword);
     }
 
 
@@ -83,6 +87,7 @@ public class ApplicationRepository {
     public LiveData<Entry> getEntry(int id) { return entryDao.getEntry(id); }
     public ListenableFuture<Integer> deleteEntry(Entry e) { return entryDao.deleteEntry(e); }
     public ListenableFuture<Integer> updateEntry(Entry e) { return entryDao.updateEntry(e); }
+    public ListenableFuture<Integer> updateEntries(List<Entry> entries) { return entryDao.updateEntries(entries); }
 
     // Categories queries
     public ListenableFuture<List<Long>> insertCategories(Category... c) { return categoryDao.insertCategories(c); }

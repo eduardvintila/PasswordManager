@@ -51,4 +51,11 @@
     <string name="category_name">Denumirea categoriei</string>
     <string name="save_category">Salvează</string>
     <string name="add_category">Adaugă o categorie nouă</string>
+    <string name="modify_master_pass">Modifică parola master</string>
+    <string name="enter_current_master_pass">Introdu parola master curentă</string>
+    <string name="enter_new_master_pass">Introdu noua parolă master</string>
+    <string name="preference_file">com.example.passmanager.preferences</string>
+    <string name="encrypted_master">encrypted_master</string>
+    <string name="modify">Modifică</string>
+    <string name="master_pass_modified">Parolă master modificată!</string>
 </resources>

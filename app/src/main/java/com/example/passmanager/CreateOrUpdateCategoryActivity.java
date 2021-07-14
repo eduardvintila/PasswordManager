@@ -10,7 +10,7 @@ import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-public class CreateOrUpdateCategory extends AppCompatActivity {
+public class CreateOrUpdateCategoryActivity extends AppCompatActivity {
 
     private EditText categoryNameField;
     private ActivityResultLauncher<String> activityLauncher;
