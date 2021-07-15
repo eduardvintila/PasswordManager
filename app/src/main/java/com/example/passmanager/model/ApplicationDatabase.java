@@ -1,7 +1,6 @@
-package com.example.passmanager;
+package com.example.passmanager.model;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.net.Uri;
 
 import androidx.annotation.NonNull;
@@ -10,13 +9,14 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 import androidx.sqlite.db.SupportSQLiteDatabase;
-import androidx.sqlite.db.SupportSQLiteQuery;
 
 import net.sqlcipher.database.SQLiteDatabase;
 import net.sqlcipher.database.SQLiteException;
 import net.sqlcipher.database.SupportFactory;
 
 import java.util.Arrays;
+
+import com.example.passmanager.R;
 
 /**
  * Room singleton class for establishing connection with the SQLCipher database.
@@ -44,6 +44,7 @@ public abstract class ApplicationDatabase extends RoomDatabase {
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
             super.onCreate(db);
 
+            // Insert some default categories in the Password Manager.
             String uriHeader = "android.resource://com.example.passmanager/";
             Category[] categories = {
                     // TODO: Extract categories names string resources.

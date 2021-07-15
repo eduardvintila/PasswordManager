@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
@@ -12,6 +11,10 @@ import android.text.TextWatcher;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.passmanager.model.Entry;
+import com.example.passmanager.utils.CryptoHelper;
+import com.example.passmanager.viewmodel.ApplicationViewModel;
 
 import java.util.Arrays;
 
@@ -113,7 +116,7 @@ public class UpdateMasterPassActivity extends AppCompatActivity {
                     for (Entry entry : entries) {
                         byte[] oldSaltBytes = CryptoHelper.decode(entry.passwordSalt);
                         SecretKey oldKey = CryptoHelper.createPbeKey(plaintextMaster,
-                                oldSaltBytes, true);
+                                oldSaltBytes, false);
                         char[] decryptedUserPassword = CryptoHelper.decrypt(oldKey, entry.userPassword);
 
                         byte[] newSaltBytes = CryptoHelper.generateSalt();
@@ -123,6 +126,8 @@ public class UpdateMasterPassActivity extends AppCompatActivity {
                         entry.passwordSalt = CryptoHelper.encode(newSaltBytes);
                         entry.userPassword = encryptedUserPassword;
                     }
+                    // Clear the old master password.
+                    Arrays.fill(plaintextMaster, (char) 0);
 
                     viewmodel.updateEntries(entries);
                     viewmodel.changeMasterPassword(newPass1);

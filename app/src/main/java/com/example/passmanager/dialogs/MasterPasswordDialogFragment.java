@@ -1,4 +1,4 @@
-package com.example.passmanager;
+package com.example.passmanager.dialogs;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -12,6 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
+
+import com.example.passmanager.R;
 
 /**
  * Dialog Fragment which prompts the user for a password.

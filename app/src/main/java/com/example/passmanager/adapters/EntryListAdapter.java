@@ -1,4 +1,4 @@
-package com.example.passmanager;
+package com.example.passmanager.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,6 +9,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.passmanager.R;
+import com.example.passmanager.model.Entry;
+
 import java.util.List;
 
 /**
@@ -18,12 +21,16 @@ public class EntryListAdapter extends RecyclerView.Adapter<EntryListAdapter.Entr
     private final LayoutInflater inflater;
     private List<Entry> entries;
 
-    // Listener used for handling click events on the entries in the list.
-    private final OnEntryListener onEntryListener;
+    public interface OnEntryClickListener {
+        void onEntryClick(int position);
+    }
 
-    EntryListAdapter(Context context, OnEntryListener onEntryListener) {
+    // Listener used for handling click events on the entries in the list.
+    private final OnEntryClickListener onEntryClickListener;
+
+    public EntryListAdapter(Context context, OnEntryClickListener onEntryClickListener) {
         inflater = LayoutInflater.from(context);
-        this.onEntryListener = onEntryListener;
+        this.onEntryClickListener = onEntryClickListener;
     }
 
     @NonNull
@@ -43,7 +50,7 @@ public class EntryListAdapter extends RecyclerView.Adapter<EntryListAdapter.Entr
         }
     }
 
-    void setEntries(List<Entry> entries) {
+    public void setEntries(List<Entry> entries) {
         this.entries = entries;
         notifyDataSetChanged();
     }
@@ -67,13 +74,14 @@ public class EntryListAdapter extends RecyclerView.Adapter<EntryListAdapter.Entr
             itemView.setOnClickListener(this);
         }
 
+        /**
+         * Called when an entry is clicked.
+         */
         @Override
         public void onClick(View v) {
-            onEntryListener.onEntryClick(getAdapterPosition());
+            if (onEntryClickListener != null) {
+                onEntryClickListener.onEntryClick(getAdapterPosition());
+            }
         }
-    }
-
-    public interface OnEntryListener {
-        void onEntryClick(int position);
     }
 }

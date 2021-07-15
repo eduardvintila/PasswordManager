@@ -10,6 +10,9 @@ import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.example.passmanager.model.Category;
+import com.example.passmanager.viewmodel.ApplicationViewModel;
+
 public class CreateOrUpdateCategoryActivity extends AppCompatActivity {
 
     private EditText categoryNameField;

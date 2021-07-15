@@ -17,6 +17,10 @@ import org.junit.runner.RunWith;
 
 import java.util.List;
 
+import com.example.passmanager.model.ApplicationDatabase;
+import com.example.passmanager.model.Entry;
+import com.example.passmanager.model.EntryDao;
+
 /**
  * Various tests which check the connectivity with the Database.
  */

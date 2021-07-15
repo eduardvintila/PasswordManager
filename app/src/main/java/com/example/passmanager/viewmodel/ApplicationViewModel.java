@@ -1,4 +1,4 @@
-package com.example.passmanager;
+package com.example.passmanager.viewmodel;
 
 import android.app.Application;
 
@@ -6,6 +6,10 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
+import com.example.passmanager.model.Category;
+import com.example.passmanager.model.CategoryWithEntries;
+import com.example.passmanager.model.Entry;
+import com.example.passmanager.repository.ApplicationRepository;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import net.sqlcipher.database.SQLiteException;
@@ -78,4 +82,5 @@ public class ApplicationViewModel extends AndroidViewModel {
     // Categories queries
     public ListenableFuture<List<Long>> insertCategories(Category... c) { return repository.insertCategories(c); }
     public LiveData<List<Category>> getAllCategories() { return repository.getAllCategories(); }
+    public LiveData<List<CategoryWithEntries>> getCategoriesWithEntries() { return repository.getCategoriesWithEntries(); }
 }

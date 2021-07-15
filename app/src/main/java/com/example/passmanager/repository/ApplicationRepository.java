@@ -1,15 +1,22 @@
-package com.example.passmanager;
+package com.example.passmanager.repository;
 
 import android.app.Application;
 
 import androidx.lifecycle.LiveData;
 
+import com.example.passmanager.model.ApplicationDatabase;
+import com.example.passmanager.model.Category;
+import com.example.passmanager.model.CategoryWithEntries;
+import com.example.passmanager.model.Entry;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import net.sqlcipher.database.SQLiteException;
 
 import java.io.File;
 import java.util.List;
+
+import com.example.passmanager.model.CategoryDao;
+import com.example.passmanager.model.EntryDao;
 
 /**
  * Singleton repository to access the database operations.
@@ -92,4 +99,5 @@ public class ApplicationRepository {
     // Categories queries
     public ListenableFuture<List<Long>> insertCategories(Category... c) { return categoryDao.insertCategories(c); }
     public LiveData<List<Category>> getAllCategories() { return categoryDao.getAllCategories(); }
+    public LiveData<List<CategoryWithEntries>> getCategoriesWithEntries() { return categoryDao.getCategoriesWithEntries(); }
 }

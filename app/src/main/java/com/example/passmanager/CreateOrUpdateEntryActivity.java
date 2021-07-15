@@ -12,16 +12,25 @@ import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.passmanager.model.Category;
+import com.example.passmanager.model.Entry;
+import com.example.passmanager.utils.CryptoHelper;
+import com.example.passmanager.viewmodel.ApplicationViewModel;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.slider.Slider;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.crypto.SecretKey;
 
@@ -58,6 +67,12 @@ public class CreateOrUpdateEntryActivity extends AppCompatActivity {
 
     // Only used if updating an existing entry.
     private Entry oldEntry;
+
+    private int categoryNo = 1;
+
+    private List<Category> categories;
+    private ArrayAdapter<CharSequence> arrayAdapter;
+    private List<Integer> adapterIds;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,6 +160,36 @@ public class CreateOrUpdateEntryActivity extends AppCompatActivity {
                 }
             }
         });
+
+        arrayAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item);
+
+        // Spinner with categories.
+        viewmodel.getAllCategories().observe(this, categories -> {
+            if (categories != null) {
+                this.categories = categories;
+                adapterIds = new ArrayList<>();
+                arrayAdapter.clear();
+                for (Category c : categories) {
+                    arrayAdapter.add(c.name);
+                    adapterIds.add(c.categoryNo);
+                }
+            }
+        });
+
+        Spinner categoriesSpinner = findViewById(R.id.categoriesSpinner);
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        categoriesSpinner.setAdapter(arrayAdapter);
+        categoriesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                categoryNo = adapterIds.get(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) { }
+        });
+
     }
 
     /**
@@ -173,6 +218,7 @@ public class CreateOrUpdateEntryActivity extends AppCompatActivity {
             newEntry.userPassword = encryptedUserPassword;
             newEntry.passwordSalt = CryptoHelper.encode(saltBytes);
             newEntry.lastModified = new Date(Calendar.getInstance().getTimeInMillis());
+            newEntry.categoryNo = categoryNo;
 
             viewmodel.updateEntry(newEntry);
         } else {
@@ -181,7 +227,7 @@ public class CreateOrUpdateEntryActivity extends AppCompatActivity {
                     entryDescriptionField.getText().toString(), null,
                     serviceLinkField.getText().toString(), userIdField.getText().toString(),
                     encryptedUserPassword, CryptoHelper.encode(saltBytes),
-                    new Date(Calendar.getInstance().getTimeInMillis()));
+                    new Date(Calendar.getInstance().getTimeInMillis()), categoryNo);
 
             viewmodel.insertEntry(entry);
         }

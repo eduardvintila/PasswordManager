@@ -1,4 +1,4 @@
-package com.example.passmanager;
+package com.example.passmanager.utils;
 
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyProperties;

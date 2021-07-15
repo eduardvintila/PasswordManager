@@ -11,6 +11,10 @@ import android.text.Editable;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.passmanager.model.ApplicationDatabase;
+import com.example.passmanager.utils.CryptoHelper;
+import com.example.passmanager.viewmodel.ApplicationViewModel;
+
 import java.io.File;
 
 /**

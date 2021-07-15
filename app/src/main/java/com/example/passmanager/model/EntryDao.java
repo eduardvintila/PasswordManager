@@ -1,4 +1,4 @@
-package com.example.passmanager;
+package com.example.passmanager.model;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;

@@ -20,6 +20,11 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.passmanager.dialogs.MasterPasswordDialogFragment;
+import com.example.passmanager.model.Entry;
+import com.example.passmanager.utils.CryptoHelper;
+import com.example.passmanager.viewmodel.ApplicationViewModel;
+
 import java.util.Arrays;
 
 import javax.crypto.SecretKey;

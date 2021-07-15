@@ -1,7 +1,8 @@
-package com.example.passmanager;
+package com.example.passmanager.model;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
@@ -14,6 +15,10 @@ import java.sql.Date;
  *    about a service (an app or a website).
  * </p>
  */
+/*@Entity(tableName = "Entries", foreignKeys = {@ForeignKey(entity = Category.class,
+    parentColumns = "categoryNo",
+    childColumns = "categoryNo",
+    onDelete = ForeignKey.SET_NULL)})*/
 @Entity(tableName = "Entries")
 public class Entry {
 
@@ -69,9 +74,12 @@ public class Entry {
     @ColumnInfo(name = "lastModified")
     public Date lastModified;
 
+    @ColumnInfo(name = "categoryNo")
+    public int categoryNo;
+
     public Entry(String entryName, String entryDescription, String entryPicPath,
                  String serviceLink, String userId, String userPassword, String passwordSalt,
-                 Date lastModified) {
+                 Date lastModified, int categoryNo) {
         this.entryName = entryName;
         this.entryDescription = entryDescription;
         this.entryPicPath = entryPicPath;
@@ -80,6 +88,7 @@ public class Entry {
         this.userPassword = userPassword;
         this.passwordSalt = passwordSalt;
         this.lastModified = lastModified;
+        this.categoryNo = categoryNo;
     }
 
     @Ignore

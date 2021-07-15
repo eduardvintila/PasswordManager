@@ -9,6 +9,9 @@ import android.text.TextWatcher;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.passmanager.utils.CryptoHelper;
+import com.example.passmanager.viewmodel.ApplicationViewModel;
+
 import java.util.Arrays;
 
 /**

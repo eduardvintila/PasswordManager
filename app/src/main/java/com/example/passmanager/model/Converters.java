@@ -1,4 +1,4 @@
-package com.example.passmanager;
+package com.example.passmanager.model;
 
 import android.net.Uri;
 
