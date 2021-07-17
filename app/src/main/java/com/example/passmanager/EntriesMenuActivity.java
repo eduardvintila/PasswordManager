@@ -130,7 +130,7 @@ public class EntriesMenuActivity extends AppCompatActivity implements CategoryLi
     @Override
     public void onEntryClick(int categoryIndex, int entryIndex) {
         int entryId = entriesLists.get(categoryIndex).get(entryIndex).entryNo;
-        // Go to the view entry details menu and pass the encrypted master password.
+        // Go to the view entry details menu.
         Intent intent = new Intent(this, EntryActivity.class);
         intent.putExtra(EXTRA_ENTRY_ID, entryId);
         startActivity(intent);

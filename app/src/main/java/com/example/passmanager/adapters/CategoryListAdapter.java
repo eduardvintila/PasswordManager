@@ -1,9 +1,12 @@
 package com.example.passmanager.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -48,13 +51,18 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
         return new CategoryListAdapter.CategoryViewHolder(itemView);
     }
 
+    @SuppressLint("DefaultLocale")
     @Override
     public void onBindViewHolder(@NonNull CategoryListAdapter.CategoryViewHolder holder, int position) {
         if (categories != null) {
             Category current = categories.get(position);
             holder.categoryName.setText(current.name);
+            holder.categoryIcon.setImageURI(current.icon); // TODO: What if the URI is invalid?
+
 
             if (entriesLists != null) {
+                holder.numberOfEntries.setText(String.format("(%d)",
+                        entriesLists.get(position).size()));
                 // Setup the recycler view and it's adapter for entries in this category.
                 RecyclerView entriesRv = holder.itemView.findViewById(R.id.entriesRecyclerView);
                 Context context = entriesRv.getContext();
@@ -64,7 +72,7 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
                 entriesRv.setAdapter(adapter);
             }
         } else {
-            holder.categoryName.setText("");
+            holder.numberOfEntries.setText("(0)");
         }
     }
 
@@ -91,10 +99,16 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
     class CategoryViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
             EntryListAdapter.OnEntryClickListener {
         private final TextView categoryName;
+        private final ImageView categoryIcon;
+        private final ImageView categoryArrow;
+        private final TextView numberOfEntries;
 
         private CategoryViewHolder(View itemView) {
             super(itemView);
             categoryName = itemView.findViewById(R.id.categoryNameTextView);
+            categoryIcon = itemView.findViewById(R.id.categoryIconImageView);
+            categoryArrow = itemView.findViewById(R.id.categoryArrow);
+            numberOfEntries = itemView.findViewById(R.id.numberOfEntriesTextView);
             itemView.setOnClickListener(this);
         }
 
@@ -106,7 +120,13 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
         public void onClick(View v) {
             View layout = v.findViewById(R.id.expandableLayout);
             boolean visible = layout.getVisibility() == View.VISIBLE;
-            layout.setVisibility(visible ? View.GONE : View.VISIBLE);
+            if (visible) {
+                layout.setVisibility(View.GONE);
+                categoryArrow.setImageResource(R.drawable.ic_baseline_arrow_down_24);
+            } else {
+                layout.setVisibility(View.VISIBLE);
+                categoryArrow.setImageResource(R.drawable.ic_baseline_arrow_up_24);
+            }
         }
 
         /**

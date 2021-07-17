@@ -44,16 +44,8 @@ public abstract class ApplicationDatabase extends RoomDatabase {
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
             super.onCreate(db);
 
-            // Insert some default categories in the Password Manager.
-            String uriHeader = "android.resource://com.example.passmanager/";
-            Category[] categories = {
-                    // TODO: Extract categories names string resources.
-                    new Category("Email", Uri.parse(uriHeader + R.drawable.ic_baseline_email_24)),
-                    new Category("Forum", Uri.parse(uriHeader + R.drawable.ic_baseline_forum_24)),
-                    new Category("Bank", Uri.parse(uriHeader + R.drawable.ic_baseline_bank_24))
-            };
-
-            INSTANCE.categoryDao().insertCategories(categories);
+            // Insert the default categories in the database.
+            INSTANCE.categoryDao().insertCategories(Category.defaultCategories);
         }
     };
 

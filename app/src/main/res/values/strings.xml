@@ -58,4 +58,5 @@
     <string name="encrypted_master">encrypted_master</string>
     <string name="modify">Modifică</string>
     <string name="master_pass_modified">Parolă master modificată!</string>
+    <string name="expand">Expand</string>
 </resources>
