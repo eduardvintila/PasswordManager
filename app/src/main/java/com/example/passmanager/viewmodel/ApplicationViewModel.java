@@ -24,7 +24,6 @@ import java.util.List;
 public class ApplicationViewModel extends AndroidViewModel {
 
     private final ApplicationRepository repository;
-    private boolean validMasterPass;
 
     public ApplicationViewModel(@NonNull Application application) {
         super(application);
@@ -37,14 +36,10 @@ public class ApplicationViewModel extends AndroidViewModel {
      * @param application Current application context.
      * @param masterPass Master password for decrypting the repository data.
      * @param clearPass If true, clear the password from memory after opening the connection.
+     * @return true if the connection has been opened successfully; false otherwise.
      */
-    public void open(@NonNull Application application, char[] masterPass, boolean clearPass) {
-        try {
-            repository.open(application, masterPass, clearPass);
-            validMasterPass = true;
-        } catch (SQLiteException e) {
-            validMasterPass = false;
-        }
+    public boolean open(@NonNull Application application, char[] masterPass, boolean clearPass) {
+        return repository.open(application, masterPass, clearPass);
     }
 
     /**
@@ -65,11 +60,17 @@ public class ApplicationViewModel extends AndroidViewModel {
         repository.create(application, masterPass, clearPass);
     }
 
+    /**
+     * Delete the data repository.
+     * @param application Current application context.
+     */
+    public void delete(@NonNull Application application) {
+        repository.delete(application);
+    }
+
     public void changeMasterPassword(char[] newPassword) {
         repository.changeMasterPassword(newPassword);
     }
-
-    public boolean isValidMasterPass() { return validMasterPass; }
 
     // Queries
     public LiveData<List<Entry>> getAllEntries() { return repository.getAllEntries(); }

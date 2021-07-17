@@ -2,7 +2,7 @@
     <string name="app_name">PassManager</string>
     <string name="msg_insert_master_pass">Introdu parola master</string>
     <string name="auth">Autentifică-te</string>
-    <string name="invalid_pass">Parolă invalidă sau bază de date inexistentă!</string>
+    <string name="invalid_pass">Parolă master invalidă!</string>
     <string name="valid_pass">Parolă valida!</string>
     <string name="create_new_database">Creează o noua bază</string>
     <string name="first_pass_master">Alege o parolă master</string>
@@ -59,4 +59,7 @@
     <string name="modify">Modifică</string>
     <string name="master_pass_modified">Parolă master modificată!</string>
     <string name="expand">Expand</string>
+    <string name="database_deleted">Din cauza încercărilor eșuate, baza de date cu toate
+        înregistrările a fost ștearsă!</string>
+    <string name="attempts_left">Încercări rămase: </string>
 </resources>

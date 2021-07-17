@@ -50,14 +50,18 @@ public class ApplicationRepository {
      * @param application Current application context
      * @param masterPass Master password for decrypting the database.
      * @param clearPass If true, clear the password from memory after opening the connection.
-     * @throws SQLiteException if the connection with the database fails (most likely because the
-     * master password is invalid).
+     * @return true if the connection has been opened successfully; false otherwise.
      */
-    public void open(Application application, char[] masterPass, boolean clearPass) throws SQLiteException {
-        db = ApplicationDatabase.getDatabase(application, masterPass, clearPass);
-        entryDao = db.entryDao();
-        categoryDao = db.categoryDao();
-        allEntries = entryDao.getAllEntries();
+    public boolean open(Application application, char[] masterPass, boolean clearPass) {
+        try {
+            db = ApplicationDatabase.getDatabase(application, masterPass, clearPass);
+            entryDao = db.entryDao();
+            categoryDao = db.categoryDao();
+            allEntries = entryDao.getAllEntries();
+            return true;
+        } catch (SQLiteException e) {
+            return false;
+        }
     }
 
     /**
@@ -81,11 +85,18 @@ public class ApplicationRepository {
      * @param clearPass If true, clear the password from memory after opening the connection.
      */
     public void create(Application application, char[] masterPass, boolean clearPass) {
+        delete(application);
+        open(application, masterPass, clearPass);
+    }
+
+    /**
+     * Delete the local database.
+     * @param application Current application context.
+     */
+    public void delete(Application application) {
         File databaseFile = application.getDatabasePath(ApplicationDatabase.DB_NAME);
         databaseFile.mkdirs();
         databaseFile.delete();
-
-        open(application, masterPass, clearPass);
     }
 
     // Entries queries

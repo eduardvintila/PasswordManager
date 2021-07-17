@@ -36,7 +36,7 @@ public class EntryListAdapter extends RecyclerView.Adapter<EntryListAdapter.Entr
     @NonNull
     @Override
     public EntryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = inflater.inflate(R.layout.recyclerview_item, parent, false);
+        View itemView = inflater.inflate(R.layout.entry_row, parent, false);
         return new EntryViewHolder(itemView);
     }
 
