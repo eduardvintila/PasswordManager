@@ -17,6 +17,9 @@ import com.example.passmanager.R;
 import com.example.passmanager.model.Category;
 import com.example.passmanager.model.Entry;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -57,8 +60,16 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
         if (categories != null) {
             Category current = categories.get(position);
             holder.categoryName.setText(current.name);
-            holder.categoryIcon.setImageURI(current.icon); // TODO: What if the URI is invalid?
-
+            try {
+                // Check that the icon is still accessible.
+                InputStream inputStream =
+                        holder.itemView.
+                                getContext().getContentResolver().openInputStream(current.icon);
+                inputStream.close();
+            } catch (IOException e) {
+                current.icon = null; // TODO: Set icon to null in the database, too.
+            }
+            holder.categoryIcon.setImageURI(current.icon);
 
             if (entriesLists != null) {
                 holder.numberOfEntries.setText(String.format("(%d)",

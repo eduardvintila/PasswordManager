@@ -47,38 +47,13 @@ public class CreateOrUpdateCategoryActivity extends AppCompatActivity {
         activityLauncher = registerForActivityResult(new ActivityResultContracts.OpenDocument(),
                 uri -> {
                     iconUri = uri;
+                    // Set the URI to be persistable across device reboots.
                     getContentResolver().takePersistableUriPermission(iconUri,
                             Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                    iconImageView.setImageURI(iconUri); // Set the icon URI to the image selected.
 
+                    // Set the icon URI to the image selected.
+                    iconImageView.setImageURI(iconUri);
                 });
-    }
-
-    public class PickImage extends ActivityResultContract<String, Uri> {
-
-        public PickImage() {}
-
-        @NonNull
-        @Override
-        public Intent createIntent(@NonNull Context context, String input) {
-            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-            intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION
-                    | Intent.FLAG_GRANT_PREFIX_URI_PERMISSION
-                    | Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            intent.addCategory(Intent.CATEGORY_OPENABLE).setType(input);
-            return intent;
-        }
-
-        @Override
-        public Uri parseResult(int resultCode, @Nullable Intent intent) {
-            if (intent != null && resultCode == Activity.RESULT_OK) {
-                // intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
-                /*getContentResolver().takePersistableUriPermission(iconUri,
-                            Intent.FLAG_GRANT_READ_URI_PERMISSION);*/
-                return intent.getData();
-            }
-            return null;
-        }
     }
 
     public void saveCategory() {

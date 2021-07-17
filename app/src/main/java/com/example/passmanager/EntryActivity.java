@@ -83,7 +83,7 @@ public class EntryActivity extends AppCompatActivity
 
         SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_file),
                                                             Context.MODE_PRIVATE);
-        encryptedMaster = sharedPref.getString(getString(R.string.encrypted_master), null);
+        encryptedMaster = sharedPref.getString(getString(R.string.encrypted_master_key), null);
 
         Intent intent = getIntent();
         if (intent != null) {

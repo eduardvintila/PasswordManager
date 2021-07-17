@@ -117,7 +117,7 @@ public class CreateOrUpdateEntryActivity extends AppCompatActivity {
         Intent prevIntent = getIntent();
         SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_file),
                                                             Context.MODE_PRIVATE);
-        encryptedMaster = sharedPref.getString(getString(R.string.encrypted_master), null);
+        encryptedMaster = sharedPref.getString(getString(R.string.encrypted_master_key), null);
 
         // Check whether we are updating an existing entry or creating a new one
         if (prevIntent.hasExtra(EntriesMenuActivity.EXTRA_ENTRY_ID)) {

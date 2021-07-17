@@ -89,7 +89,7 @@ public class UpdateMasterPassActivity extends AppCompatActivity {
 
         SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_file),
                                                             Context.MODE_PRIVATE);
-        encryptedMaster = sharedPref.getString(getString(R.string.encrypted_master), null);
+        encryptedMaster = sharedPref.getString(getString(R.string.encrypted_master_key), null);
 
         viewmodel = new ViewModelProvider(this).get(ApplicationViewModel.class);
     }
@@ -138,7 +138,7 @@ public class UpdateMasterPassActivity extends AppCompatActivity {
                     SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_file),
                                                                         Context.MODE_PRIVATE);
                     sharedPref.edit()
-                            .putString(getString(R.string.encrypted_master), newPassEncrypted)
+                            .putString(getString(R.string.encrypted_master_key), newPassEncrypted)
                             .apply();
 
                     Arrays.fill(newPass1, (char) 0);

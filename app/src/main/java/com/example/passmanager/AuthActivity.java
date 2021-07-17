@@ -62,13 +62,14 @@ public class AuthActivity extends AppCompatActivity {
      * Shared Preferences.
      */
     private void extractAttempts() {
-        lastAttempt = sharedPref.getLong("last_attempt", 0);
+        lastAttempt = sharedPref.getLong(getString(R.string.last_attempt_key), 0);
         long currentTime = Calendar.getInstance().getTimeInMillis();
         long minutes = TimeUnit.MILLISECONDS.toMinutes(currentTime - lastAttempt);
         if (minutes > MINUTES_RESET_ATTEMPTS) {
             resetAttempts();
         } else {
-            loginAttemptsLeft = sharedPref.getInt("login_attempts_left", MAX_LOGIN_ATTEMPTS);
+            loginAttemptsLeft = sharedPref.getInt(getString(R.string.login_attempts_left_key),
+                    MAX_LOGIN_ATTEMPTS);
         }
     }
 
@@ -123,7 +124,7 @@ public class AuthActivity extends AppCompatActivity {
 
             // Use SharedPreferences to pass the encrypted master password to other activities.
             sharedPref.edit()
-                    .putString(getString(R.string.encrypted_master), encrypted)
+                    .putString(getString(R.string.encrypted_master_key), encrypted)
                     .apply();
 
             Intent intent = new Intent(this, EntriesMenuActivity.class);
@@ -145,8 +146,8 @@ public class AuthActivity extends AppCompatActivity {
         super.onPause();
         // Save the number of attempts left and the time of last attempt to the Shared Preferences.
         sharedPref.edit()
-                .putInt("login_attempts_left", loginAttemptsLeft)
-                .putLong("last_attempt", lastAttempt)
+                .putInt(getString(R.string.login_attempts_left_key), loginAttemptsLeft)
+                .putLong(getString(R.string.last_attempt_key), lastAttempt)
                 .apply();
     }
 }
