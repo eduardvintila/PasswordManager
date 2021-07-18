@@ -120,7 +120,7 @@ public class AuthActivity extends AppCompatActivity {
 
             // Encrypt the master password and pass it to the next activities in order to use it
             // for encrypting/decrypting passwords in the entries.
-            String encrypted = CryptoHelper.encryptMasterPassword(pass);
+            String encrypted = CryptoHelper.encryptMasterPassword(pass, true);
 
             // Use SharedPreferences to pass the encrypted master password to other activities.
             sharedPref.edit()

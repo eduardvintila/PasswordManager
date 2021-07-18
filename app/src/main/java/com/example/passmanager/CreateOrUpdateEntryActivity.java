@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.icu.util.Calendar;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -22,6 +24,7 @@ import android.widget.Toast;
 import com.example.passmanager.model.Category;
 import com.example.passmanager.model.Entry;
 import com.example.passmanager.utils.CryptoHelper;
+import com.example.passmanager.utils.NetworkHelper;
 import com.example.passmanager.viewmodel.ApplicationViewModel;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
@@ -31,6 +34,8 @@ import com.google.android.material.textfield.TextInputLayout;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import javax.crypto.SecretKey;
 
@@ -95,6 +100,7 @@ public class CreateOrUpdateEntryActivity extends AppCompatActivity {
 
         findViewById(R.id.saveEntryBtn).setOnClickListener(view -> saveEntry());
         findViewById(R.id.generatePassBtn).setOnClickListener(view -> generatePassword());
+        findViewById(R.id.checkBreachBtn).setOnClickListener(view -> checkPassword());
 
         // When the character set or password length has changed, generate a new password.
         upperAlphaChip.setOnCheckedChangeListener((buttonView, isChecked) -> generatePassword());
@@ -189,7 +195,41 @@ public class CreateOrUpdateEntryActivity extends AppCompatActivity {
             @Override
             public void onNothingSelected(AdapterView<?> parent) { }
         });
+    }
 
+    /**
+     * Check if the password has been compromised in a data breach.
+     */
+    public void checkPassword() {
+        // Internet connection required.
+        if (NetworkHelper.isInternetConnectionAvailable(this)) {
+            Executor executor = Executors.newSingleThreadExecutor();
+
+            // For announcing the UI thread when the network request has finished.
+            Handler handler = new Handler(Looper.getMainLooper());
+
+            // Launch the network request on a new thread.
+            executor.execute(() -> {
+                // Get the password from the field
+                Editable editable = userPasswordField.getText();
+                char[] userPassword = new char[editable.length()];
+                editable.getChars(0, editable.length(), userPassword, 0);
+
+                boolean breached = NetworkHelper.isPassPwned(userPassword, true);
+
+                // Announce the UI thread that the network operation has finished.
+                handler.post(() -> {
+                    // Running in the UI Thread.
+                    if (breached) {
+                        Toast.makeText(CreateOrUpdateEntryActivity.this,
+                                R.string.pass_found_in_data_breach, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(CreateOrUpdateEntryActivity.this,
+                                R.string.pass_not_found_in_data_breach, Toast.LENGTH_SHORT).show();
+                    }
+                });
+            });
+        }
     }
 
     /**
@@ -206,7 +246,7 @@ public class CreateOrUpdateEntryActivity extends AppCompatActivity {
         // String userPassword = userPasswordField.getText().toString();
         byte[] saltBytes = CryptoHelper.generateSalt();
         SecretKey key = CryptoHelper.createPbeKey(plainTextMaster, saltBytes, true);
-        String encryptedUserPassword = CryptoHelper.encrypt(key, userPassword);
+        String encryptedUserPassword = CryptoHelper.encrypt(key, userPassword, true);
 
         if (oldEntry != null) {
             // Update an existing entry.

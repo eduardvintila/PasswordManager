@@ -8,6 +8,8 @@ import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyStore;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Arrays;
 
@@ -76,8 +78,7 @@ public class CryptoHelper {
     }
 
     /**
-     * Use password-based encryption to generate a key for symmetric encryption. The plaintext
-     * password array is cleared from memory after creating the key.
+     * Use password-based encryption to generate a key for symmetric encryption.
      *
      * @param password Plaintext password used in key generation.
      * @param salt Random salt used in key generation.
@@ -101,12 +102,14 @@ public class CryptoHelper {
     }
 
     /**
-     * Encrypt a text using a symmetric-key algorithm. The text array is cleared from memory
-     * after the encryption.
+     * Encrypt a text using a symmetric-key algorithm.
      *
+     * @param key The symmetric key.
+     * @param text The plaintext text to be encrypted.
+     * @param clearText Whether to clear the plaintext after encryption or not.
      * @return The encrypted text encoded with Base64.
      */
-    public static String encrypt(SecretKey key, char[] text) {
+    public static String encrypt(SecretKey key, char[] text, boolean clearText) {
         try {
             byte[] iv = generateIv();
             String encodedIv = encode(iv);
@@ -121,9 +124,11 @@ public class CryptoHelper {
             buffer.get(textBytes);
             byte[] encryptedBytes = cipher.doFinal(textBytes);
 
+            // Clear the intermediary buffers.
             Arrays.fill(textBytes, (byte) 0);
             Arrays.fill(buffer.array(), (byte) 0);
-            Arrays.fill(text, (char) 0);
+
+            if (clearText) { Arrays.fill(text, (char) 0); }
 
             // Attach the Initialisation Vector to the beginning of the encrypted text.
             return encodedIv + encode(encryptedBytes);
@@ -151,6 +156,7 @@ public class CryptoHelper {
             cipher.init(Cipher.DECRYPT_MODE, key, ivParameterSpec);
             byte[] decryptedBytes = cipher.doFinal(decode(encryptedText));
 
+            // Decode the bytes into a character array.
             ByteBuffer buffer = ByteBuffer.wrap(decryptedBytes);
             CharBuffer charBuffer = StandardCharsets.UTF_8.decode(buffer);
             char[] decryptedPass = new char[charBuffer.remaining()];
@@ -217,11 +223,12 @@ public class CryptoHelper {
      * from memory after the encryption.
      *
      * @param masterPass plaintext master password
+     * @param clearPass Whether to clear the plaintext password after generating the key or not.
      * @return The encrypted password encoded with Base64.
      */
-    public static String encryptMasterPassword(char[] masterPass) {
+    public static String encryptMasterPassword(char[] masterPass, boolean clearPass) {
         SecretKey key = generateKeyForKeyStore("masterKey");
-        return encrypt(key, masterPass);
+        return encrypt(key, masterPass, clearPass);
     }
 
     /**
@@ -308,7 +315,34 @@ public class CryptoHelper {
     }
 
     /**
-     * Encode bytes to a string representation using Base64.
+     * Hash a password using a {@link MessageDigest} algorithm.
+     *
+     * @param password The plaintext password.
+     * @param algorithm The {@link MessageDigest} algorithm.
+     * @param clearPass Whether to clear the plaintext password or not after hashing.
+     * @return The password hash, encoded as a hex string.
+     */
+    public static String hash(char[] password, String algorithm, boolean clearPass) {
+        try {
+            MessageDigest messageDigest = MessageDigest.getInstance(algorithm);
+            ByteBuffer passBytesBuf = StandardCharsets.UTF_8.encode(CharBuffer.wrap(password));
+            messageDigest.update(passBytesBuf);
+            byte[] hashBytes = messageDigest.digest();
+
+            // Clear the auxiliary buffer.
+            Arrays.fill(passBytesBuf.array(), (byte) 0);
+
+            if (clearPass) { Arrays.fill(password, (char) 0);}
+
+            return hexEncode(hashBytes).toUpperCase();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * Encode bytes to a string representation using {@link Base64}.
      *
      * @param bytes to be converted.
      * @return The string representation.
@@ -318,7 +352,7 @@ public class CryptoHelper {
     }
 
     /**
-     * Decode a string to the corresponding bytes using Base64.
+     * Decode a string to the corresponding bytes using {@link Base64}.
      *
      * @param base64Str string to be converted.
      * @return The bytes after conversion.
@@ -328,7 +362,23 @@ public class CryptoHelper {
     }
 
     /**
-     * Calculate the length of a Base64 encoded string (with padding enabled).
+     * Encode an array of bytes as a string of hexadecimal digits.
+     */
+    public static String hexEncode(byte[] bytes) {
+        StringBuilder sb = new StringBuilder(bytes.length * 2);
+        for (byte aByte : bytes) {
+            int val = aByte & 0xFF;
+            if (val < 16) {
+                // Add a leading '0' if the byte value is represented with one hex digit.
+                sb.append('0');
+            }
+            sb.append(Integer.toHexString(val));
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Calculate the length of a {@link Base64} encoded string (with padding enabled).
      *
      * @param length number of bytes encoded.
      * @return number of characters in the encoding.

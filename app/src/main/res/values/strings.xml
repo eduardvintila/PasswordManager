@@ -64,4 +64,8 @@
     <string name="attempts_left">Încercări rămase: </string>
     <string name="last_attempt_key">last_attempt_key</string>
     <string name="login_attempts_left_key">login_attempts_left</string>
+    <string name="verify_password_data_breach">Verifică parola</string>
+    <string name="pass_found_in_data_breach">Parola este compromisă!</string>
+    <string name="pass_not_found_in_data_breach">Parola nu a fost gasită într-o bază de date
+        compromisă.</string>
 </resources>

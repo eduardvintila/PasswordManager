@@ -8,5 +8,4 @@
     Update class names in README.
     Rename "userPassword" names to "entryPassword".
     Fix password strongness warning that hides the "show password" icon.
-    Add clearPass paramater to other functions in CryptoHelper?
     Fix bug when creating a new database and default categories are not inserted.

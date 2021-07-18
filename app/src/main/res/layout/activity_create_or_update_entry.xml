@@ -142,6 +142,12 @@
         android:text="@string/generate_password" />
 
     <Button
+        android:id="@+id/checkBreachBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/verify_password_data_breach" />
+
+    <Button
         android:id="@+id/saveEntryBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

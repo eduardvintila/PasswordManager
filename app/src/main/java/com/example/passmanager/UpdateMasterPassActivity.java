@@ -121,7 +121,8 @@ public class UpdateMasterPassActivity extends AppCompatActivity {
 
                         byte[] newSaltBytes = CryptoHelper.generateSalt();
                         SecretKey newKey = CryptoHelper.createPbeKey(newPass1, newSaltBytes, false);
-                        String encryptedUserPassword = CryptoHelper.encrypt(newKey, decryptedUserPassword);
+                        String encryptedUserPassword = CryptoHelper.encrypt(newKey,
+                                decryptedUserPassword, true);
 
                         entry.passwordSalt = CryptoHelper.encode(newSaltBytes);
                         entry.userPassword = encryptedUserPassword;
@@ -132,7 +133,7 @@ public class UpdateMasterPassActivity extends AppCompatActivity {
                     viewmodel.updateEntries(entries);
                     viewmodel.changeMasterPassword(newPass1);
 
-                    String newPassEncrypted = CryptoHelper.encryptMasterPassword(newPass1);
+                    String newPassEncrypted = CryptoHelper.encryptMasterPassword(newPass1, true);
 
                     // Save the new encrypted master password.
                     SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_file),
