@@ -15,11 +15,10 @@ import java.sql.Date;
  *    about a service (an app or a website).
  * </p>
  */
-/*@Entity(tableName = "Entries", foreignKeys = {@ForeignKey(entity = Category.class,
+@Entity(tableName = "Entries", foreignKeys = {@ForeignKey(entity = Category.class,
     parentColumns = "categoryNo",
     childColumns = "categoryNo",
-    onDelete = ForeignKey.SET_NULL)})*/
-@Entity(tableName = "Entries")
+    onDelete = ForeignKey.SET_DEFAULT)})
 public class Entry {
 
     /**
@@ -74,7 +73,13 @@ public class Entry {
     @ColumnInfo(name = "lastModified")
     public Date lastModified;
 
-    @ColumnInfo(name = "categoryNo")
+    /**
+     * The default category of an entry is the first category in the database, which should be
+     * the "Others" category. When a category is deleted, all of its entries are moved to this
+     * category, with the help of the onDelete rule in the foreign key declaration at the
+     * top of this class.
+     */
+    @ColumnInfo(name = "categoryNo", defaultValue = "1")
     public int categoryNo;
 
     public Entry(String entryName, String entryDescription, String entryPicPath,

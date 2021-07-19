@@ -12,8 +12,6 @@ import com.example.passmanager.model.Entry;
 import com.example.passmanager.repository.ApplicationRepository;
 import com.google.common.util.concurrent.ListenableFuture;
 
-import net.sqlcipher.database.SQLiteException;
-
 import java.util.List;
 
 /**
@@ -83,5 +81,8 @@ public class ApplicationViewModel extends AndroidViewModel {
     // Categories queries
     public ListenableFuture<List<Long>> insertCategories(Category... c) { return repository.insertCategories(c); }
     public LiveData<List<Category>> getAllCategories() { return repository.getAllCategories(); }
+    public LiveData<Category> getCategory(int categoryId) { return repository.getCategory(categoryId); }
+    public ListenableFuture<Integer> updateCategory(Category category) { return repository.updateCategory(category); }
+    public ListenableFuture<Integer> deleteCategory(Category category) { return repository.deleteCategory(category); }
     public LiveData<List<CategoryWithEntries>> getCategoriesWithEntries() { return repository.getCategoriesWithEntries(); }
 }

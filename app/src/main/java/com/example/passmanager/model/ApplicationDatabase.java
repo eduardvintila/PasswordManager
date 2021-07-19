@@ -1,7 +1,6 @@
 package com.example.passmanager.model;
 
 import android.content.Context;
-import android.net.Uri;
 
 import androidx.annotation.NonNull;
 import androidx.room.Database;
@@ -15,8 +14,6 @@ import net.sqlcipher.database.SQLiteException;
 import net.sqlcipher.database.SupportFactory;
 
 import java.util.Arrays;
-
-import com.example.passmanager.R;
 
 /**
  * Room singleton class for establishing connection with the SQLCipher database.

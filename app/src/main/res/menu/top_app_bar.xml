@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/addCategoryBtn"
+        android:title="@string/short_add_category"
+        android:contentDescription="@string/add_category"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/modifyMasterPassBtn"
+        android:title="@string/short_change_master_pass"
+        android:contentDescription="@string/modify_master_pass"
+        app:showAsAction="ifRoom" />
+
+</menu>

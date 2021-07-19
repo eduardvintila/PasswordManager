@@ -110,5 +110,8 @@ public class ApplicationRepository {
     // Categories queries
     public ListenableFuture<List<Long>> insertCategories(Category... c) { return categoryDao.insertCategories(c); }
     public LiveData<List<Category>> getAllCategories() { return categoryDao.getAllCategories(); }
+    public LiveData<Category> getCategory(int categoryId) { return categoryDao.getCategory(categoryId); }
+    public ListenableFuture<Integer> updateCategory(Category category) { return categoryDao.updateCategory(category); }
+    public ListenableFuture<Integer> deleteCategory(Category category) { return categoryDao.deleteCategory(category); }
     public LiveData<List<CategoryWithEntries>> getCategoriesWithEntries() { return categoryDao.getCategoriesWithEntries(); }
 }

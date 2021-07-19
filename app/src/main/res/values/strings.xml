@@ -3,7 +3,6 @@
     <string name="msg_insert_master_pass">Introdu parola master</string>
     <string name="auth">Autentifică-te</string>
     <string name="invalid_pass">Parolă master invalidă!</string>
-    <string name="valid_pass">Parolă valida!</string>
     <string name="create_new_database">Creează o noua bază</string>
     <string name="first_pass_master">Alege o parolă master</string>
     <string name="second_pass_master">Introdu din nou parola</string>
@@ -68,4 +67,14 @@
     <string name="pass_found_in_data_breach">Parola este compromisă!</string>
     <string name="pass_not_found_in_data_breach">Parola nu a fost gasită într-o bază de date
         compromisă.</string>
+    <string name="short_add_category">Add categ</string>
+    <string name="short_change_master_pass">Change master</string>
+    <string name="modify_category">Modifică categoria</string>
+    <string name="delete_category">Șterge categoria</string>
+    <string name="delete_category_format">Sigur vrei să ștergi categoria %s ? Toate
+        înregistrările asociate vor fi mutate în categoria Others.</string>
+    <string name="yes">Da</string>
+    <string name="no">Nu</string>
+    <string name="cannot_delete_category">Nu poți șterge această categorie.</string>
+    <string name="category_selected">Categorie selectată</string>
 </resources>

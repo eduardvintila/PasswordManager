@@ -223,8 +223,8 @@ public class EntryActivity extends AppCompatActivity
     protected void onDestroy() {
         super.onDestroy();
 
-        // When exiting the view entry menu, clear the password from the clipboard.
-        // Works good on a real device, doesn't seem to work with the emulator.
+        // When exiting the view entry menu, clear the password from the clipboard. Since
+        // onDestroy() is killable, we might not reach this point every time the activity is killed.
         ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         String passLabel = getString(R.string.label_user_password);
         if (clipboard.getPrimaryClipDescription().getLabel().equals(passLabel)) {

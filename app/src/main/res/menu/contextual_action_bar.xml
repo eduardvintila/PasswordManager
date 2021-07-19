@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/modifyCategoryBtn"
+        android:title="@string/modify_category"
+        android:icon="@drawable/ic_baseline_edit_24"
+        android:contentDescription="@string/modify_category"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/deleteCategoryBtn"
+        android:title="@string/delete_category"
+        android:icon="@drawable/ic_baseline_delete_24"
+        android:contentDescription="@string/delete_category"
+        app:showAsAction="ifRoom" />
+</menu>

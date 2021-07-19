@@ -8,7 +8,6 @@
     <fragment
         android:id="@+id/FirstFragment"
         android:name="com.example.passmanager.FirstFragment"
-        android:label="@string/entries_label"
         tools:layout="@layout/fragment_first">
     </fragment>
 </navigation>

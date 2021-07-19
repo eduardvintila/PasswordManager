@@ -2,7 +2,6 @@ package com.example.passmanager.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,13 +12,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.passmanager.CreateOrUpdateCategoryActivity;
 import com.example.passmanager.R;
 import com.example.passmanager.model.Category;
 import com.example.passmanager.model.Entry;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -38,13 +35,21 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
         void onEntryClick(int categoryIndex, int entryIndex);
     }
 
+    public interface OnCategoryLongClickListener {
+        void onLongClick(int categoryIndex, View categoryBackgroundView);
+    }
+
     // Listener used for handling click events on the entries in the list.
     private final OnEntryClickListener onEntryClickListener;
 
+    private final OnCategoryLongClickListener onCategoryLongClickListener;
+
     public CategoryListAdapter(Context context,
-                        OnEntryClickListener onEntryClickListener) {
+                                OnEntryClickListener onEntryClickListener,
+                                OnCategoryLongClickListener onCategoryLongClickListener) {
         inflater = LayoutInflater.from(context);
         this.onEntryClickListener = onEntryClickListener;
+        this.onCategoryLongClickListener = onCategoryLongClickListener;
     }
 
     @NonNull
@@ -60,14 +65,9 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
         if (categories != null) {
             Category current = categories.get(position);
             holder.categoryName.setText(current.name);
-            try {
-                // Check that the icon is still accessible.
-                InputStream inputStream =
-                        holder.itemView.
-                                getContext().getContentResolver().openInputStream(current.icon);
-                inputStream.close();
-            } catch (IOException e) {
-                current.icon = null; // TODO: Set icon to null in the database, too.
+            if (!CreateOrUpdateCategoryActivity.isUriContentAvailable(current.icon,
+                    holder.itemView.getContext())) {
+                current.icon = null;
             }
             holder.categoryIcon.setImageURI(current.icon);
 
@@ -108,7 +108,7 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
     }
 
     class CategoryViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
-            EntryListAdapter.OnEntryClickListener {
+            View.OnLongClickListener, EntryListAdapter.OnEntryClickListener {
         private final TextView categoryName;
         private final ImageView categoryIcon;
         private final ImageView categoryArrow;
@@ -121,6 +121,8 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
             categoryArrow = itemView.findViewById(R.id.categoryArrow);
             numberOfEntries = itemView.findViewById(R.id.numberOfEntriesTextView);
             itemView.setOnClickListener(this);
+            itemView.setOnLongClickListener(this);
+            itemView.setLongClickable(true);
         }
 
         /**
@@ -138,6 +140,16 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
                 layout.setVisibility(View.VISIBLE);
                 categoryArrow.setImageResource(R.drawable.ic_baseline_arrow_up_24);
             }
+        }
+
+        /**
+         * Called when a category has been long clicked.
+         */
+        @Override
+        public boolean onLongClick(View v) {
+            onCategoryLongClickListener.onLongClick(getAdapterPosition(),
+                    itemView.findViewById(R.id.categoryBackgroundView));
+            return true;
         }
 
         /**

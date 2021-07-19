@@ -8,11 +8,20 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
+            <View
+                android:id="@+id/categoryBackgroundView"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toTopOf="@+id/expandableLayout"
+                app:layout_constraintEnd_toEndOf="@+id/categoryArrow"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/categoryNameTextView" />
 
             <TextView
                 android:id="@+id/categoryNameTextView"
@@ -57,9 +66,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginBottom="8dp"
-                tools:text="(4)"
                 app:layout_constraintBottom_toTopOf="@+id/expandableLayout"
-                app:layout_constraintStart_toEndOf="@+id/categoryIconImageView" />
+                app:layout_constraintStart_toEndOf="@+id/categoryIconImageView"
+                tools:text="(4)" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/expandableLayout"

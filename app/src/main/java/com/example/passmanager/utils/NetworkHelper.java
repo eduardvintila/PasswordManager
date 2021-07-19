@@ -65,7 +65,7 @@ public class NetworkHelper {
 
             try {
                 // Use the hash prefix in order to receive a response with all password hash
-                // suffixes that begin with the specified prefix in the HIBP database.
+                // suffixes in the HIBP's passwords database that begin with the specified prefix.
                 Uri uri = Uri.parse(HIBP_URL_PWNED_PASSWORDS + hashPrefix);
                 URL requestUrl = new URL(uri.toString());
 

@@ -9,3 +9,4 @@
     Rename "userPassword" names to "entryPassword".
     Fix password strongness warning that hides the "show password" icon.
     Fix bug when creating a new database and default categories are not inserted.
+    Add validations for text fields (make sure they have a minimum length, or that they're not empty).
