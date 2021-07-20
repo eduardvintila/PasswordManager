@@ -13,17 +13,20 @@ import com.example.passmanager.R;
 public class Category {
 
     /**
-     * Category number.
+     * Category ID in the Password Manager.
      */
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "categoryNo")
-    public int categoryNo;
+    @ColumnInfo(name = "categoryId")
+    public int categoryId;
 
+    /**
+     * Category name.
+     */
     @ColumnInfo(name = "name")
     public String name;
 
     /**
-     * URI of an icon associated with the category.
+     * URI of an icon attached to this category.
      */
     @ColumnInfo(name = "icon")
     public Uri icon;

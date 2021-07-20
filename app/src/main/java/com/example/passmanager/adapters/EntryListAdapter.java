@@ -44,7 +44,7 @@ public class EntryListAdapter extends RecyclerView.Adapter<EntryListAdapter.Entr
     public void onBindViewHolder(@NonNull EntryViewHolder holder, int position) {
         if (entries != null) {
             Entry current = entries.get(position);
-            holder.entryItemView.setText(current.entryName);
+            holder.entryItemView.setText(current.name);
         } else {
             holder.entryItemView.setText("");
         }

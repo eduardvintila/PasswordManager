@@ -16,53 +16,47 @@ import java.sql.Date;
  * </p>
  */
 @Entity(tableName = "Entries", foreignKeys = {@ForeignKey(entity = Category.class,
-    parentColumns = "categoryNo",
-    childColumns = "categoryNo",
+    parentColumns = "categoryId",
+    childColumns = "categoryId",
     onDelete = ForeignKey.SET_DEFAULT)})
 public class Entry {
 
     /**
-     * Entry number in the Password Manager.
+     * Entry ID in the Password Manager.
      */
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "entryNo")
-    public int entryNo;
+    @ColumnInfo(name = "entryId")
+    public int entryId;
 
     /**
      * Name of the entry, typically the name of the website/app.
      */
-    @ColumnInfo(name = "entryName")
-    public String entryName;
+    @ColumnInfo(name = "name")
+    public String name;
 
     /**
      * Description of the entry.
      */
-    @ColumnInfo(name = "entryDescription")
-    public String entryDescription;
-
-    /**
-     * Filesystem path to a picture associated with the entry.
-     */
-    @ColumnInfo(name = "entryPicPath")
-    public String entryPicPath;
+    @ColumnInfo(name = "description")
+    public String description;
 
     /**
      * Link/URL/URI of the service.
      */
-    @ColumnInfo(name = "serviceLink")
-    public String serviceLink;
+    @ColumnInfo(name = "link")
+    public String link;
 
     /**
      * User ID for authentication (it can be an e-mail or a username).
      */
-    @ColumnInfo(name = "userId")
-    public String userId;
+    @ColumnInfo(name = "username")
+    public String username;
 
     /**
      * User password for authentication, stored in an encrypted form by using a salt.
      */
-    @ColumnInfo(name = "userPassword")
-    public String userPassword;
+    @ColumnInfo(name = "password")
+    public String password;
 
     /**
      * Salt generated for encrypting/decrypting the user password.
@@ -70,6 +64,9 @@ public class Entry {
     @ColumnInfo(name = "passwordSalt")
     public String passwordSalt;
 
+    /**
+     * Date of last modification.
+     */
     @ColumnInfo(name = "lastModified")
     public Date lastModified;
 
@@ -79,33 +76,31 @@ public class Entry {
      * category, with the help of the onDelete rule in the foreign key declaration at the
      * top of this class.
      */
-    @ColumnInfo(name = "categoryNo", defaultValue = "1")
-    public int categoryNo;
+    @ColumnInfo(name = "categoryId", defaultValue = "1", index = true)
+    public int categoryId;
 
-    public Entry(String entryName, String entryDescription, String entryPicPath,
-                 String serviceLink, String userId, String userPassword, String passwordSalt,
-                 Date lastModified, int categoryNo) {
-        this.entryName = entryName;
-        this.entryDescription = entryDescription;
-        this.entryPicPath = entryPicPath;
-        this.serviceLink = serviceLink;
-        this.userId = userId;
-        this.userPassword = userPassword;
+    public Entry(String name, String description, String link, String username, String password,
+                 String passwordSalt, Date lastModified, int categoryId) {
+        this.name = name;
+        this.description = description;
+        this.link = link;
+        this.username = username;
+        this.password = password;
         this.passwordSalt = passwordSalt;
         this.lastModified = lastModified;
-        this.categoryNo = categoryNo;
+        this.categoryId = categoryId;
     }
 
+    // Old constructor used for testing.
     @Ignore
-    public Entry(int entryNo, String entryName, String entryDescription, String entryPicPath,
-                 String serviceLink, String userId, String userPassword, String passwordSalt) {
-        this.entryNo = entryNo;
-        this.entryName = entryName;
-        this.entryDescription = entryDescription;
-        this.entryPicPath = entryPicPath;
-        this.serviceLink = serviceLink;
-        this.userId = userId;
-        this.userPassword = userPassword;
+    public Entry(int entryId, String name, String description, String link, String username,
+                 String password, String passwordSalt) {
+        this.entryId = entryId;
+        this.name = name;
+        this.description = description;
+        this.link = link;
+        this.username = username;
+        this.password = password;
         this.passwordSalt = passwordSalt;
     }
 }

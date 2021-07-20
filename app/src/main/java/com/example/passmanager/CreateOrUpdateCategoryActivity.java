@@ -19,10 +19,15 @@ import java.io.InputStream;
 
 public class CreateOrUpdateCategoryActivity extends AppCompatActivity {
 
-    private EditText categoryNameField;
+    // For launching an implicit intent for an image chooser.
     private ActivityResultLauncher<String[]> activityLauncher;
+
+    private EditText categoryNameField;
     private Uri iconUri;
+
+    // ImageView for displaying the selected icon.
     private ImageView iconImageView;
+
     private ApplicationViewModel viewmodel;
 
     // Only used if updating an existing category.
@@ -34,21 +39,21 @@ public class CreateOrUpdateCategoryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_or_update_category);
 
         categoryNameField = findViewById(R.id.categoryNameEditText);
+        iconImageView = findViewById(R.id.iconImageView);
         findViewById(R.id.chooseIconBtn).setOnClickListener(view -> chooseIcon());
         findViewById(R.id.saveCategoryBtn).setOnClickListener(view -> saveCategory());
-        iconImageView = findViewById(R.id.iconImageView);
 
         viewmodel = new ViewModelProvider(this).get(ApplicationViewModel.class);
 
         Intent prevIntent = getIntent();
-        // Check whether we are updating an existing entry or creating a new one
+        // Check whether we are updating an existing category or creating a new one.
         if (prevIntent.hasExtra(EntriesMenuActivity.EXTRA_CATEGORY_ID)) {
             int categoryId = prevIntent.getIntExtra(EntriesMenuActivity.EXTRA_CATEGORY_ID, 1);
             viewmodel.getCategory(categoryId).observe(this, category -> {
                 if (oldCategory == null && category != null) {
                     oldCategory = category;
                     categoryNameField.setText(category.name);
-                    if (isUriContentAvailable(category.icon, this)) {
+                    if (isUriResourceAvailable(category.icon, this)) {
                         iconUri = category.icon;
                     } else {
                         category.icon = null;
@@ -88,12 +93,22 @@ public class CreateOrUpdateCategoryActivity extends AppCompatActivity {
         finish();
     }
 
+    /**
+     * Launch the implicit intent for choosing an image.
+     */
     void chooseIcon() {
         String[] arr = {"image/*"};
         activityLauncher.launch(arr);
     }
 
-    public static boolean isUriContentAvailable(Uri uri, Context context) {
+    /**
+     * Verify that a resource pointed by a Uri is still available.
+     *
+     * @param uri Uri of the resource.
+     * @param context Application context.
+     * @return true if the content is available; false otherwise.
+     */
+    public static boolean isUriResourceAvailable(Uri uri, Context context) {
         try {
             InputStream inputStream =
                             context.getContentResolver().openInputStream(uri);

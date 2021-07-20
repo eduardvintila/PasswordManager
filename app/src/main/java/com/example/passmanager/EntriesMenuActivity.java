@@ -147,7 +147,7 @@ public class EntriesMenuActivity extends AppCompatActivity implements
      * @param categoryIndex the index in the categories list.
      */
     public void editCategory(int categoryIndex) {
-        int categoryId = categories.get(categoryIndex).categoryNo;
+        int categoryId = categories.get(categoryIndex).categoryId;
         Intent intent = new Intent(this, CreateOrUpdateCategoryActivity.class);
         intent.putExtra(EntriesMenuActivity.EXTRA_CATEGORY_ID, categoryId);
         startActivity(intent);
@@ -161,7 +161,7 @@ public class EntriesMenuActivity extends AppCompatActivity implements
     public void loadDeleteCategoryDialog(int categoryIndex) {
         Category category = categories.get(categoryIndex);
 
-        if (category.categoryNo == 1) {
+        if (category.categoryId == 1) {
             // Don't delete the "Others" category. This category is used for relocating the
             // entries in the deleted categories.
             Toast.makeText(this, R.string.cannot_delete_category, Toast.LENGTH_SHORT).show();
@@ -192,7 +192,7 @@ public class EntriesMenuActivity extends AppCompatActivity implements
      */
     @Override
     public void onEntryClick(int categoryIndex, int entryIndex) {
-        int entryId = entriesLists.get(categoryIndex).get(entryIndex).entryNo;
+        int entryId = entriesLists.get(categoryIndex).get(entryIndex).entryId;
         // Go to the view entry details menu.
         Intent intent = new Intent(this, EntryActivity.class);
         intent.putExtra(EXTRA_ENTRY_ID, entryId);

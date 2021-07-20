@@ -32,7 +32,7 @@ public interface EntryDao {
     @Query("SELECT * FROM entries;")
     LiveData<List<Entry>> getAllEntries();
 
-    @Query("SELECT * FROM entries WHERE entryNo = :id")
+    @Query("SELECT * FROM entries WHERE entryId = :id")
     LiveData<Entry> getEntry(int id);
 
     @Delete

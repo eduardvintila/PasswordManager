@@ -26,7 +26,7 @@
         android:inputType="textPersonName" />
 
     <EditText
-        android:id="@+id/serviceLinkEditText"
+        android:id="@+id/linkEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -34,7 +34,7 @@
         android:inputType="textPersonName" />
 
     <EditText
-        android:id="@+id/userIdEditText"
+        android:id="@+id/usernameEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -47,7 +47,7 @@
         android:layout_height="wrap_content" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/userPassTextLayout"
+        android:id="@+id/entryPassTextLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -55,7 +55,7 @@
         app:passwordToggleEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/userPassEditText"
+            android:id="@+id/entryPassEditText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:inputType="textPassword" />

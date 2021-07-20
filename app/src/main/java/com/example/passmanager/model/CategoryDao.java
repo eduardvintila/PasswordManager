@@ -22,8 +22,8 @@ public interface CategoryDao {
     @Query("SELECT * from Categories")
     LiveData<List<Category>> getAllCategories();
 
-    @Query("SELECT * FROM Categories WHERE categoryNo = :categoryId")
-    LiveData<Category> getCategory(int categoryId);
+    @Query("SELECT * FROM Categories WHERE categoryId = :id")
+    LiveData<Category> getCategory(int id);
 
     @Update
     ListenableFuture<Integer> updateCategory(Category category);

@@ -44,20 +44,21 @@ import javax.crypto.SecretKey;
  */
 public class CreateOrUpdateEntryActivity extends AppCompatActivity {
 
-    // TODO: Implement Picture path field
-    private EditText entryNameField;
-    private EditText userIdField;
-    private EditText userPasswordField;
-    private EditText entryDescriptionField;
-    private EditText serviceLinkField;
-    private TextInputLayout userPassLayout;
+    private EditText nameField;
+    private EditText usernameField;
+    private EditText passwordField;
+    private EditText descriptionField;
+    private EditText linkField;
+    private TextInputLayout passwordLayout;
 
+    // Chips for selecting character sets used in password generation.
     private ChipGroup chipGroup;
     private Chip upperAlphaChip;
     private Chip lowerAlphaChip;
     private Chip numericChip;
     private Chip specialChip;
 
+    // Slider for choosing the length of the generated password.
     private Slider passLengthSlider;
 
     private ApplicationViewModel viewmodel;
@@ -72,24 +73,35 @@ public class CreateOrUpdateEntryActivity extends AppCompatActivity {
 
     // Only used if updating an existing entry.
     private Entry oldEntry;
+    private int oldEntryCategoryId = -1;
 
-    private int categoryNo = 1;
+    // Spinner for choosing a category.
+    private Spinner categoriesSpinner;
 
+    // List of all categories for populating the spinner.
     private List<Category> categories;
-    private ArrayAdapter<CharSequence> arrayAdapter;
-    private List<Integer> adapterIds;
+
+    // Array adapter for the spinner with the categories' names.
+    private ArrayAdapter<CharSequence> arraySpinnerAdapter;
+
+    // Same size as the array adapter, used for storing each category's id.
+    private List<Integer> adapterCategoryIds;
+
+    // Id of the chosen category in the spinner.
+    private int categoryId = 1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_or_update_entry);
 
-        entryNameField = findViewById(R.id.entryNameEditText);
-        userIdField = findViewById(R.id.userIdEditText);
-        userPasswordField = findViewById(R.id.userPassEditText);
-        userPassLayout = findViewById(R.id.userPassTextLayout);
-        entryDescriptionField = findViewById(R.id.entryDescriptionEditText);
-        serviceLinkField = findViewById(R.id.serviceLinkEditText);
+        nameField = findViewById(R.id.entryNameEditText);
+        usernameField = findViewById(R.id.usernameEditText);
+        passwordField = findViewById(R.id.entryPassEditText);
+        passwordLayout = findViewById(R.id.entryPassTextLayout);
+        descriptionField = findViewById(R.id.entryDescriptionEditText);
+        linkField = findViewById(R.id.linkEditText);
         chipGroup = findViewById(R.id.chipGroup);
         upperAlphaChip = findViewById(R.id.upperAlphaChip);
         lowerAlphaChip = findViewById(R.id.lowerAlphaChip);
@@ -120,33 +132,34 @@ public class CreateOrUpdateEntryActivity extends AppCompatActivity {
 
         viewmodel = new ViewModelProvider(this).get(ApplicationViewModel.class);
 
-        Intent prevIntent = getIntent();
         SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_file),
                                                             Context.MODE_PRIVATE);
         encryptedMaster = sharedPref.getString(getString(R.string.encrypted_master_key), null);
 
+        Intent prevIntent = getIntent();
         // Check whether we are updating an existing entry or creating a new one
         if (prevIntent.hasExtra(EntriesMenuActivity.EXTRA_ENTRY_ID)) {
-            int entryId = prevIntent.getIntExtra(EntriesMenuActivity.EXTRA_ENTRY_ID, 1);
-            viewmodel.getEntry(entryId).observe(this, entry -> {
+            int oldEntryId = prevIntent.getIntExtra(EntriesMenuActivity.EXTRA_ENTRY_ID, 1);
+            oldEntryCategoryId = prevIntent.getIntExtra(EntriesMenuActivity.EXTRA_CATEGORY_ID, -1);
+            viewmodel.getEntry(oldEntryId).observe(this, entry -> {
                 if (oldEntry == null && entry != null) {
                     oldEntry = entry;
                     // When updating an existing entry, load all text fields with the old
                     // information.
-                    entryNameField.setText(entry.entryName);
-                    userIdField.setText(entry.userId);
-                    entryDescriptionField.setText(entry.entryDescription);
-                    serviceLinkField.setText(entry.serviceLink);
+                    nameField.setText(entry.name);
+                    usernameField.setText(entry.username);
+                    descriptionField.setText(entry.description);
+                    linkField.setText(entry.link);
 
                     // Also populate the password field with the plaintext password decrypted
                     // previously.
                     String pass = prevIntent.getStringExtra(EntryActivity.EXTRA_ENTRY_PASSWORD);
-                    userPasswordField.setText(pass);
+                    passwordField.setText(pass);
                 }
             });
         }
 
-        userPasswordField.addTextChangedListener(new TextWatcher() {
+        passwordField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
 
@@ -156,44 +169,56 @@ public class CreateOrUpdateEntryActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 char[] pass = s.toString().toCharArray();
-                boolean isTextPassword = userPasswordField.getInputType() == passTextType;
+                boolean isTextPassword = passwordField.getInputType() == passTextType;
                 if (isTextPassword && pass.length > 0 &&
                         CryptoHelper.passwordStrongness(pass) < CryptoHelper.PASS_MAX_STRONGNESS) {
-                    userPassLayout.setErrorEnabled(true);
-                    userPassLayout.setError(getString(R.string.password_not_strong));
+                    passwordLayout.setErrorEnabled(true);
+                    passwordLayout.setError(getString(R.string.password_not_strong));
                 } else {
-                    userPassLayout.setErrorEnabled(false);
+                    passwordLayout.setErrorEnabled(false);
                 }
             }
         });
 
-        arrayAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item);
 
-        // Spinner with categories.
-        viewmodel.getAllCategories().observe(this, categories -> {
-            if (categories != null) {
-                this.categories = categories;
-                adapterIds = new ArrayList<>();
-                arrayAdapter.clear();
-                for (Category c : categories) {
-                    arrayAdapter.add(c.name);
-                    adapterIds.add(c.categoryNo);
-                }
-            }
-        });
 
-        Spinner categoriesSpinner = findViewById(R.id.categoriesSpinner);
-        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        categoriesSpinner.setAdapter(arrayAdapter);
+        // Create the Spinner with categories.
+        arraySpinnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item);
+        arraySpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        categoriesSpinner = findViewById(R.id.categoriesSpinner);
+        categoriesSpinner.setAdapter(arraySpinnerAdapter);
         categoriesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                categoryNo = adapterIds.get(position);
+                categoryId = adapterCategoryIds.get(position);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) { }
+        });
+
+        viewmodel.getAllCategories().observe(this, categories -> {
+            if (categories != null) {
+                // Only used when updating an existing entry and for selecting its category in
+                // the spinner.
+                int posOldEntryCategory = -1;
+
+                this.categories = categories;
+                adapterCategoryIds = new ArrayList<>(categories.size());
+                arraySpinnerAdapter.clear();
+                for (int pos = 0; pos < categories.size(); pos++) {
+                    Category c = categories.get(pos);
+                    arraySpinnerAdapter.add(c.name);
+                    adapterCategoryIds.add(c.categoryId);
+                    if (oldEntryCategoryId != -1 && c.categoryId == oldEntryCategoryId) {
+                        posOldEntryCategory = pos;
+                    }
+                }
+                if (posOldEntryCategory != -1) {
+                    // Set the entry's category in the spinner.
+                    categoriesSpinner.setSelection(posOldEntryCategory);
+                }
+            }
         });
     }
 
@@ -211,11 +236,11 @@ public class CreateOrUpdateEntryActivity extends AppCompatActivity {
             // Launch the network request on a new thread.
             executor.execute(() -> {
                 // Get the password from the field
-                Editable editable = userPasswordField.getText();
-                char[] userPassword = new char[editable.length()];
-                editable.getChars(0, editable.length(), userPassword, 0);
+                Editable editable = passwordField.getText();
+                char[] entryPassword = new char[editable.length()];
+                editable.getChars(0, editable.length(), entryPassword, 0);
 
-                boolean breached = NetworkHelper.isPassPwned(userPassword, true);
+                boolean breached = NetworkHelper.isPassPwned(entryPassword, true);
 
                 // Announce the UI thread that the network operation has finished.
                 handler.post(() -> {
@@ -239,35 +264,34 @@ public class CreateOrUpdateEntryActivity extends AppCompatActivity {
         char[] plainTextMaster = CryptoHelper.decryptMasterPassword(encryptedMaster);
 
         // Use the master password and a random salt to encrypt the password for the entry.
-        Editable editable = userPasswordField.getText();
-        char[] userPassword = new char[editable.length()];
-        editable.getChars(0, editable.length(), userPassword, 0);
+        Editable editable = passwordField.getText();
+        char[] entryPassword = new char[editable.length()];
+        editable.getChars(0, editable.length(), entryPassword, 0);
 
-        // String userPassword = userPasswordField.getText().toString();
         byte[] saltBytes = CryptoHelper.generateSalt();
         SecretKey key = CryptoHelper.createPbeKey(plainTextMaster, saltBytes, true);
-        String encryptedUserPassword = CryptoHelper.encrypt(key, userPassword, true);
+        String encryptedEntryPassword = CryptoHelper.encrypt(key, entryPassword, true);
 
         if (oldEntry != null) {
             // Update an existing entry.
             Entry newEntry = oldEntry;
-            newEntry.entryName = entryNameField.getText().toString();
-            newEntry.entryDescription = entryDescriptionField.getText().toString();
-            newEntry.serviceLink = serviceLinkField.getText().toString();
-            newEntry.userId = userIdField.getText().toString();
-            newEntry.userPassword = encryptedUserPassword;
+            newEntry.name = nameField.getText().toString();
+            newEntry.description = descriptionField.getText().toString();
+            newEntry.link = linkField.getText().toString();
+            newEntry.username = usernameField.getText().toString();
+            newEntry.password = encryptedEntryPassword;
             newEntry.passwordSalt = CryptoHelper.encode(saltBytes);
             newEntry.lastModified = new Date(Calendar.getInstance().getTimeInMillis());
-            newEntry.categoryNo = categoryNo;
+            newEntry.categoryId = categoryId;
 
             viewmodel.updateEntry(newEntry);
         } else {
             // Create a new entry.
-            Entry entry = new Entry(entryNameField.getText().toString(),
-                    entryDescriptionField.getText().toString(), null,
-                    serviceLinkField.getText().toString(), userIdField.getText().toString(),
-                    encryptedUserPassword, CryptoHelper.encode(saltBytes),
-                    new Date(Calendar.getInstance().getTimeInMillis()), categoryNo);
+            Entry entry = new Entry(nameField.getText().toString(),
+                    descriptionField.getText().toString(),
+                    linkField.getText().toString(), usernameField.getText().toString(),
+                    encryptedEntryPassword, CryptoHelper.encode(saltBytes),
+                    new Date(Calendar.getInstance().getTimeInMillis()), categoryId);
 
             viewmodel.insertEntry(entry);
         }
@@ -283,7 +307,7 @@ public class CreateOrUpdateEntryActivity extends AppCompatActivity {
         String generatedPass;
         int passLen = (int) passLengthSlider.getValue();
 
-        if (userPasswordField.getInputType() == passTextType) {
+        if (passwordField.getInputType() == passTextType) {
             // Generate a text password.
             int flags = 0;
             if (lowerAlphaChip.isChecked()) { flags |= CryptoHelper.ALPHA_LOWER_SET; }
@@ -303,7 +327,7 @@ public class CreateOrUpdateEntryActivity extends AppCompatActivity {
             generatedPass = CryptoHelper.generatePassword(passLen, CryptoHelper.NUMERIC_SET);
         }
 
-        userPasswordField.setText(generatedPass);
+        passwordField.setText(generatedPass);
     }
 
     /**
@@ -317,15 +341,15 @@ public class CreateOrUpdateEntryActivity extends AppCompatActivity {
         switch (view.getId()) {
             case R.id.textRadioButton:
                 if (checked) {
-                    userPasswordField.setInputType(passTextType);
+                    passwordField.setInputType(passTextType);
                     chipGroup.setVisibility(View.VISIBLE);
                 }
                 break;
 
             case R.id.pinRadioButton:
                 if (checked) {
-                    userPasswordField.setText("");
-                    userPasswordField.setInputType(passPinType);
+                    passwordField.setText("");
+                    passwordField.setInputType(passPinType);
                     chipGroup.setVisibility(View.GONE);
                 }
                 break;

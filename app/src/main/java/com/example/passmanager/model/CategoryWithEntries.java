@@ -13,6 +13,6 @@ public class CategoryWithEntries {
     @Embedded
     public Category category;
 
-    @Relation(parentColumn = "categoryNo", entityColumn = "categoryNo")
+    @Relation(parentColumn = "categoryId", entityColumn = "categoryId")
     public List<Entry> entries;
 }

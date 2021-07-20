@@ -65,7 +65,7 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
         if (categories != null) {
             Category current = categories.get(position);
             holder.categoryName.setText(current.name);
-            if (!CreateOrUpdateCategoryActivity.isUriContentAvailable(current.icon,
+            if (!CreateOrUpdateCategoryActivity.isUriResourceAvailable(current.icon,
                     holder.itemView.getContext())) {
                 current.icon = null;
             }

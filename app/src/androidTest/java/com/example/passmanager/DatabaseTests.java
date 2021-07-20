@@ -54,11 +54,11 @@ public class DatabaseTests {
     @Test
     public void insertTest() {
 
-        Entry e0 = new Entry(1, "Yahoo", "Email Password", "/", "mail.yahoo.com", "test",
+        Entry e0 = new Entry(1, "Yahoo", "Email Password", "mail.yahoo.com", "test",
                 "123456", "xyz123");
-        Entry e1 = new Entry(2, "Google Drive", "Drive Password", "/", "drive.google.com", "test",
+        Entry e1 = new Entry(2, "Google Drive", "Drive Password", "drive.google.com", "test",
                 "abcdef123", "rraa23");
-        Entry e2 = new Entry(3, "Amazon", "Shop Password", "/", "amazon.com", "test",
+        Entry e2 = new Entry(3, "Amazon", "Shop Password", "amazon.com", "test",
                 "xyz987", "x6546d");
 
         entryDao.simpleInsert(e0);
@@ -67,9 +67,9 @@ public class DatabaseTests {
 
         List<Entry> entries = entryDao.simpleGetAllEntries();
         if (entries != null) {
-            if (!e0.entryName.equals(entries.get(0).entryName)) { Assert.fail(); }
-            if (!e1.entryName.equals(entries.get(1).entryName)) { Assert.fail(); }
-            if (!e2.entryName.equals(entries.get(2).entryName)) { Assert.fail(); }
+            if (!e0.name.equals(entries.get(0).name)) { Assert.fail(); }
+            if (!e1.name.equals(entries.get(1).name)) { Assert.fail(); }
+            if (!e2.name.equals(entries.get(2).name)) { Assert.fail(); }
 
             // The test has passed if all entries' names are matched.
             Assert.assertTrue(true);

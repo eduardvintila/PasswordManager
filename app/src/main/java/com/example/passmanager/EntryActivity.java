@@ -39,11 +39,11 @@ public class EntryActivity extends AppCompatActivity
     public static final String EXTRA_ENTRY_PASSWORD = BuildConfig.APPLICATION_ID +
             ".ENTRY_PASSWORD";
 
-    private TextView entryNameField;
-    private TextView userIdField;
-    private TextView userPasswordField;
-    private TextView entryDescriptionField;
-    private TextView serviceLinkField;
+    private TextView nameField;
+    private TextView usernameField;
+    private TextView passwordField;
+    private TextView descriptionField;
+    private TextView linkField;
     private TextView entryLastModifiedField;
 
     private Button decryptBtn;
@@ -52,11 +52,13 @@ public class EntryActivity extends AppCompatActivity
 
     private ApplicationViewModel viewmodel;
 
+    // The encrypted master password used in decrypting the password in the entry.
     private String encryptedMaster;
 
+    // The entry that is being visualized.
     private Entry entry;
 
-    private boolean userPasswordDecrypted = false;
+    private boolean entryPasswordDecrypted = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,11 +67,11 @@ public class EntryActivity extends AppCompatActivity
 
         viewmodel = new ViewModelProvider(this).get(ApplicationViewModel.class);
 
-        entryNameField = findViewById(R.id.entryNameTextView);
-        userIdField = findViewById(R.id.userIdTextView);
-        userPasswordField = findViewById(R.id.userPassTextView);
-        entryDescriptionField = findViewById(R.id.entryDescriptionTextView);
-        serviceLinkField = findViewById(R.id.serviceLinkTextView);
+        nameField = findViewById(R.id.entryNameTextView);
+        usernameField = findViewById(R.id.usernameTextView);
+        passwordField = findViewById(R.id.entryPassTextView);
+        descriptionField = findViewById(R.id.entryDescriptionTextView);
+        linkField = findViewById(R.id.linkTextView);
         entryLastModifiedField = findViewById(R.id.lastModifiedTextView);
         decryptBtn = findViewById(R.id.loadDialogBtn);
         copyPassBtn = findViewById(R.id.copyPassBtn);
@@ -92,15 +94,15 @@ public class EntryActivity extends AppCompatActivity
                 if (entry != null) {
                     // Populate the fields with the entry information.
                     this.entry = entry;
-                    entryNameField.setText(entry.entryName);
-                    userIdField.setText(entry.userId);
-                    userPasswordField.setText(entry.userPassword);
-                    entryDescriptionField.setText(entry.entryDescription);
-                    serviceLinkField.setText(entry.serviceLink);
+                    nameField.setText(entry.name);
+                    usernameField.setText(entry.username);
+                    passwordField.setText(entry.password);
+                    descriptionField.setText(entry.description);
+                    linkField.setText(entry.link);
                     entryLastModifiedField.setText(entry.lastModified.toString());
 
                     decryptBtn.setVisibility(View.VISIBLE);
-                    userPasswordDecrypted = false;
+                    entryPasswordDecrypted = false;
                 }
             });
         } else {
@@ -145,17 +147,17 @@ public class EntryActivity extends AppCompatActivity
             Arrays.fill(inputPass, (char) 0);
 
             // Decrypt the password in the entry.
-            String encryptedUserPassword = entry.userPassword;
+            String encryptedEntryPassword = entry.password;
             byte[] saltBytes = CryptoHelper.decode(entry.passwordSalt);
             SecretKey key = CryptoHelper.createPbeKey(plaintextMaster, saltBytes, true);
-            char[] decryptedUserPassword = CryptoHelper.decrypt(key, encryptedUserPassword);
+            char[] decryptedEntryPassword = CryptoHelper.decrypt(key, encryptedEntryPassword);
 
-            if (decryptedUserPassword != null){
-                userPasswordField.setText(decryptedUserPassword, 0, decryptedUserPassword.length);
+            if (decryptedEntryPassword != null){
+                this.passwordField.setText(decryptedEntryPassword, 0, decryptedEntryPassword.length);
             }
             // Since the password has been decrypted, hide the "decrypt password" button.
             decryptBtn.setVisibility(View.INVISIBLE);
-            userPasswordDecrypted = true;
+            entryPasswordDecrypted = true;
 
             // And make the copy password button visible.
             copyPassBtn.setVisibility(View.VISIBLE);
@@ -184,11 +186,12 @@ public class EntryActivity extends AppCompatActivity
      * Modify the entry in the repository.
      */
     public void modifyEntry() {
-        if (userPasswordDecrypted) {
+        if (entryPasswordDecrypted) {
             // Load the activity where the user can edit the entry information.
             Intent intent = new Intent(this, CreateOrUpdateEntryActivity.class);
-            intent.putExtra(EntriesMenuActivity.EXTRA_ENTRY_ID, entry.entryNo);
-            intent.putExtra(EntryActivity.EXTRA_ENTRY_PASSWORD, userPasswordField.getText().toString());
+            intent.putExtra(EntriesMenuActivity.EXTRA_ENTRY_ID, entry.entryId);
+            intent.putExtra(EntriesMenuActivity.EXTRA_CATEGORY_ID, entry.categoryId);
+            intent.putExtra(EntryActivity.EXTRA_ENTRY_PASSWORD, passwordField.getText().toString());
             startActivity(intent);
         } else {
             Toast.makeText(this, R.string.decrypt_password_first, Toast.LENGTH_SHORT).show();
@@ -201,7 +204,7 @@ public class EntryActivity extends AppCompatActivity
     public void copyPass() {
         ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clip = ClipData.newPlainText(getString(R.string.label_user_password),
-                userPasswordField.getText().toString());
+                passwordField.getText().toString());
         clipboard.setPrimaryClip(clip);
 
         Toast.makeText(this, R.string.password_copied, Toast.LENGTH_SHORT).show();
@@ -213,7 +216,7 @@ public class EntryActivity extends AppCompatActivity
     public void copyUser() {
         ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clip = ClipData.newPlainText("user ID",
-                userIdField.getText().toString());
+                usernameField.getText().toString());
         clipboard.setPrimaryClip(clip);
 
         Toast.makeText(this, R.string.user_copied, Toast.LENGTH_SHORT).show();

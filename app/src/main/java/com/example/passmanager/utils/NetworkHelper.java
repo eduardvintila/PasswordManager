@@ -91,6 +91,7 @@ public class NetworkHelper {
                         return true;
                     }
                 }
+                urlConnection.disconnect();
             } catch (Exception e) {
                 e.printStackTrace();
             }

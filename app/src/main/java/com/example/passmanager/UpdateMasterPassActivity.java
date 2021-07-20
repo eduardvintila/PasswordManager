@@ -117,15 +117,15 @@ public class UpdateMasterPassActivity extends AppCompatActivity {
                         byte[] oldSaltBytes = CryptoHelper.decode(entry.passwordSalt);
                         SecretKey oldKey = CryptoHelper.createPbeKey(plaintextMaster,
                                 oldSaltBytes, false);
-                        char[] decryptedUserPassword = CryptoHelper.decrypt(oldKey, entry.userPassword);
+                        char[] decryptedEntryPassword = CryptoHelper.decrypt(oldKey, entry.password);
 
                         byte[] newSaltBytes = CryptoHelper.generateSalt();
                         SecretKey newKey = CryptoHelper.createPbeKey(newPass1, newSaltBytes, false);
-                        String encryptedUserPassword = CryptoHelper.encrypt(newKey,
-                                decryptedUserPassword, true);
+                        String encryptedEntryPassword = CryptoHelper.encrypt(newKey,
+                                decryptedEntryPassword, true);
 
                         entry.passwordSalt = CryptoHelper.encode(newSaltBytes);
-                        entry.userPassword = encryptedUserPassword;
+                        entry.password = encryptedEntryPassword;
                     }
                     // Clear the old master password.
                     Arrays.fill(plaintextMaster, (char) 0);
