@@ -4,13 +4,12 @@ import android.app.Application;
 
 import androidx.lifecycle.LiveData;
 
+import com.example.passmanager.R;
 import com.example.passmanager.model.ApplicationDatabase;
 import com.example.passmanager.model.Category;
 import com.example.passmanager.model.CategoryWithEntries;
 import com.example.passmanager.model.Entry;
 import com.google.common.util.concurrent.ListenableFuture;
-
-import net.sqlcipher.database.SQLiteException;
 
 import java.io.File;
 import java.util.List;
@@ -29,11 +28,6 @@ public class ApplicationRepository {
     private EntryDao entryDao;
     private CategoryDao categoryDao;
 
-    /**
-     * Cache all entries.
-     */
-    private LiveData<List<Entry>> allEntries;
-
     private ApplicationRepository() {}
 
     public static ApplicationRepository getRepository() {
@@ -45,7 +39,7 @@ public class ApplicationRepository {
 
 
     /**
-     * Open a connection with the local database.
+     * Open a connection with an existing local database.
      *
      * @param application Current application context
      * @param masterPass Master password for decrypting the database.
@@ -54,13 +48,35 @@ public class ApplicationRepository {
      */
     public boolean open(Application application, char[] masterPass, boolean clearPass) {
         try {
+            if (!exists(application))
+                throw new Exception(application.getString(R.string.exception_db_not_present));
             db = ApplicationDatabase.getDatabase(application, masterPass, clearPass);
             entryDao = db.entryDao();
             categoryDao = db.categoryDao();
-            allEntries = entryDao.getAllEntries();
             return true;
-        } catch (SQLiteException e) {
+        } catch (Exception e) {
             return false;
+        }
+    }
+
+    /**
+     * Create a new local database. Delete the previous one if it exists.
+     *
+     * @param application Current application context.
+     * @param masterPass Master password for encrypting the database
+     * @param clearPass If true, clear the password from memory after opening the connection.
+     */
+    public void create(Application application, char[] masterPass, boolean clearPass) {
+        try {
+            delete(application);
+            db = ApplicationDatabase.getDatabase(application, masterPass, clearPass);
+            entryDao = db.entryDao();
+            categoryDao = db.categoryDao();
+
+            // Insert the default categories.
+            categoryDao.insertCategories(Category.defaultCategories).get();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -76,17 +92,15 @@ public class ApplicationRepository {
         db.changeMasterPassword(newPassword);
     }
 
-
     /**
-     * Create a new local database. Delete the previous one if it exists.
+     * Check if a password manager database exists.
      *
-     * @param application Current application context.
-     * @param masterPass Master password for encrypting the database
-     * @param clearPass If true, clear the password from memory after opening the connection.
+     * @param application The application context.
+     * @return <code>true</code> if the database is found; <code>false otherwise.</code>
      */
-    public void create(Application application, char[] masterPass, boolean clearPass) {
-        delete(application);
-        open(application, masterPass, clearPass);
+    public boolean exists(Application application) {
+        File databaseFile = application.getDatabasePath(ApplicationDatabase.DB_NAME);
+        return databaseFile.exists();
     }
 
     /**
@@ -100,7 +114,7 @@ public class ApplicationRepository {
     }
 
     // Entries queries
-    public LiveData<List<Entry>> getAllEntries() { return allEntries; }
+    public LiveData<List<Entry>> getAllEntries() { return entryDao.getAllEntries(); }
     public ListenableFuture<Long> insertEntry(Entry e) { return entryDao.insert(e); }
     public LiveData<Entry> getEntry(int id) { return entryDao.getEntry(id); }
     public ListenableFuture<Integer> deleteEntry(Entry e) { return entryDao.deleteEntry(e); }

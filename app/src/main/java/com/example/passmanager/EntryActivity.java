@@ -228,10 +228,15 @@ public class EntryActivity extends AppCompatActivity
 
         // When exiting the view entry menu, clear the password from the clipboard. Since
         // onDestroy() is killable, we might not reach this point every time the activity is killed.
-        ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-        String passLabel = getString(R.string.label_user_password);
-        if (clipboard.getPrimaryClipDescription().getLabel().equals(passLabel)) {
-            clipboard.setPrimaryClip(ClipData.newPlainText("", ""));
+        try {
+            ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            String passLabel = getString(R.string.label_user_password);
+            if (clipboard.getPrimaryClipDescription().getLabel().equals(passLabel)) {
+                clipboard.setPrimaryClip(ClipData.newPlainText("", ""));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
     }
 }

@@ -77,4 +77,5 @@
     <string name="no">Nu</string>
     <string name="cannot_delete_category">Nu poți șterge această categorie.</string>
     <string name="category_selected">Categorie selectată</string>
+    <string name="exception_db_not_present">Baza de date nu există!</string>
 </resources>

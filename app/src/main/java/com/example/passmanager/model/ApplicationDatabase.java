@@ -36,16 +36,6 @@ public abstract class ApplicationDatabase extends RoomDatabase {
      */
     public abstract CategoryDao categoryDao();
 
-    private static final Callback createCallback = new Callback() {
-        @Override
-        public void onCreate(@NonNull SupportSQLiteDatabase db) {
-            super.onCreate(db);
-
-            // Insert the default categories in the database.
-            INSTANCE.categoryDao().insertCategories(Category.defaultCategories);
-        }
-    };
-
     /**
      * Get a handle to the RoomDatabase. Creates the database if it doesn't exist.
      *
@@ -65,7 +55,6 @@ public abstract class ApplicationDatabase extends RoomDatabase {
                     INSTANCE = Room.databaseBuilder(context, ApplicationDatabase.class, DB_NAME)
                             .fallbackToDestructiveMigration()
                             .openHelperFactory(factory)
-                            .addCallback(createCallback)
                             .build();
                     try {
                         // SQLCipher doesn't check if the master password is valid until a command is

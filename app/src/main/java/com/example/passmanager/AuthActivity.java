@@ -88,6 +88,7 @@ public class AuthActivity extends AppCompatActivity {
         lastAttempt = Calendar.getInstance().getTimeInMillis();
         loginAttemptsLeft--;
         if (loginAttemptsLeft == 0 ) {
+            // No more attempts left. Delete the database.
             viewmodel.delete(getApplication());
             resetAttempts();
             Toast.makeText(this, R.string.database_deleted, Toast.LENGTH_LONG).show();
