@@ -26,6 +26,11 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+    }
+
     buildFeatures {
         viewBinding true
     }
@@ -76,4 +81,14 @@ dependencies {
     testImplementation 'org.mockito:mockito-core:3.8.0'
     androidTestImplementation 'org.mockito:mockito-android:3.8.0'
     androidTestImplementation 'androidx.test:rules:1.4.0'
+
+    // Google Drive
+    implementation 'com.google.android.gms:play-services-auth:19.2.0'
+    implementation 'com.google.http-client:google-http-client-gson:1.26.0'
+    implementation('com.google.api-client:google-api-client-android:1.26.0') {
+        exclude group: 'org.apache.httpcomponents'
+    }
+    implementation('com.google.apis:google-api-services-drive:v3-rev136-1.25.0') {
+        exclude group: 'org.apache.httpcomponents'
+    }
 }

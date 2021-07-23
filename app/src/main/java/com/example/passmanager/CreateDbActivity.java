@@ -1,15 +1,21 @@
 package com.example.passmanager;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.passmanager.model.ApplicationDatabase;
 import com.example.passmanager.utils.CryptoHelper;
+import com.example.passmanager.utils.DriveHelper;
 import com.example.passmanager.viewmodel.ApplicationViewModel;
 
 import java.util.Arrays;
@@ -28,6 +34,9 @@ public class CreateDbActivity extends AppCompatActivity {
 
     private int passStrongness = 0;
     private boolean equalPasswords = false;
+    private DriveHelper driveHelper;
+
+    private ActivityResultLauncher<Intent> activityResultLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +45,8 @@ public class CreateDbActivity extends AppCompatActivity {
         firstPassField = findViewById(R.id.firstPassEditText);
         secondPassField = findViewById(R.id.secondPassEditText);
         notMatchingTextView = findViewById(R.id.notMatchingTextView);
-        findViewById(R.id.updateMasterPassBtn).setOnClickListener(view -> create());
+        findViewById(R.id.createDbBtn).setOnClickListener(view -> create());
+        findViewById(R.id.getDbBtn).setOnClickListener(view -> onClickGet());
 
         firstPassField.addTextChangedListener(new TextWatcher() {
             @Override
@@ -78,6 +88,21 @@ public class CreateDbActivity extends AppCompatActivity {
         });
 
         viewmodel = new ViewModelProvider(this).get(ApplicationViewModel.class);
+
+        driveHelper = DriveHelper.getInstance();
+        activityResultLauncher =
+                registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                        result -> {
+                            if (result.getResultCode() == Activity.RESULT_OK) {
+                                driveHelper.onSignInResult(result.getData(), this);
+                                driveHelper.getFile(getDatabasePath(ApplicationDatabase.DB_NAME));
+                                finish();
+                            }
+                        });
+    }
+
+    public void onClickGet() {
+        driveHelper.signIn(activityResultLauncher, this);
     }
 
     /**
