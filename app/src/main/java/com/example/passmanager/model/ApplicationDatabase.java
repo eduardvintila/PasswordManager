@@ -55,6 +55,7 @@ public abstract class ApplicationDatabase extends RoomDatabase {
                     INSTANCE = Room.databaseBuilder(context, ApplicationDatabase.class, DB_NAME)
                             .fallbackToDestructiveMigration()
                             .openHelperFactory(factory)
+                            .setJournalMode(JournalMode.TRUNCATE)
                             .build();
                     try {
                         // SQLCipher doesn't check if the master password is valid until a command is

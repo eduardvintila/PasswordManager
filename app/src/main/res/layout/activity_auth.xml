@@ -68,10 +68,11 @@
         app:layout_constraintTop_toBottomOf="@+id/authBtn"
         app:layout_constraintVertical_bias="0.211" />
 
-    <com.google.android.gms.common.SignInButton
+    <Button
         android:id="@+id/saveDbBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/save_database_google_drive"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

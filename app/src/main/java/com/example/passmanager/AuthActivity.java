@@ -11,7 +11,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
-import android.util.Log;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,12 +38,10 @@ public class AuthActivity extends AppCompatActivity {
     private static final int MAX_LOGIN_ATTEMPTS = 5;
     private static final long MINUTES_RESET_ATTEMPTS = 15;
 
-    private static final int REQ_CODE_SIGN_IN = 1;
-
     private int loginAttemptsLeft;
     private long lastAttempt;
 
-    private ActivityResultLauncher<Intent> activityResultLauncher;
+    private ActivityResultLauncher<Intent> saveDbLauncher;
     private DriveHelper driveHelper;
 
     @Override
@@ -55,8 +52,6 @@ public class AuthActivity extends AppCompatActivity {
         masterPassField = findViewById(R.id.editTextPassword);
         findViewById(R.id.authBtn).setOnClickListener(view -> auth());
         findViewById(R.id.goToCreateBtn).setOnClickListener(view -> goToCreate());
-        driveHelper = DriveHelper.getInstance();
-        findViewById(R.id.saveDbBtn).setOnClickListener(view -> onClickSave());
 
         viewmodel = new ViewModelProvider(this).get(ApplicationViewModel.class);
 
@@ -68,20 +63,19 @@ public class AuthActivity extends AppCompatActivity {
         sharedPref = getSharedPreferences(getString(R.string.preference_file), Context.MODE_PRIVATE);
         extractAttempts();
 
-        activityResultLauncher =
+        driveHelper = DriveHelper.getInstance();
+        saveDbLauncher =
                 registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                         result -> {
                             if (result.getResultCode() == Activity.RESULT_OK) {
-                                Log.d("AuthActivity", "gata intent");
+                                // Pass the sign in result to the DriveHelper.
                                 driveHelper.onSignInResult(result.getData(), this);
+                                // Save the database on the Drive.
                                 driveHelper.saveFile(getDatabasePath(ApplicationDatabase.DB_NAME));
                             }
                         });
-    }
-
-    public void onClickSave() {
-        Log.d("AuthActivity", "clicksave");
-        driveHelper.signIn(activityResultLauncher, this);
+        findViewById(R.id.saveDbBtn).setOnClickListener(view ->
+                driveHelper.signIn(saveDbLauncher, this));
     }
 
     /**

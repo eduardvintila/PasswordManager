@@ -30,13 +30,14 @@ public class CreateDbActivity extends AppCompatActivity {
     private EditText secondPassField;
     private TextView notMatchingTextView;
 
+    // Password characters from the first field.
     char[] pass1;
 
     private int passStrongness = 0;
     private boolean equalPasswords = false;
-    private DriveHelper driveHelper;
 
-    private ActivityResultLauncher<Intent> activityResultLauncher;
+    private ActivityResultLauncher<Intent> downloadDbLauncher;
+    private DriveHelper driveHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +47,6 @@ public class CreateDbActivity extends AppCompatActivity {
         secondPassField = findViewById(R.id.secondPassEditText);
         notMatchingTextView = findViewById(R.id.notMatchingTextView);
         findViewById(R.id.createDbBtn).setOnClickListener(view -> create());
-        findViewById(R.id.getDbBtn).setOnClickListener(view -> onClickGet());
 
         firstPassField.addTextChangedListener(new TextWatcher() {
             @Override
@@ -90,19 +90,19 @@ public class CreateDbActivity extends AppCompatActivity {
         viewmodel = new ViewModelProvider(this).get(ApplicationViewModel.class);
 
         driveHelper = DriveHelper.getInstance();
-        activityResultLauncher =
+        downloadDbLauncher =
                 registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                         result -> {
                             if (result.getResultCode() == Activity.RESULT_OK) {
+                                // Pass the sign in result to the DriveHelper.
                                 driveHelper.onSignInResult(result.getData(), this);
+                                // Download the database from the Drive.
                                 driveHelper.getFile(getDatabasePath(ApplicationDatabase.DB_NAME));
                                 finish();
                             }
                         });
-    }
-
-    public void onClickGet() {
-        driveHelper.signIn(activityResultLauncher, this);
+        findViewById(R.id.getDbBtn).setOnClickListener(view ->
+                driveHelper.signIn(downloadDbLauncher, this));
     }
 
     /**

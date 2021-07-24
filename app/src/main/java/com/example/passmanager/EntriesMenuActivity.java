@@ -1,5 +1,6 @@
 package com.example.passmanager;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -7,6 +8,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import androidx.appcompat.view.ActionMode;
@@ -22,9 +25,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.passmanager.adapters.CategoryListAdapter;
 import com.example.passmanager.databinding.ActivityEntriesMenuBinding;
 import com.example.passmanager.dialogs.DeleteCategoryDialogFragment;
+import com.example.passmanager.model.ApplicationDatabase;
 import com.example.passmanager.model.Category;
 import com.example.passmanager.model.CategoryWithEntries;
 import com.example.passmanager.model.Entry;
+import com.example.passmanager.utils.DriveHelper;
 import com.example.passmanager.viewmodel.ApplicationViewModel;
 
 import java.util.ArrayList;
@@ -54,11 +59,15 @@ public class EntriesMenuActivity extends AppCompatActivity implements
     // List of categories.
     List<Category> categories;
 
-    // Callback and actionmode for displaying a contextual action bar.
+    // Callback and actionmode for displaying a contextual action bar when a category is long
+    // clicked.
     private CategoryActionModeCallback callback;
     private ActionMode actionMode;
 
     private View selectedCategoryBackgroundView;
+
+    private ActivityResultLauncher<Intent> saveDbLauncher;
+    private DriveHelper driveHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,9 +88,6 @@ public class EntriesMenuActivity extends AppCompatActivity implements
             Intent intent = new Intent(this, CreateOrUpdateEntryActivity.class);
             startActivity(intent);
         });
-
-        findViewById(R.id.addCategoryBtn).setOnClickListener(view -> createCategory());
-        findViewById(R.id.modifyMasterPassBtn).setOnClickListener(view -> modifyMasterPass());
 
         // Setup the recycler view and it's adapter for populating categories.
         RecyclerView recyclerView = findViewById(R.id.categoriesRecyclerView);
@@ -104,8 +110,38 @@ public class EntriesMenuActivity extends AppCompatActivity implements
         });
 
         callback = new CategoryActionModeCallback();
-    }
 
+        driveHelper = DriveHelper.getInstance();
+        saveDbLauncher =
+                registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                        result -> {
+                            if (result.getResultCode() == Activity.RESULT_OK) {
+                                // Pass the sign in result to the DriveHelper.
+                                driveHelper.onSignInResult(result.getData(), this);
+                                // Save the database on the Drive.
+                                driveHelper.saveFile(getDatabasePath(ApplicationDatabase.DB_NAME));
+                            }
+                        });
+
+        binding.topAppBar.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.addCategoryBtn:
+                    createCategory();
+                    return true;
+
+                case R.id.modifyMasterPassBtn:
+                    modifyMasterPass();
+                    return true;
+
+                case R.id.saveDbBtn:
+                    driveHelper.signIn(saveDbLauncher, this);
+                    return true;
+
+                default:
+                    return false;
+            }
+        });
+    }
 
     /**
      * Inflate the top menu.

@@ -78,4 +78,10 @@
     <string name="cannot_delete_category">Nu poți șterge această categorie.</string>
     <string name="category_selected">Categorie selectată</string>
     <string name="exception_db_not_present">Baza de date nu există!</string>
+    <string name="google_authentication_failed">\"Autentificare eșuată Google \"</string>
+    <string name="save_database_google_drive">Salvează baza de date pe Google Drive</string>
+    <string name="download_database_google_drive">Descarcă baza de date de pe Google Drive</string>
+    <string name="more">Mai multe</string>
+    <string name="change_master_password">Schimbă parola master</string>
+    <string name="add_new_category">Adaugă o categorie</string>
 </resources>

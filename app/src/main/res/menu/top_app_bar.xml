@@ -4,14 +4,20 @@
 
     <item
         android:id="@+id/addCategoryBtn"
-        android:title="@string/short_add_category"
+        android:title="@string/add_new_category"
         android:contentDescription="@string/add_category"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/modifyMasterPassBtn"
-        android:title="@string/short_change_master_pass"
+        android:title="@string/change_master_password"
         android:contentDescription="@string/modify_master_pass"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/saveDbBtn"
+        android:title="@string/save_database_google_drive"
+        android:contentDescription="@string/save_database_google_drive"
+        app:showAsAction="never"/>
 
 </menu>
