@@ -12,11 +12,12 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.example.passmanager.model.ApplicationDatabase;
 import com.example.passmanager.utils.CryptoHelper;
 import com.example.passmanager.utils.DriveHelper;
 import com.example.passmanager.viewmodel.ApplicationViewModel;
+import com.google.android.gms.common.SignInButton;
 
 import java.util.Arrays;
 
@@ -36,7 +37,7 @@ public class CreateDbActivity extends AppCompatActivity {
     private int passStrongness = 0;
     private boolean equalPasswords = false;
 
-    private ActivityResultLauncher<Intent> downloadDbLauncher;
+    private ActivityResultLauncher<Intent> googleSignInLauncher;
     private DriveHelper driveHelper;
 
     @Override
@@ -90,19 +91,39 @@ public class CreateDbActivity extends AppCompatActivity {
         viewmodel = new ViewModelProvider(this).get(ApplicationViewModel.class);
 
         driveHelper = DriveHelper.getInstance();
-        downloadDbLauncher =
+        googleSignInLauncher =
                 registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                         result -> {
                             if (result.getResultCode() == Activity.RESULT_OK) {
                                 // Pass the sign in result to the DriveHelper.
                                 driveHelper.onSignInResult(result.getData(), this);
-                                // Download the database from the Drive.
-                                driveHelper.getFile(getDatabasePath(ApplicationDatabase.DB_NAME));
-                                finish();
                             }
                         });
-        findViewById(R.id.getDbBtn).setOnClickListener(view ->
-                driveHelper.signIn(downloadDbLauncher, this));
+        SignInButton syncDbBtn = findViewById(R.id.syncDbBtn);
+        DriveHelper.setGoogleButtonText(syncDbBtn, getString(R.string.sync));
+        syncDbBtn.setOnClickListener(view -> {
+                    driveHelper.signIn(googleSignInLauncher, this);
+                    driveHelper.showDriveDbSyncDialog(this, (success -> {
+                        // Upload finished.
+                        if (success) {
+                            Toast.makeText(this, R.string.upload_successful,
+                                    Toast.LENGTH_SHORT).show();
+                        }  else {
+                            Toast.makeText(this, R.string.upload_failed,
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }), (success -> {
+                        // Download finished.
+                        if (success) {
+                            Toast.makeText(this, R.string.download_successful,
+                                    Toast.LENGTH_SHORT).show();
+                            finish();
+                        } else {
+                            Toast.makeText(this, R.string.download_failed,
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }));
+                });
     }
 
     /**

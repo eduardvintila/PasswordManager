@@ -84,4 +84,25 @@
     <string name="more">Mai multe</string>
     <string name="change_master_password">Schimbă parola master</string>
     <string name="add_new_category">Adaugă o categorie</string>
+    <string name="close">Închide</string>
+    <string name="db_drive_found">Bază de date gasită în cloud!</string>
+    <string name="db_drive_found_format">Am gasit o bază de date stocată în Google Drive,
+        modficată ultima dată la: %s.</string>
+    <string name="db_drive_not_found">Nu a fost gasită o bază de date în cloud!</string>
+    <string name="db_not_found_drive_long">Nu a fost gasită nicio bază de date stocată pe Google
+        Drive.</string>
+    <string name="db_found_locally_format"> În schimb, există o bază de date stocată local care a
+        fost modificată ultima dată la: %s.</string>
+    <string name="db_not_found_locally"> În plus, pe dispozitivul actual nu s-a găsit nicio bază de
+        date.</string>
+    <string name="download_db_from_cloud">Descarcă baza din cloud</string>
+    <string name="upload_db_in_cloud">Încarcă în cloud baza locală</string>
+    <string name="sync">Sincronizează</string>
+    <string name="sync_with_drive">Sincronizează cu Google Drive</string>
+    <string name="upload_successful">Baza de date a fost încarcată cu succes în cloud!</string>
+    <string name="upload_failed">Încărcarea în cloud a bazei de date a eșuat!</string>
+    <string name="download_successful_auth">Baza de date din cloud a fost descărcată cu succes!
+        Este necesară o nouă autentificare pentru a accesa-o.</string>
+    <string name="download_failed">Descărcarea bazei de date din cloud a eșuat!</string>
+    <string name="download_successful">Baza de date din cloud a fost descărcată cu succes!</string>
 </resources>

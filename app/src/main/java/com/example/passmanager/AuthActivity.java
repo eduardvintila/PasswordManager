@@ -19,6 +19,7 @@ import com.example.passmanager.model.ApplicationDatabase;
 import com.example.passmanager.utils.CryptoHelper;
 import com.example.passmanager.utils.DriveHelper;
 import com.example.passmanager.viewmodel.ApplicationViewModel;
+import com.google.android.gms.common.SignInButton;
 
 import java.io.File;
 import java.util.Calendar;
@@ -41,7 +42,7 @@ public class AuthActivity extends AppCompatActivity {
     private int loginAttemptsLeft;
     private long lastAttempt;
 
-    private ActivityResultLauncher<Intent> saveDbLauncher;
+    private ActivityResultLauncher<Intent> googleSignInLauncher;
     private DriveHelper driveHelper;
 
     @Override
@@ -64,18 +65,38 @@ public class AuthActivity extends AppCompatActivity {
         extractAttempts();
 
         driveHelper = DriveHelper.getInstance();
-        saveDbLauncher =
+        googleSignInLauncher =
                 registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                         result -> {
                             if (result.getResultCode() == Activity.RESULT_OK) {
                                 // Pass the sign in result to the DriveHelper.
                                 driveHelper.onSignInResult(result.getData(), this);
-                                // Save the database on the Drive.
-                                driveHelper.saveFile(getDatabasePath(ApplicationDatabase.DB_NAME));
                             }
                         });
-        findViewById(R.id.saveDbBtn).setOnClickListener(view ->
-                driveHelper.signIn(saveDbLauncher, this));
+        SignInButton syncDbBtn = findViewById(R.id.syncDbBtn);
+        DriveHelper.setGoogleButtonText(syncDbBtn, getString(R.string.sync));
+        syncDbBtn.setOnClickListener(view -> {
+            driveHelper.signIn(googleSignInLauncher, this);
+            driveHelper.showDriveDbSyncDialog(this, (success -> {
+                // Upload finished.
+                if (success) {
+                    Toast.makeText(this, R.string.upload_successful,
+                            Toast.LENGTH_SHORT).show();
+                }  else {
+                    Toast.makeText(this, R.string.upload_failed,
+                            Toast.LENGTH_SHORT).show();
+                }
+            }), (success -> {
+                // Download finished.
+                if (success) {
+                    Toast.makeText(this, R.string.download_successful,
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, R.string.download_failed,
+                            Toast.LENGTH_SHORT).show();
+                }
+            }));
+        });
     }
 
     /**

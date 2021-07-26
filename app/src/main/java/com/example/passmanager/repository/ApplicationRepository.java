@@ -84,8 +84,10 @@ public class ApplicationRepository {
      * Close the connection with the local database.
      */
     public void close() {
-        db.closeDatabase();
-        db = null;
+        if (db != null) {
+            db.closeDatabase();
+            db = null;
+        }
     }
 
     public void changeMasterPassword(char[] newPassword) {

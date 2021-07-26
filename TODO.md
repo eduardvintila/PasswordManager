@@ -7,4 +7,5 @@
     Update class names in README.
     Fix password strongness warning that hides the "show password" icon.
     Add validations for text fields (make sure they have a minimum length, or that they're not empty).
-    Add more comments in DriveHelper class.
+    Add loading dialog.
+    When the database is deleted after multiple failed auth attempts, delete it from Drive, too?

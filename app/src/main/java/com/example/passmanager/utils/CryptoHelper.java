@@ -210,7 +210,7 @@ public class CryptoHelper {
             KeyStore keyStore = KeyStore.getInstance("AndroidKeyStore");
             keyStore.load(null);
             final KeyStore.SecretKeyEntry keyEntry =
-                    (KeyStore.SecretKeyEntry) keyStore.getEntry("masterKey", null);
+                    (KeyStore.SecretKeyEntry) keyStore.getEntry(alias, null);
             return keyEntry.getSecretKey();
         } catch (Exception e) {
             e.printStackTrace();

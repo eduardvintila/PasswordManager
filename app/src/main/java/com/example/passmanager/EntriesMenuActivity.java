@@ -13,7 +13,6 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import androidx.appcompat.view.ActionMode;
-import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -24,13 +23,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.passmanager.adapters.CategoryListAdapter;
 import com.example.passmanager.databinding.ActivityEntriesMenuBinding;
-import com.example.passmanager.dialogs.DeleteCategoryDialogFragment;
-import com.example.passmanager.model.ApplicationDatabase;
 import com.example.passmanager.model.Category;
 import com.example.passmanager.model.CategoryWithEntries;
 import com.example.passmanager.model.Entry;
 import com.example.passmanager.utils.DriveHelper;
 import com.example.passmanager.viewmodel.ApplicationViewModel;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +64,7 @@ public class EntriesMenuActivity extends AppCompatActivity implements
 
     private View selectedCategoryBackgroundView;
 
-    private ActivityResultLauncher<Intent> saveDbLauncher;
+    private ActivityResultLauncher<Intent> googleSignInLauncher;
     private DriveHelper driveHelper;
 
     @Override
@@ -112,14 +110,12 @@ public class EntriesMenuActivity extends AppCompatActivity implements
         callback = new CategoryActionModeCallback();
 
         driveHelper = DriveHelper.getInstance();
-        saveDbLauncher =
+        googleSignInLauncher =
                 registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                         result -> {
                             if (result.getResultCode() == Activity.RESULT_OK) {
                                 // Pass the sign in result to the DriveHelper.
                                 driveHelper.onSignInResult(result.getData(), this);
-                                // Save the database on the Drive.
-                                driveHelper.saveFile(getDatabasePath(ApplicationDatabase.DB_NAME));
                             }
                         });
 
@@ -133,8 +129,31 @@ public class EntriesMenuActivity extends AppCompatActivity implements
                     modifyMasterPass();
                     return true;
 
-                case R.id.saveDbBtn:
-                    driveHelper.signIn(saveDbLauncher, this);
+                case R.id.syncDbBtn:
+                    driveHelper.signIn(googleSignInLauncher, this);
+                    driveHelper.showDriveDbSyncDialog(this, (success -> {
+                        // Upload finished.
+                        if (success) {
+                            Toast.makeText(this, R.string.upload_successful,
+                                    Toast.LENGTH_SHORT).show();
+                        }  else {
+                            Toast.makeText(this, R.string.upload_failed,
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }), (success) -> {
+                        // Download finished.
+                        if (success) {
+                            Toast.makeText(this, R.string.download_successful_auth,
+                                    Toast.LENGTH_LONG).show();
+                            viewmodel.close();
+                            Intent intent = new Intent(this, AuthActivity.class);
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            Toast.makeText(this, R.string.download_failed,
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    });
                     return true;
 
                 default:
@@ -202,13 +221,16 @@ public class EntriesMenuActivity extends AppCompatActivity implements
             // entries in the deleted categories.
             Toast.makeText(this, R.string.cannot_delete_category, Toast.LENGTH_SHORT).show();
         } else {
-            DialogFragment dialogFragment =
-                    new DeleteCategoryDialogFragment(category, (dialog, which) -> {
-                        // Executed when the positive button has been presed.
+            new MaterialAlertDialogBuilder(this)
+                    .setTitle(R.string.delete_category)
+                    .setMessage(String.format(getString(R.string.delete_category_format),
+                            category.name))
+                    .setPositiveButton(R.string.yes, (dialog, which) -> {
                         viewmodel.deleteCategory(category);
                         actionMode.finish();
-                    });
-            dialogFragment.show(getSupportFragmentManager(), "dialogDeleteCategory");
+                    })
+                    .setNegativeButton(R.string.no, null)
+                    .show();
         }
     }
 

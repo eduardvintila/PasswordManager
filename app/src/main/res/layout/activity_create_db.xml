@@ -56,7 +56,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@android:color/holo_red_light"
-        app:layout_constraintBottom_toTopOf="@+id/updateMasterPassBtn"
+        app:layout_constraintBottom_toTopOf="@+id/createDbBtn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/secondPassEditText" />
@@ -71,11 +71,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/secondPassEditText" />
 
-    <Button
-        android:id="@+id/getDbBtn"
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/syncDbBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/download_database_google_drive"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

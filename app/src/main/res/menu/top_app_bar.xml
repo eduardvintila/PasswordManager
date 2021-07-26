@@ -15,9 +15,9 @@
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/saveDbBtn"
-        android:title="@string/save_database_google_drive"
-        android:contentDescription="@string/save_database_google_drive"
+        android:id="@+id/syncDbBtn"
+        android:title="@string/sync_with_drive"
+        android:contentDescription="@string/sync_with_drive"
         app:showAsAction="never"/>
 
 </menu>
