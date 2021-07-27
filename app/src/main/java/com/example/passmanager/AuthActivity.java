@@ -120,6 +120,12 @@ public class AuthActivity extends AppCompatActivity {
         lastAttempt = 0;
     }
 
+    public void resetSessionExpireTime() {
+        sharedPref.edit()
+                .putString(getString(R.string.session_expire_time_key), null)
+                .apply();
+    }
+
     /**
      * Called when a wrong master password is entered. Decrement the number of authentication
      * attempts left and update the time of the last attempt. If there are no more login attempts
@@ -160,6 +166,7 @@ public class AuthActivity extends AppCompatActivity {
         } else {
             // Authentication successful.
             resetAttempts();
+            resetSessionExpireTime();
 
             // Encrypt the master password and pass it to the next activities in order to use it
             // for encrypting/decrypting passwords in the entries.

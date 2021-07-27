@@ -1,7 +1,9 @@
 package com.example.passmanager;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,6 +32,7 @@ import com.example.passmanager.utils.DriveHelper;
 import com.example.passmanager.viewmodel.ApplicationViewModel;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,6 +52,9 @@ public class EntriesMenuActivity extends AppCompatActivity implements
 
     public static final String EXTRA_CATEGORY_ID = BuildConfig.APPLICATION_ID + ".CATEGORY_ID";
 
+    // TODO: Set this value in the Settings menu.
+    public static final long SESSION_EXPIRE_MINUTES = 0;
+
     private CategoryListAdapter adapter;
 
     // Lists of entries for each category.
@@ -66,6 +72,8 @@ public class EntriesMenuActivity extends AppCompatActivity implements
 
     private ActivityResultLauncher<Intent> googleSignInLauncher;
     private DriveHelper driveHelper;
+
+    private SharedPreferences sharedPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,6 +127,7 @@ public class EntriesMenuActivity extends AppCompatActivity implements
                             }
                         });
 
+        // Listener for clicks on the action bar items.
         binding.topAppBar.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
                 case R.id.addCategoryBtn:
@@ -165,6 +174,9 @@ public class EntriesMenuActivity extends AppCompatActivity implements
                     return false;
             }
         });
+
+        sharedPref = getSharedPreferences(getString(R.string.preference_file),
+                Context.MODE_PRIVATE);
     }
 
     /**
@@ -192,6 +204,41 @@ public class EntriesMenuActivity extends AppCompatActivity implements
         // destroyed when the application is terminated.
         super.onDestroy();
         viewmodel.close();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        // When the main menu leaves the foreground, set an expiration time after which a new
+        // authentication is needed.
+        String expireTimeStr = LocalDateTime.now().plusMinutes(SESSION_EXPIRE_MINUTES).toString();
+        sharedPref.edit()
+                .putString(getString(R.string.session_expire_time_key), expireTimeStr)
+                .apply();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        String expireTimeStr = sharedPref.getString(
+                getString(R.string.session_expire_time_key), null);
+        if (expireTimeStr != null) {
+            // Check if the current session has expired.
+            LocalDateTime currentTime = LocalDateTime.now();
+            LocalDateTime expireTime = LocalDateTime.parse(expireTimeStr);
+            if (currentTime.isAfter(expireTime)) {
+                // Session expired.
+                viewmodel.close();
+                Toast.makeText(this, R.string.session_expired, Toast.LENGTH_LONG).show();
+
+                // Go to the authentication menu.
+                Intent intent = new Intent(this, AuthActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        }
     }
 
     /**
