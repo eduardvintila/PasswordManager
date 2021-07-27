@@ -125,5 +125,5 @@
     <string name="passwords_header">Parole</string>
     <string name="entry_plaintext_passwords_title">Afișează parole în format clar</string>
     <string name="entry_plaintext_passwords_summary">Afișează întotdeauna parolele din înregistrări în format clar, fară să fie nevoie de parola master pentru a le decripta.</string>
-    <string name="entry_plaintext_passwords_setting">entry_plaintext_passwords_setting</string>
+    <string name="entry_autodecrypt_setting">entry_plaintext_passwords_setting</string>
 </resources>

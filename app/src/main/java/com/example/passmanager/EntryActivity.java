@@ -87,7 +87,7 @@ public class EntryActivity extends AppCompatActivity
         // Get the setting which indicates whether to automatically decrypt the entry pass or not.
         boolean autoDecrypt =
                 PreferenceManager.getDefaultSharedPreferences(this).getBoolean
-                        (getString(R.string.entry_plaintext_passwords_setting), false);
+                        (getString(R.string.entry_autodecrypt_setting), false);
 
         SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_file),
                                                             Context.MODE_PRIVATE);

@@ -3,7 +3,7 @@
     <PreferenceCategory app:title="@string/passwords_header">
 
         <SwitchPreferenceCompat
-            app:key="@string/entry_plaintext_passwords_setting"
+            app:key="@string/entry_autodecrypt_setting"
             app:title="@string/entry_plaintext_passwords_title"
             app:summary="@string/entry_plaintext_passwords_summary" />
 
