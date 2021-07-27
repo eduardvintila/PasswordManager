@@ -156,6 +156,11 @@ public class EntriesMenuActivity extends AppCompatActivity implements
                     });
                     return true;
 
+                case R.id.settingsBtn:
+                    Intent intent = new Intent(this, SettingsActivity.class);
+                    startActivity(intent);
+                    return true;
+
                 default:
                     return false;
             }

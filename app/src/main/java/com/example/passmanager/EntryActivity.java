@@ -4,6 +4,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.preference.PreferenceManager;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -83,6 +84,11 @@ public class EntryActivity extends AppCompatActivity
         findViewById(R.id.modifyBtn).setOnClickListener(view -> modifyEntry());
         findViewById(R.id.deleteBtn).setOnClickListener(view -> deleteEntry());
 
+        // Get the setting which indicates whether to automatically decrypt the entry pass or not.
+        boolean autoDecrypt =
+                PreferenceManager.getDefaultSharedPreferences(this).getBoolean
+                        (getString(R.string.entry_plaintext_passwords_setting), false);
+
         SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_file),
                                                             Context.MODE_PRIVATE);
         encryptedMaster = sharedPref.getString(getString(R.string.encrypted_master_key), null);
@@ -103,6 +109,10 @@ public class EntryActivity extends AppCompatActivity
 
                     decryptBtn.setVisibility(View.VISIBLE);
                     entryPasswordDecrypted = false;
+
+                    if (autoDecrypt) {
+                        decryptEntryPassword(CryptoHelper.decryptMasterPassword(encryptedMaster));
+                    }
                 }
             });
         } else {
@@ -112,10 +122,32 @@ public class EntryActivity extends AppCompatActivity
     }
 
     /**
+     * Decrypt the password in the entry using the master password. Clears the plaintext master
+     * password from memory after decryption.
+     *
+     * @param plaintextMaster The plaintext master password.
+     */
+    public void decryptEntryPassword(char[] plaintextMaster) {
+        // Decrypt the password in the entry.
+        String encryptedEntryPassword = entry.password;
+        byte[] saltBytes = CryptoHelper.decode(entry.passwordSalt);
+        SecretKey key = CryptoHelper.createPbeKey(plaintextMaster, saltBytes, true);
+        char[] decryptedEntryPassword = CryptoHelper.decrypt(key, encryptedEntryPassword);
+
+        if (decryptedEntryPassword != null){
+            this.passwordField.setText(decryptedEntryPassword, 0, decryptedEntryPassword.length);
+        }
+        // Since the password has been decrypted, hide the "decrypt password" button.
+        decryptBtn.setVisibility(View.INVISIBLE);
+        entryPasswordDecrypted = true;
+
+        // And make the copy password button visible.
+        copyPassBtn.setVisibility(View.VISIBLE);
+    }
+
+    /**
      * Load the dialog box which prompts the user to enter the master password in order to
      * decrypt the password stored in the entry.
-     *
-     * TODO: Make this optional.
      */
     public void loadDialog() {
         // Check if the entry has been loaded.
@@ -145,23 +177,7 @@ public class EntryActivity extends AppCompatActivity
         char[] plaintextMaster = CryptoHelper.decryptMasterPassword(encryptedMaster);
         if (Arrays.equals(inputPass, plaintextMaster)) {
             Arrays.fill(inputPass, (char) 0);
-
-            // Decrypt the password in the entry.
-            String encryptedEntryPassword = entry.password;
-            byte[] saltBytes = CryptoHelper.decode(entry.passwordSalt);
-            SecretKey key = CryptoHelper.createPbeKey(plaintextMaster, saltBytes, true);
-            char[] decryptedEntryPassword = CryptoHelper.decrypt(key, encryptedEntryPassword);
-
-            if (decryptedEntryPassword != null){
-                this.passwordField.setText(decryptedEntryPassword, 0, decryptedEntryPassword.length);
-            }
-            // Since the password has been decrypted, hide the "decrypt password" button.
-            decryptBtn.setVisibility(View.INVISIBLE);
-            entryPasswordDecrypted = true;
-
-            // And make the copy password button visible.
-            copyPassBtn.setVisibility(View.VISIBLE);
-
+            decryptEntryPassword(plaintextMaster);
             Toast.makeText(getApplicationContext(), R.string.user_pass_decrypted,
                     Toast.LENGTH_SHORT).show();
             dialog.dismiss();
