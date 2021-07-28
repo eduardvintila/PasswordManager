@@ -53,7 +53,7 @@ public class EntriesMenuActivity extends AppCompatActivity implements
     public static final String EXTRA_CATEGORY_ID = BuildConfig.APPLICATION_ID + ".CATEGORY_ID";
 
     // TODO: Set this value in the Settings menu.
-    public static final long SESSION_EXPIRE_MINUTES = 0;
+    public static final long SESSION_EXPIRE_MINUTES = 10;
 
     private CategoryListAdapter adapter;
 
