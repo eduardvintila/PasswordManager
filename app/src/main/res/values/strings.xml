@@ -113,4 +113,7 @@
     <string name="entry_autodecrypt_setting">entry_plaintext_passwords_setting</string>
     <string name="session_expire_time_key">session_expire_time_key</string>
     <string name="session_expired">Sesiunea actuală a expirat. Este necesară o nouă autentificare.</string>
+    <string name="session_expire_minutes_setting">session_expire_minutes_setting</string>
+    <string name="session_expire_minutes_title">Minute expirare sesiune</string>
+    <string name="session_expire_minutes_summary">Numărul de minute de inactivitate după care sesiunea expiră și este necesară o nouă autentificare.</string>
 </resources>

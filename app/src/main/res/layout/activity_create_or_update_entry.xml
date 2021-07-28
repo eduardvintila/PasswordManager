@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:fillViewport="true" >
+
+    <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="10dp"
     tools:context=".CreateOrUpdateEntryActivity">
@@ -52,7 +57,11 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="@string/password_prompt"
-        app:passwordToggleEnabled="true">
+        app:helperTextEnabled="false"
+        app:helperTextTextColor="@android:color/holo_red_dark"
+        app:counterEnabled="true"
+        app:counterMaxLength="@integer/password_max_length"
+        app:passwordToggleEnabled="true" >
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/entryPassEditText"
@@ -131,9 +140,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:stepSize="1.0"
-        android:value="16"
-        android:valueFrom="4"
-        android:valueTo="64" />
+        android:value="@integer/text_password_default_length"
+        android:valueFrom="@integer/password_min_length"
+        android:valueTo="@integer/password_max_length" />
 
     <Button
         android:id="@+id/generatePassBtn"
@@ -154,3 +163,5 @@
         android:text="@string/save_entry" />
 
 </LinearLayout>
+
+</ScrollView>

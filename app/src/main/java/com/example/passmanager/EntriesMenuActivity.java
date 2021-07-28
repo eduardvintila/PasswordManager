@@ -20,6 +20,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -51,9 +52,6 @@ public class EntriesMenuActivity extends AppCompatActivity implements
     public static final String EXTRA_ENTRY_ID = BuildConfig.APPLICATION_ID + ".ENTRY_ID";
 
     public static final String EXTRA_CATEGORY_ID = BuildConfig.APPLICATION_ID + ".CATEGORY_ID";
-
-    // TODO: Set this value in the Settings menu.
-    public static final long SESSION_EXPIRE_MINUTES = 10;
 
     private CategoryListAdapter adapter;
 
@@ -210,9 +208,14 @@ public class EntriesMenuActivity extends AppCompatActivity implements
     protected void onPause() {
         super.onPause();
 
+        // Get the session expire minutes setting value.
+        int expireMinutes = PreferenceManager.getDefaultSharedPreferences(this)
+                .getInt(getString(R.string.session_expire_minutes_setting),
+                        R.integer.session_expire_default_minutes);
+
         // When the main menu leaves the foreground, set an expiration time after which a new
         // authentication is needed.
-        String expireTimeStr = LocalDateTime.now().plusMinutes(SESSION_EXPIRE_MINUTES).toString();
+        String expireTimeStr = LocalDateTime.now().plusMinutes(expireMinutes).toString();
         sharedPref.edit()
                 .putString(getString(R.string.session_expire_time_key), expireTimeStr)
                 .apply();

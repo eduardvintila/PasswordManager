@@ -39,8 +39,6 @@ public class CryptoHelper {
     public static final String SPECIAL = "!#$%&'()*+,-./:;<=>?@[]^_`{|}~"; // missing " \ space
 
     public static final int PASS_MAX_STRONGNESS = 5;
-    public static final int DEFAULT_TEXT_PASS_LENGTH = 12;
-    public static final int DEFAULT_PIN_PASS_LENGTH = 4;
 
     // Flags for generating passwords using specific character sets.
     public static final int ALPHA_LOWER_SET = 0b0001;

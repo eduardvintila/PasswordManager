@@ -123,11 +123,11 @@ public class CreateOrUpdateEntryActivity extends AppCompatActivity {
 
         findViewById(R.id.textRadioButton).setOnClickListener(view -> {
             onRadioButtonClicked(view);
-            passLengthSlider.setValue(CryptoHelper.DEFAULT_TEXT_PASS_LENGTH);
+            passLengthSlider.setValue(R.integer.text_password_default_length);
         });
         findViewById(R.id.pinRadioButton).setOnClickListener(view -> {
             onRadioButtonClicked(view);
-            passLengthSlider.setValue(CryptoHelper.DEFAULT_PIN_PASS_LENGTH);
+            passLengthSlider.setValue(R.integer.pin_password_default_length);
         });
 
         viewmodel = new ViewModelProvider(this).get(ApplicationViewModel.class);
@@ -172,10 +172,10 @@ public class CreateOrUpdateEntryActivity extends AppCompatActivity {
                 boolean isTextPassword = passwordField.getInputType() == passTextType;
                 if (isTextPassword && pass.length > 0 &&
                         CryptoHelper.passwordStrongness(pass) < CryptoHelper.PASS_MAX_STRONGNESS) {
-                    passwordLayout.setErrorEnabled(true);
-                    passwordLayout.setError(getString(R.string.password_not_strong));
+                   passwordLayout.setHelperTextEnabled(true);
+                   passwordLayout.setHelperText(getString(R.string.password_not_strong));
                 } else {
-                    passwordLayout.setErrorEnabled(false);
+                    passwordLayout.setHelperTextEnabled(false);
                 }
             }
         });

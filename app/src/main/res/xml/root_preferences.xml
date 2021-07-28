@@ -1,11 +1,24 @@
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory app:title="@string/passwords_header">
+    <PreferenceCategory android:title="@string/passwords_header">
 
         <SwitchPreferenceCompat
-            app:key="@string/entry_autodecrypt_setting"
-            app:title="@string/entry_plaintext_passwords_title"
-            app:summary="@string/entry_plaintext_passwords_summary" />
+            android:key="@string/entry_autodecrypt_setting"
+            android:title="@string/entry_plaintext_passwords_title"
+            android:summary="@string/entry_plaintext_passwords_summary" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Sesiune">
+        <SeekBarPreference
+            android:key="@string/session_expire_minutes_setting"
+            android:title="@string/session_expire_minutes_title"
+            android:summary="@string/session_expire_minutes_summary"
+            app:min="@integer/session_expire_min_minutes"
+            android:max="@integer/session_expire_max_minutes"
+            android:defaultValue="@integer/session_expire_default_minutes"
+            app:showSeekBarValue="true"/>
 
     </PreferenceCategory>
 

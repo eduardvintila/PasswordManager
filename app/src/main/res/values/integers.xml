@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="password_max_length">64</integer>
+    <integer name="password_min_length">4</integer>
+    <integer name="text_password_default_length">12</integer>
+    <integer name="pin_password_default_length">4</integer>
+    <integer name="session_expire_min_minutes">1</integer>
+    <integer name="session_expire_max_minutes">60</integer>
+    <integer name="session_expire_default_minutes">10</integer>
+</resources>
