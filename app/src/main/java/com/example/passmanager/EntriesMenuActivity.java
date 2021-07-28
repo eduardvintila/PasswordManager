@@ -211,7 +211,7 @@ public class EntriesMenuActivity extends AppCompatActivity implements
         // Get the session expire minutes setting value.
         int expireMinutes = PreferenceManager.getDefaultSharedPreferences(this)
                 .getInt(getString(R.string.session_expire_minutes_setting),
-                        R.integer.session_expire_default_minutes);
+                        getResources().getInteger(R.integer.session_expire_default_minutes));
 
         // When the main menu leaves the foreground, set an expiration time after which a new
         // authentication is needed.

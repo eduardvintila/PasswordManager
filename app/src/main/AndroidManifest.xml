@@ -20,7 +20,8 @@
         <activity
             android:name=".EntriesMenuActivity"
             android:label="@string/title_activity_entries_menu"
-            android:theme="@style/Theme.PassManager.NoActionBar" />
+            android:theme="@style/Theme.PassManager.NoActionBar"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden" />
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"

@@ -123,11 +123,13 @@ public class CreateOrUpdateEntryActivity extends AppCompatActivity {
 
         findViewById(R.id.textRadioButton).setOnClickListener(view -> {
             onRadioButtonClicked(view);
-            passLengthSlider.setValue(R.integer.text_password_default_length);
+            passLengthSlider
+                    .setValue(getResources().getInteger(R.integer.text_password_default_length));
         });
         findViewById(R.id.pinRadioButton).setOnClickListener(view -> {
             onRadioButtonClicked(view);
-            passLengthSlider.setValue(R.integer.pin_password_default_length);
+            passLengthSlider
+                    .setValue(getResources().getInteger(R.integer.pin_password_default_length));
         });
 
         viewmodel = new ViewModelProvider(this).get(ApplicationViewModel.class);
