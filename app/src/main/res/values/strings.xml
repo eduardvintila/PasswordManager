@@ -109,12 +109,23 @@
     <string name="settings">Setări</string>
     <string name="passwords_header">Parole</string>
     <string name="entry_plaintext_passwords_title">Afișează parole în format clar</string>
-    <string name="entry_plaintext_passwords_summary">Afișează întotdeauna parolele din înregistrări în format clar, fară să fie nevoie de parola master pentru a le decripta.</string>
+    <string name="entry_plaintext_passwords_summary">Afișează întotdeauna parolele din
+        înregistrări în format clar, fară să fie nevoie de parola master pentru a le decripta.</string>
     <string name="entry_autodecrypt_setting">entry_plaintext_passwords_setting</string>
     <string name="session_expire_time_key">session_expire_time_key</string>
     <string name="session_expired">Sesiunea actuală a expirat. Este necesară o nouă autentificare.</string>
     <string name="session_expire_minutes_setting">session_expire_minutes_setting</string>
     <string name="session_expire_minutes_title">Minute expirare sesiune</string>
-    <string name="session_expire_minutes_summary">Numărul de minute de inactivitate după care sesiunea expiră și este necesară o nouă autentificare.</string>
+    <string name="session_expire_minutes_summary">Numărul de minute de inactivitate după care
+        sesiunea expiră și este necesară o nouă autentificare.</string>
     <string name="no_internet_connection">Nu există conexiune la internet!</string>
+    <string name="confirmation_download_db">Ești sigur că vrei să descarci baza de date de pe
+        cloud? Bază de date locală va fi complet înlocuită.</string>
+    <string name="download">Descarcă</string>
+    <string name="confirmation_upload_db">Ești sigur că vrei să încarci baza de date locală pe
+        Google Drive? Eventuala bază de date stocată în cloud va fi complet înlocuită!</string>
+    <string name="upload">Încarcă</string>
+    <string name="cancel">Închide</string>
+    <string name="confirmation_download_db_title">Descarci baza din cloud?</string>
+    <string name="confirmation_upload_db_title">Încarci baza locală în cloud?</string>
 </resources>

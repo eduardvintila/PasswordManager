@@ -280,6 +280,85 @@ public class DriveHelper {
         void onFinishUpload(boolean success);
     }
 
+
+    /**
+     * Load a confirmation dialog box for uploading a local database to Google Drive.
+     *
+     * @param context Current application context.
+     * @param localDbPath Filesystem path to the local database.
+     * @param uploadCallback Callback for a finished upload.
+     * @param mainExecutor Main thread executor for executing the callback.
+     */
+    private void showDriveDbUploadConfirmationDialog(Context context,
+                                                     java.io.File localDbPath,
+                                                     FinishUploadCallback uploadCallback,
+                                                     Executor mainExecutor) {
+        new MaterialAlertDialogBuilder(context)
+                .setTitle(R.string.confirmation_upload_db_title)
+                .setMessage(R.string.confirmation_upload_db)
+                .setPositiveButton(R.string.upload, (dialog, which) -> {
+                    // Upload the local database to the Drive.
+                    ListenableFuture<Boolean> uploadFuture =
+                            saveFile(localDbPath);
+
+                    if (uploadCallback != null) {
+                        uploadFuture.addListener(() -> {
+                            // Upload finished, check if it was successful.
+                            boolean success;
+                            try {
+                                success = uploadFuture.get();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                success = false;
+                            }
+                            uploadCallback.onFinishUpload(success);
+                        }, mainExecutor);
+                    }
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .show();
+    }
+
+    /**
+     * Load a confirmation dialog box for downloading a remote database from Google Drive.
+     *
+     * @param context Current application context.
+     * @param driveDbId The remote database's ID in the Drive.
+     * @param downloadPath Filesystem path to the download location.
+     * @param downloadCallback Callback for a finished download.
+     * @param mainExecutor Main thread executor for executing the callback.
+     */
+    private void showDriveDbDownloadConfirmationDialog(Context context,
+                                                       String driveDbId, java.io.File downloadPath,
+                                                       FinishDownloadCallback downloadCallback,
+                                                       Executor mainExecutor) {
+        new MaterialAlertDialogBuilder(context)
+                .setTitle(R.string.confirmation_download_db_title)
+                .setMessage(R.string.confirmation_download_db)
+                .setPositiveButton(R.string.download, (dialog, which) -> {
+                    // Download the remote database from Google Drive.
+                    ListenableFuture<Boolean> downloadFuture =
+                            getFile(driveDbId, downloadPath);
+
+                    if (downloadCallback != null) {
+                        downloadFuture.addListener(() -> {
+                            // Download finished, check if it was successful.
+                            boolean success;
+                            try {
+                                success = downloadFuture.get();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                success = false;
+                            }
+                            downloadCallback.onFinishDownload(success);
+                        }, mainExecutor);
+                    }
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .show();
+
+    }
+
     /**
      * Load a dialog box with options for synchronizing the database with Google Drive.
      *
@@ -291,12 +370,12 @@ public class DriveHelper {
                                       FinishUploadCallback uploadCallback,
                                       FinishDownloadCallback downloadCallback) {
         try {
+            // Executor for the main (UI) thread.
+            Executor mainThreadExecutor = ContextCompat.getMainExecutor(context);
+
             // Local database information.
             java.io.File localDbPath = context.getDatabasePath(ApplicationDatabase.DB_NAME);
             String localDbName = localDbPath.getName();
-
-            // Executor for the main (UI) thread.
-            Executor mainThreadExecutor = ContextCompat.getMainExecutor(context);
 
             // Find an existing database in the Drive.
             ListenableFuture<Pair<String, DateTime>> futureSearch = findFile(localDbName);
@@ -358,42 +437,12 @@ public class DriveHelper {
                             .setTitle(dialogTitle)
                             .setMessage(dialogMessage)
                             .setPositiveButton(R.string.upload_db_in_cloud, (dialog, which) -> {
-                                    // Upload the local database to the Drive.
-                                    ListenableFuture<Boolean> uploadFuture =
-                                            saveFile(localDbPath);
-
-                                    if (uploadCallback != null) {
-                                        uploadFuture.addListener(() -> {
-                                                // Upload finished, check if it was successful.
-                                                boolean success;
-                                                try {
-                                                    success = uploadFuture.get();
-                                                } catch (Exception e) {
-                                                    e.printStackTrace();
-                                                    success = false;
-                                                }
-                                                uploadCallback.onFinishUpload(success);
-                                            }, mainThreadExecutor);
-                                    }
+                                    showDriveDbUploadConfirmationDialog(context, localDbPath,
+                                            uploadCallback, mainThreadExecutor);
                                 })
                             .setNegativeButton(R.string.download_db_from_cloud, (dialog, which) -> {
-                                    // Download the remote database from Google Drive.
-                                    ListenableFuture<Boolean> downloadFuture =
-                                            getFile(finalDriveDbId, localDbPath);
-
-                                    if (downloadCallback != null) {
-                                        downloadFuture.addListener(() -> {
-                                            // Download finished, check if it was successful.
-                                            boolean success;
-                                            try {
-                                                success = downloadFuture.get();
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
-                                                success = false;
-                                            }
-                                            downloadCallback.onFinishDownload(success);
-                                        }, mainThreadExecutor);
-                                    }
+                                    showDriveDbDownloadConfirmationDialog(context, finalDriveDbId,
+                                            localDbPath, downloadCallback, mainThreadExecutor);
                                 })
                             .setNeutralButton(R.string.close, null)
                             .show();
@@ -417,6 +466,11 @@ public class DriveHelper {
         }
     }
 
+    /**
+     * Set the text of a Google Sign In button
+     * @param btn The Google Sign In button.
+     * @param text The text to be set.
+     */
     public static void setGoogleButtonText(SignInButton btn, CharSequence text) {
         for (int i = 0; i < btn.getChildCount(); i++) {
             View view = btn.getChildAt(0);
