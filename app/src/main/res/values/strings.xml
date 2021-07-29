@@ -116,4 +116,5 @@
     <string name="session_expire_minutes_setting">session_expire_minutes_setting</string>
     <string name="session_expire_minutes_title">Minute expirare sesiune</string>
     <string name="session_expire_minutes_summary">Numărul de minute de inactivitate după care sesiunea expiră și este necesară o nouă autentificare.</string>
+    <string name="no_internet_connection">Nu există conexiune la internet!</string>
 </resources>

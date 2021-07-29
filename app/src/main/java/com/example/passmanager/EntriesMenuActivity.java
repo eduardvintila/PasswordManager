@@ -30,6 +30,7 @@ import com.example.passmanager.model.Category;
 import com.example.passmanager.model.CategoryWithEntries;
 import com.example.passmanager.model.Entry;
 import com.example.passmanager.utils.DriveHelper;
+import com.example.passmanager.utils.NetworkHelper;
 import com.example.passmanager.viewmodel.ApplicationViewModel;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
@@ -137,30 +138,35 @@ public class EntriesMenuActivity extends AppCompatActivity implements
                     return true;
 
                 case R.id.syncDbBtn:
-                    driveHelper.signIn(googleSignInLauncher, this);
-                    driveHelper.showDriveDbSyncDialog(this, (success -> {
-                        // Upload finished.
-                        if (success) {
-                            Toast.makeText(this, R.string.upload_successful,
-                                    Toast.LENGTH_SHORT).show();
-                        }  else {
-                            Toast.makeText(this, R.string.upload_failed,
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    }), (success) -> {
-                        // Download finished.
-                        if (success) {
-                            Toast.makeText(this, R.string.download_successful_auth,
-                                    Toast.LENGTH_LONG).show();
-                            viewmodel.close();
-                            Intent intent = new Intent(this, AuthActivity.class);
-                            startActivity(intent);
-                            finish();
-                        } else {
-                            Toast.makeText(this, R.string.download_failed,
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                    if (NetworkHelper.isInternetConnectionAvailable(this)) {
+                        driveHelper.signIn(googleSignInLauncher, this);
+                        driveHelper.showDriveDbSyncDialog(this, (success -> {
+                            // Upload finished.
+                            if (success) {
+                                Toast.makeText(this, R.string.upload_successful,
+                                        Toast.LENGTH_SHORT).show();
+                            }  else {
+                                Toast.makeText(this, R.string.upload_failed,
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }), (success) -> {
+                            // Download finished.
+                            if (success) {
+                                Toast.makeText(this, R.string.download_successful_auth,
+                                        Toast.LENGTH_LONG).show();
+                                viewmodel.close();
+                                Intent intent = new Intent(this, AuthActivity.class);
+                                startActivity(intent);
+                                finish();
+                            } else {
+                                Toast.makeText(this, R.string.download_failed,
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    } else {
+                        Toast.makeText(this, R.string.no_internet_connection,
+                                Toast.LENGTH_SHORT).show();
+                    }
                     return true;
 
                 case R.id.settingsBtn:

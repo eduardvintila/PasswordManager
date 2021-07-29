@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.example.passmanager.utils.CryptoHelper;
 import com.example.passmanager.utils.DriveHelper;
+import com.example.passmanager.utils.NetworkHelper;
 import com.example.passmanager.viewmodel.ApplicationViewModel;
 import com.google.android.gms.common.SignInButton;
 
@@ -102,27 +103,32 @@ public class CreateDbActivity extends AppCompatActivity {
         SignInButton syncDbBtn = findViewById(R.id.syncDbBtn);
         DriveHelper.setGoogleButtonText(syncDbBtn, getString(R.string.sync));
         syncDbBtn.setOnClickListener(view -> {
-                    driveHelper.signIn(googleSignInLauncher, this);
-                    driveHelper.showDriveDbSyncDialog(this, (success -> {
-                        // Upload finished.
-                        if (success) {
-                            Toast.makeText(this, R.string.upload_successful,
-                                    Toast.LENGTH_SHORT).show();
-                        }  else {
-                            Toast.makeText(this, R.string.upload_failed,
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    }), (success -> {
-                        // Download finished.
-                        if (success) {
-                            Toast.makeText(this, R.string.download_successful,
-                                    Toast.LENGTH_SHORT).show();
-                            finish();
-                        } else {
-                            Toast.makeText(this, R.string.download_failed,
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    }));
+                    if (NetworkHelper.isInternetConnectionAvailable(this)) {
+                        driveHelper.signIn(googleSignInLauncher, this);
+                        driveHelper.showDriveDbSyncDialog(this, (success -> {
+                            // Upload finished.
+                            if (success) {
+                                Toast.makeText(this, R.string.upload_successful,
+                                        Toast.LENGTH_SHORT).show();
+                            }  else {
+                                Toast.makeText(this, R.string.upload_failed,
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }), (success -> {
+                            // Download finished.
+                            if (success) {
+                                Toast.makeText(this, R.string.download_successful,
+                                        Toast.LENGTH_SHORT).show();
+                                finish();
+                            } else {
+                                Toast.makeText(this, R.string.download_failed,
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }));
+                    } else {
+                        Toast.makeText(this, R.string.no_internet_connection,
+                                Toast.LENGTH_SHORT).show();
+                    }
                 });
     }
 

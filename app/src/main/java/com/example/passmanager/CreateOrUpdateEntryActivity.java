@@ -256,6 +256,8 @@ public class CreateOrUpdateEntryActivity extends AppCompatActivity {
                     }
                 });
             });
+        } else {
+            Toast.makeText(this, R.string.no_internet_connection,  Toast.LENGTH_SHORT).show();
         }
     }
 
