@@ -6,6 +6,7 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static androidx.test.espresso.action.ViewActions.longClick;
 import static androidx.test.espresso.action.ViewActions.pressImeActionButton;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
@@ -541,6 +542,142 @@ public class PasswordManagerTests {
                 .check(matches(withText("bloc2a")));
         onView(allOf(withId(R.id.entryPassTextView), isDisplayed()))
                 .check(matches(withText("1234")));
+        pressBack();
+    }
+
+    /**
+     * Insert a new category, add an entry in this category, and check that the deletion of the
+     * category doesn't corrupt the entry's data.
+     */
+    @Test
+    public void e() {
+        // Authenticate.
+        ViewInteraction authBtn = onView(
+                allOf(withId(R.id.authBtn), isDisplayed()));
+        authBtn.check(matches(isDisplayed()));
+
+        onView(allOf(withId(R.id.editTextPassword), isDisplayed()))
+                .perform(replaceText("1Q2w3e4r5t6y7u#"), closeSoftKeyboard());
+
+        authBtn.perform(click());
+
+        // Open the overflow menu.
+        ViewInteraction overflowMenuButton = onView(
+                allOf(childAtPosition(
+                        childAtPosition(
+                                withId(R.id.topAppBar),
+                                1),
+                        0),
+                        isDisplayed()));
+        overflowMenuButton.perform(click());
+
+        // Go to the "add category" menu
+        ViewInteraction materialTextView = onView(
+                allOf(withId(R.id.title), withText(R.string.add_new_category),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(R.id.content),
+                                        0),
+                                0),
+                        isDisplayed()));
+        materialTextView.perform(click());
+
+        onView(allOf(withId(R.id.categoryNameEditText)))
+                .perform(replaceText("Test Category"), closeSoftKeyboard());
+
+        // Save category.
+        onView(allOf(withId(R.id.saveCategoryBtn))).perform(click());
+
+        // Go to the add entry menu.
+        onView(allOf(withId(R.id.fab), isDisplayed())).perform(click());
+
+        onView(allOf(withId(R.id.entryNameEditText)))
+                .perform(scrollTo(), replaceText("Test Entry"),
+                        closeSoftKeyboard());
+
+        onView(allOf(withId(R.id.entryDescriptionEditText)))
+                .perform(scrollTo(), replaceText("Description Test"),
+                        closeSoftKeyboard());
+
+        onView(allOf(withId(R.id.linkEditText)))
+                .perform(scrollTo(), replaceText("test.com"),
+                        closeSoftKeyboard());
+
+        onView(allOf(withId(R.id.usernameEditText)))
+                .perform(scrollTo(), replaceText("testuser"),
+                        closeSoftKeyboard());
+
+        onView(allOf(withId(R.id.categoriesSpinner))).perform(scrollTo(), click());
+
+        DataInteraction appCompatCheckedTextView2 = onData(anything())
+                .inAdapterView(childAtPosition(
+                        withClassName(is("android.widget.PopupWindow$PopupBackgroundView")),
+                        0))
+                .atPosition(10); // Select the "Test Category" category from the spinner.
+        appCompatCheckedTextView2.perform(click());
+
+        ViewInteraction checkableImageButton2 = onView(
+                allOf(withId(R.id.text_input_end_icon), // Check the "show password" icon.
+                        childAtPosition(
+                                childAtPosition(
+                                        withClassName(is("android.widget.LinearLayout")),
+                                        1),
+                                0),
+                        isDisplayed()));
+        checkableImageButton2.perform(click());
+
+        onView(allOf(withId(R.id.entryPassEditText)))
+                .perform(scrollTo(), replaceText("test123"),
+                        closeSoftKeyboard());
+        // Save the entry.
+        onView(allOf(withId(R.id.saveEntryBtn))).perform(scrollTo(), click());
+
+        // Long click the "Test Category" category.
+        ViewInteraction categoriesRecyclerView = onView(allOf(withId(R.id.categoriesRecyclerView)));
+        categoriesRecyclerView.perform(actionOnItemAtPosition(10, longClick()));
+
+        // Click the delete category button.
+        ViewInteraction actionMenuItemView = onView(
+                allOf(withId(R.id.deleteCategoryBtn),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(R.id.action_mode_bar),
+                                        1),
+                                1),
+                        isDisplayed()));
+        actionMenuItemView.perform(click());
+
+        // Click the confirmation button in the dialog.
+        ViewInteraction materialButton4 = onView(
+                allOf(withId(android.R.id.button1),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(R.id.buttonPanel),
+                                        0),
+                                3)));
+        materialButton4.perform(scrollTo(), click());
+
+        // Click the "Others" Category. TODO: Make sure that this category is visible on screen.
+        categoriesRecyclerView.perform(actionOnItemAtPosition(0, click()));
+        // Click the "Test Entry" entry.
+        ViewInteraction recyclerView8 = onView(
+                allOf(withId(R.id.entriesRecyclerView),
+                        childAtPosition(
+                                childAtPosition(
+                                        hasDescendant(withText("Others")),
+                                        5),
+                                0)));
+        recyclerView8.perform(actionOnItemAtPosition(1, click()));
+        onView(allOf(withId(R.id.entryNameTextView), isDisplayed()))
+                .check(matches(withText("Test Entry")));
+        onView(allOf(withId(R.id.usernameTextView), isDisplayed()))
+                .check(matches(withText("testuser")));
+        onView(allOf(withId(R.id.entryPassTextView), isDisplayed()))
+                .check(matches(withText("test123")));
+        onView(allOf(withId(R.id.entryDescriptionTextView), isDisplayed()))
+                .check(matches(withText("Description Test")));
+        onView(allOf(withId(R.id.linkTextView), isDisplayed()))
+                .check(matches(withText("test.com")));
         pressBack();
     }
 
