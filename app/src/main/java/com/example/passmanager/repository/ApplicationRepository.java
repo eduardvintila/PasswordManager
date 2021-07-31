@@ -110,9 +110,7 @@ public class ApplicationRepository {
      * @param application Current application context.
      */
     public void delete(Application application) {
-        File databaseFile = application.getDatabasePath(ApplicationDatabase.DB_NAME);
-        databaseFile.mkdirs();
-        databaseFile.delete();
+        application.deleteDatabase(ApplicationDatabase.DB_NAME);
     }
 
     // Entries queries

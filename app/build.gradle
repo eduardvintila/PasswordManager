@@ -32,6 +32,10 @@ android {
         exclude 'META-INF/DEPENDENCIES'
     }
 
+    testOptions {
+        animationsDisabled = true;
+    }
+
     buildFeatures {
         viewBinding true
     }
@@ -42,6 +46,7 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment:2.3.5'
     implementation 'androidx.navigation:navigation-ui:2.3.5'
     implementation 'androidx.preference:preference:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.4.0'
     def lifecycle_version = "2.4.0-alpha02"
     def arch_version = "2.1.0"
     def room_version = "2.3.0"

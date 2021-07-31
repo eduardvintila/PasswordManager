@@ -70,7 +70,7 @@ public class EntryListAdapter extends RecyclerView.Adapter<EntryListAdapter.Entr
 
         private EntryViewHolder(View itemView) {
             super(itemView);
-            entryItemView = itemView.findViewById(R.id.textView);
+            entryItemView = itemView.findViewById(R.id.entryNameTextView);
             itemView.setOnClickListener(this);
         }
 

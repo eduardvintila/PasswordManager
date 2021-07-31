@@ -467,7 +467,8 @@ public class DriveHelper {
     }
 
     /**
-     * Set the text of a Google Sign In button
+     * Set the text of a Google Sign In button.
+     *
      * @param btn The Google Sign In button.
      * @param text The text to be set.
      */
