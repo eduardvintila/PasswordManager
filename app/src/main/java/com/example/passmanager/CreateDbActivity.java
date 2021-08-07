@@ -21,6 +21,7 @@ import com.example.passmanager.utils.DriveHelper;
 import com.example.passmanager.utils.NetworkHelper;
 import com.example.passmanager.viewmodel.ApplicationViewModel;
 import com.google.android.gms.common.SignInButton;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Arrays;
 
@@ -32,7 +33,9 @@ public class CreateDbActivity extends AppCompatActivity {
     private ApplicationViewModel viewmodel;
     private EditText firstPassField;
     private EditText secondPassField;
-    private TextView notMatchingTextView;
+
+    private TextInputLayout firstPassLayout;
+    private TextInputLayout secondPassLayout;
 
     // Password characters from the first field.
     char[] pass1;
@@ -49,7 +52,8 @@ public class CreateDbActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_db);
         firstPassField = findViewById(R.id.firstPassEditText);
         secondPassField = findViewById(R.id.secondPassEditText);
-        notMatchingTextView = findViewById(R.id.notMatchingTextView);
+        firstPassLayout = findViewById(R.id.textLayout1);
+        secondPassLayout = findViewById(R.id.textLayout2);
         findViewById(R.id.createDbBtn).setOnClickListener(view -> create());
 
         firstPassField.addTextChangedListener(new TextWatcher() {
@@ -71,6 +75,8 @@ public class CreateDbActivity extends AppCompatActivity {
                 passStrongness = CryptoHelper.passwordStrongness(pass1);
                 equalPasswords = Arrays.equals(pass1, pass2);
                 Arrays.fill(pass2, (char) 0);
+
+                validate();
             }
         });
 
@@ -88,6 +94,8 @@ public class CreateDbActivity extends AppCompatActivity {
                 e2.getChars(0, e2.length(), pass2, 0);
                 equalPasswords = Arrays.equals(pass1, pass2);
                 Arrays.fill(pass2, (char) 0);
+
+                validate();
             }
         });
 
@@ -135,10 +143,39 @@ public class CreateDbActivity extends AppCompatActivity {
     }
 
     /**
+     * Validate the password fields.
+     *
+     * @return <code>true</code> if the fields are valid; <code>false</code> otherwise.
+     */
+    private boolean validate() {
+        boolean valid = true;
+
+        if (passStrongness < CryptoHelper.PASS_MAX_STRONGNESS) {
+            firstPassLayout.setHelperTextEnabled(true);
+            firstPassLayout.setHelperText(getString(R.string.password_not_strong));
+            valid = false;
+        } else {
+            firstPassLayout.setHelperTextEnabled(false);
+        }
+
+        if (!equalPasswords) {
+            if (secondPassField.length() > 0) {
+                secondPassLayout.setHelperTextEnabled(true);
+                secondPassLayout.setHelperText(getString(R.string.passwords_not_matching));
+            }
+            valid = false;
+        } else {
+            secondPassLayout.setHelperTextEnabled(false);
+        }
+
+        return valid;
+    }
+
+    /**
      * Create a new database.
      */
     public void create() {
-        if (equalPasswords && passStrongness == CryptoHelper.PASS_MAX_STRONGNESS) {
+        if (validate()) {
             // Display a loading dialog box.
             DialogFragment loadingDialog = new LoadingDialogFragment();
             loadingDialog.show(getSupportFragmentManager(), "dialogLoading");
@@ -146,9 +183,6 @@ public class CreateDbActivity extends AppCompatActivity {
             viewmodel.create(getApplication(), pass1, true);
             viewmodel.close();
             finish();
-        } else {
-            // Passwords not matching or not strong enough.
-            notMatchingTextView.setText(R.string.passwords_not_matching);
         }
     }
 }

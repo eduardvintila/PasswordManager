@@ -7,161 +7,220 @@
     android:fillViewport="true" >
 
     <LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="10dp"
-    tools:context=".CreateOrUpdateEntryActivity">
-
-    <EditText
-        android:id="@+id/entryNameEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/entry_name_prompt"
-        android:inputType="textPersonName" />
+        android:orientation="vertical"
+        android:padding="10dp"
+        tools:context=".CreateOrUpdateEntryActivity">
 
-    <EditText
-        android:id="@+id/entryDescriptionEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:ems="10"
-        android:hint="@string/description_prompt"
-        android:inputType="textPersonName" />
-
-    <EditText
-        android:id="@+id/linkEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/link_prompt"
-        android:inputType="textPersonName" />
-
-    <EditText
-        android:id="@+id/usernameEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/username_prompt"
-        android:inputType="textPersonName" />
-
-    <Spinner
-        android:id="@+id/categoriesSpinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/entryPassTextLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/password_prompt"
-        app:helperTextEnabled="false"
-        app:helperTextTextColor="@android:color/holo_red_dark"
-        app:counterEnabled="true"
-        app:counterMaxLength="@integer/password_max_length"
-        app:passwordToggleEnabled="true" >
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/entryPassEditText"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:inputType="textPassword" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:text="@string/password_type" />
-
-    <RadioGroup
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <RadioButton
-            android:id="@+id/textRadioButton"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/entryNameLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:checked="true"
-            android:text="@string/text_password" />
+            app:helperTextTextColor="@android:color/holo_red_dark" >
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/entryNameEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/entry_name_prompt"
+                android:maxLength="@integer/entry_name_max_length"
+                android:inputType="textPersonName" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <RadioButton
-            android:id="@+id/pinRadioButton"
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/entryDescriptionEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:ems="10"
+                android:hint="@string/description_prompt"
+                android:maxLength="@integer/entry_description_max_length"
+                android:inputType="textMultiLine" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/linkEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:ems="10"
+                android:hint="@string/link_prompt"
+                android:maxLength="@integer/entry_link_max_length"
+                android:inputType="textUri" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/usernameEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:ems="10"
+                android:hint="@string/username_prompt"
+                android:maxLength="@integer/username_max_length"
+                android:inputType="textPersonName" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/spinnerEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/category"
+                android:layout_marginTop="10dp"
+                android:ems="10"
+                android:drawableEnd="@drawable/ic_baseline_arrow_down_24"
+                android:focusable="false"
+                android:inputType="none" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Spinner
+            android:id="@+id/categoriesSpinner"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:spinnerMode="dialog"
+            android:layout_marginTop="10dp"/>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/entryPassTextLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:text="@string/pin_password" />
-    </RadioGroup>
+            android:ems="10"
+            android:hint="@string/password_prompt"
+            app:helperTextEnabled="false"
+            app:helperTextTextColor="@android:color/holo_red_dark"
+            app:counterEnabled="true"
+            app:counterMaxLength="@integer/password_max_length"
+            app:passwordToggleEnabled="true" >
 
-    <com.google.android.material.chip.ChipGroup
-        android:id="@+id/chipGroup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/entryPassEditText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:maxLength="@integer/password_max_length"
+                android:inputType="textPassword" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/lowerAlphaChip"
+        <TextView
+            android:id="@+id/textView4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/Widget.MaterialComponents.Chip.Choice"
-            android:checked="true"
-            android:text="@string/lower_alpha"/>
+            android:layout_marginTop="5dp"
+            android:text="@string/password_type" />
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/upperAlphaChip"
+        <RadioGroup
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/Widget.MaterialComponents.Chip.Choice"
-            android:checked="true"
-            android:text="@string/upper_alpha"/>
+            android:orientation="horizontal">
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/numericChip"
+            <RadioButton
+                android:id="@+id/textRadioButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="@string/text_password" />
+
+            <RadioButton
+                android:id="@+id/pinRadioButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="@string/pin_password" />
+        </RadioGroup>
+
+        <TextView
+            android:id="@+id/textView5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/Widget.MaterialComponents.Chip.Choice"
-            android:checked="true"
-            android:text="@string/digits"/>
+            android:layout_marginTop="5dp"
+            android:text="@string/pass_gen_character_sets" />
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/specialChip"
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/lowerAlphaChip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:checked="true"
+                android:text="@string/lower_alpha"/>
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/upperAlphaChip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:checked="true"
+                android:text="@string/upper_alpha"/>
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/numericChip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:checked="true"
+                android:text="@string/digits"/>
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/specialChip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:checked="true"
+                android:text="@string/special_characters"/>
+        </com.google.android.material.chip.ChipGroup>
+
+
+        <TextView
+            android:id="@+id/passGenLengthTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/Widget.MaterialComponents.Chip.Choice"
-            android:checked="true"
-            android:text="@string/special_characters"/>
-    </com.google.android.material.chip.ChipGroup>
+            android:layout_marginTop="10dp"
+            android:text="@string/pass_gen_length" />
 
-    <com.google.android.material.slider.Slider
-        android:id="@+id/passLengthSlider"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:stepSize="1.0"
-        android:value="@integer/text_password_default_length"
-        android:valueFrom="@integer/password_min_length"
-        android:valueTo="@integer/password_max_length" />
+        <com.google.android.material.slider.Slider
+            android:id="@+id/passLengthSlider"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/pass_gen_length_slider"
+            android:stepSize="1.0"
+            android:value="@integer/text_password_default_length"
+            android:valueFrom="@integer/password_min_length"
+            android:valueTo="@integer/password_max_length" />
 
-    <Button
-        android:id="@+id/generatePassBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/generate_password" />
+        <Button
+            android:id="@+id/generatePassBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/generate_password" />
 
-    <Button
-        android:id="@+id/checkBreachBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/verify_password_data_breach" />
+        <Button
+            android:id="@+id/checkBreachBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/verify_password_data_breach" />
 
-    <Button
-        android:id="@+id/saveEntryBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/save_entry" />
-
-</LinearLayout>
-
+        <Button
+            android:id="@+id/saveEntryBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/save_entry" />
+    </LinearLayout>
 </ScrollView>

@@ -19,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.passmanager.model.Category;
@@ -50,6 +51,7 @@ public class CreateOrUpdateEntryActivity extends AppCompatActivity {
     private EditText descriptionField;
     private EditText linkField;
     private TextInputLayout passwordLayout;
+    private TextInputLayout nameLayout;
 
     // Chips for selecting character sets used in password generation.
     private ChipGroup chipGroup;
@@ -78,6 +80,8 @@ public class CreateOrUpdateEntryActivity extends AppCompatActivity {
     // Spinner for choosing a category.
     private Spinner categoriesSpinner;
 
+    private EditText spinnerEditText;
+
     // List of all categories for populating the spinner.
     private List<Category> categories;
 
@@ -91,6 +95,9 @@ public class CreateOrUpdateEntryActivity extends AppCompatActivity {
     private int categoryId = 1;
 
 
+    private TextView sliderPassLenTextView;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,6 +107,7 @@ public class CreateOrUpdateEntryActivity extends AppCompatActivity {
         usernameField = findViewById(R.id.usernameEditText);
         passwordField = findViewById(R.id.entryPassEditText);
         passwordLayout = findViewById(R.id.entryPassTextLayout);
+        nameLayout = findViewById(R.id.entryNameLayout);
         descriptionField = findViewById(R.id.entryDescriptionEditText);
         linkField = findViewById(R.id.linkEditText);
         chipGroup = findViewById(R.id.chipGroup);
@@ -108,19 +116,30 @@ public class CreateOrUpdateEntryActivity extends AppCompatActivity {
         numericChip = findViewById(R.id.numericChip);
         specialChip = findViewById(R.id.specialChip);
         passLengthSlider = findViewById(R.id.passLengthSlider);
+        spinnerEditText = findViewById(R.id.spinnerEditText);
+        sliderPassLenTextView = findViewById(R.id.passGenLengthTextView);
 
 
         findViewById(R.id.saveEntryBtn).setOnClickListener(view -> saveEntry());
         findViewById(R.id.generatePassBtn).setOnClickListener(view -> generatePassword());
         findViewById(R.id.checkBreachBtn).setOnClickListener(view -> checkPassword());
+        spinnerEditText.setOnClickListener(view -> categoriesSpinner.performClick());
 
         // When the character set or password length has changed, generate a new password.
         upperAlphaChip.setOnCheckedChangeListener((buttonView, isChecked) -> generatePassword());
         lowerAlphaChip.setOnCheckedChangeListener((buttonView, isChecked) -> generatePassword());
         numericChip.setOnCheckedChangeListener((buttonView, isChecked) -> generatePassword());
         specialChip.setOnCheckedChangeListener((buttonView, isChecked) -> generatePassword());
-        passLengthSlider.addOnChangeListener((slider, value, fromUser) -> generatePassword());
+        final String defaultGenLenStr = getString(R.string.pass_gen_length) +
+                getResources().getInteger(R.integer.text_password_default_length);
+        sliderPassLenTextView.setText(defaultGenLenStr);
+        passLengthSlider.addOnChangeListener((slider, value, fromUser) -> {
+            final String genLenStr = getString(R.string.pass_gen_length) + (int) value;
+            sliderPassLenTextView.setText(genLenStr);
+            generatePassword();
+        });
 
+        // Setup radio buttons for password type.
         findViewById(R.id.textRadioButton).setOnClickListener(view -> {
             onRadioButtonClicked(view);
             passLengthSlider
@@ -161,6 +180,7 @@ public class CreateOrUpdateEntryActivity extends AppCompatActivity {
             });
         }
 
+        // Set a listener for when the password is changed.
         passwordField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
@@ -181,6 +201,23 @@ public class CreateOrUpdateEntryActivity extends AppCompatActivity {
                 }
             }
         });
+        nameField.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) { }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length() == 0) {
+                    nameLayout.setHelperTextEnabled(true);
+                    nameLayout.setHelperText(getString(R.string.entry_name_cannot_be_empty));
+                } else {
+                    nameLayout.setHelperTextEnabled(false);
+                }
+            }
+        });
 
 
 
@@ -193,10 +230,13 @@ public class CreateOrUpdateEntryActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 categoryId = adapterCategoryIds.get(position);
+                spinnerEditText.setText(arraySpinnerAdapter.getItem(position));
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) { }
+            public void onNothingSelected(AdapterView<?> parent) {
+                spinnerEditText.setText(arraySpinnerAdapter.getItem(0));
+            }
         });
 
         viewmodel.getAllCategories().observe(this, categories -> {
@@ -266,6 +306,18 @@ public class CreateOrUpdateEntryActivity extends AppCompatActivity {
      */
     public void saveEntry() {
         char[] plainTextMaster = CryptoHelper.decryptMasterPassword(encryptedMaster);
+
+        if (nameField.length() == 0 || passwordField.length() == 0) {
+            if (nameField.length() == 0) {
+                nameLayout.setHelperTextEnabled(true);
+                nameLayout.setHelperText(getString(R.string.entry_name_cannot_be_empty));
+            }
+            if (passwordField.length() == 0) {
+                passwordLayout.setHelperTextEnabled(true);
+                passwordLayout.setHelperText(getString(R.string.pass_cannot_be_empty));
+            }
+            return;
+        }
 
         // Use the master password and a random salt to encrypt the password for the entry.
         Editable editable = passwordField.getText();

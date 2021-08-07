@@ -8,18 +8,25 @@
     android:padding="20dp"
     tools:context=".CreateOrUpdateCategoryActivity">
 
-    <EditText
-        android:id="@+id/categoryNameEditText"
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:hint="@string/category_name" />
+        android:hint="@string/category_name">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/categoryNameEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:maxLength="@integer/category_name_max_length" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/chooseIconBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:text="@string/choose_icon" />
 
     <Button

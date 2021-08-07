@@ -484,6 +484,12 @@ public class DriveHelper {
         }
     }
 
+    /**
+     * Display a loading dialog box.
+     *
+     * @param context The application context
+     * @return A reference to the dialog fragment just created.
+     */
     private DialogFragment displayLoadingDialog(Context context) {
         try {
             // Display a loading dialog box.

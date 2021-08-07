@@ -24,6 +24,7 @@ import com.example.passmanager.utils.DriveHelper;
 import com.example.passmanager.utils.NetworkHelper;
 import com.example.passmanager.viewmodel.ApplicationViewModel;
 import com.google.android.gms.common.SignInButton;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.File;
 import java.util.Calendar;
@@ -34,9 +35,10 @@ import java.util.concurrent.TimeUnit;
  */
 public class AuthActivity extends AppCompatActivity {
 
-    private TextView validationMsg;
     private EditText masterPassField;
     private ApplicationViewModel viewmodel;
+
+    private TextInputLayout masterPassLayout;
 
     SharedPreferences sharedPref;
 
@@ -53,8 +55,8 @@ public class AuthActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auth);
-        validationMsg = findViewById(R.id.validationTextView);
         masterPassField = findViewById(R.id.editTextPassword);
+        masterPassLayout = findViewById(R.id.textLayout1);
         findViewById(R.id.authBtn).setOnClickListener(view -> auth());
         findViewById(R.id.goToCreateBtn).setOnClickListener(view -> goToCreate());
 
@@ -140,7 +142,6 @@ public class AuthActivity extends AppCompatActivity {
      * remaining, delete the data repository with all the entries in the Password Manager.
      */
     private void failedAttempt() {
-        validationMsg.setText(R.string.invalid_pass);
         lastAttempt = Calendar.getInstance().getTimeInMillis();
         loginAttemptsLeft--;
         if (loginAttemptsLeft == 0 ) {
@@ -153,7 +154,8 @@ public class AuthActivity extends AppCompatActivity {
             Toast.makeText(this, getString(R.string.attempts_left) + loginAttemptsLeft,
                     Toast.LENGTH_SHORT).show();
         }
-
+        masterPassLayout.setHelperTextEnabled(true);
+        masterPassLayout.setHelperText(getString(R.string.invalid_master_password));
     }
 
     /**
@@ -174,8 +176,8 @@ public class AuthActivity extends AppCompatActivity {
 
         if (!viewmodel.open(getApplication(), pass, false)) {
             // Authentication failed.
-            failedAttempt();
             loadingDialog.dismiss();
+            failedAttempt();
         } else {
             // Authentication successful.
             resetAttempts();

@@ -17,6 +17,7 @@ import com.example.passmanager.dialogs.LoadingDialogFragment;
 import com.example.passmanager.model.Entry;
 import com.example.passmanager.utils.CryptoHelper;
 import com.example.passmanager.viewmodel.ApplicationViewModel;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Arrays;
 
@@ -29,7 +30,10 @@ public class UpdateMasterPassActivity extends AppCompatActivity {
     private EditText currentMasterPassField;
     private EditText firstPassField;
     private EditText secondPassField;
-    private TextView notMatchingTextView;
+
+    private TextInputLayout currentMasterPassLayout;
+    private TextInputLayout firstPassLayout;
+    private TextInputLayout secondPassLayout;
 
     char[] newPass1;
 
@@ -46,8 +50,10 @@ public class UpdateMasterPassActivity extends AppCompatActivity {
         setContentView(R.layout.activity_update_master_pass);
         firstPassField = findViewById(R.id.firstPassEditText);
         secondPassField = findViewById(R.id.secondPassEditText);
-        notMatchingTextView = findViewById(R.id.notMatchingTextView);
         currentMasterPassField = findViewById(R.id.masterPassEditText);
+        currentMasterPassLayout = findViewById(R.id.textLayout1);
+        firstPassLayout = findViewById(R.id.textLayout2);
+        secondPassLayout = findViewById(R.id.textLayout3);
         findViewById(R.id.updateMasterPassBtn).setOnClickListener(view -> updateMasterPass());
 
         firstPassField.addTextChangedListener(new TextWatcher() {
@@ -69,6 +75,8 @@ public class UpdateMasterPassActivity extends AppCompatActivity {
                 passStrongness = CryptoHelper.passwordStrongness(newPass1);
                 equalPasswords = Arrays.equals(newPass1, newPass2);
                 Arrays.fill(newPass2, (char) 0);
+
+                validate();
             }
         });
 
@@ -86,6 +94,8 @@ public class UpdateMasterPassActivity extends AppCompatActivity {
                 e2.getChars(0, e2.length(), newPass2, 0);
                 equalPasswords = Arrays.equals(newPass1, newPass2);
                 Arrays.fill(newPass2, (char) 0);
+
+                validate();
             }
         });
 
@@ -94,6 +104,35 @@ public class UpdateMasterPassActivity extends AppCompatActivity {
         encryptedMaster = sharedPref.getString(getString(R.string.encrypted_master_key), null);
 
         viewmodel = new ViewModelProvider(this).get(ApplicationViewModel.class);
+    }
+
+    /**
+     * Validate the new password fields.
+     *
+     * @return <code>true</code> if the fields are valid; <code>false</code> otherwise.
+     */
+    private boolean validate() {
+        boolean valid = true;
+
+        if (passStrongness < CryptoHelper.PASS_MAX_STRONGNESS) {
+            firstPassLayout.setHelperTextEnabled(true);
+            firstPassLayout.setHelperText(getString(R.string.password_not_strong));
+            valid = false;
+        } else {
+            firstPassLayout.setHelperTextEnabled(false);
+        }
+
+        if (!equalPasswords) {
+            if (secondPassField.length() > 0) {
+                secondPassLayout.setHelperTextEnabled(true);
+                secondPassLayout.setHelperText(getString(R.string.passwords_not_matching));
+            }
+            valid = false;
+        } else {
+            secondPassLayout.setHelperTextEnabled(false);
+        }
+
+        return valid;
     }
 
     /**
@@ -108,10 +147,9 @@ public class UpdateMasterPassActivity extends AppCompatActivity {
 
         // Check that it matches with the master password.
         char[] plaintextMaster = CryptoHelper.decryptMasterPassword(encryptedMaster);
-        if (Arrays.equals(inputPass, plaintextMaster)
-                && equalPasswords && passStrongness == CryptoHelper.PASS_MAX_STRONGNESS) {
+        boolean isMasterPassCorrect = Arrays.equals(inputPass, plaintextMaster);
+        if (isMasterPassCorrect && validate()) {
             viewmodel.getAllEntries().observe(this, entries -> {
-
                 // Display a loading dialog box.
                 DialogFragment loadingDialog = new LoadingDialogFragment();
                 loadingDialog.show(getSupportFragmentManager(), "dialogLoading");
@@ -154,9 +192,11 @@ public class UpdateMasterPassActivity extends AppCompatActivity {
                     finish();
                 }
             });
-
-        } else {
-            notMatchingTextView.setText(R.string.passwords_not_matching);
+        } else if (!isMasterPassCorrect) {
+            currentMasterPassLayout.setHelperTextEnabled(true);
+            currentMasterPassLayout.setHelperText(getString(R.string.invalid_master_password));
+        } else if (isMasterPassCorrect) {
+            currentMasterPassLayout.setHelperTextEnabled(false);
         }
     }
 }

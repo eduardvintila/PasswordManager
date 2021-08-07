@@ -6,60 +6,59 @@
     android:layout_height="match_parent"
     tools:context=".CreateDbActivity">
 
-    <EditText
-        android:id="@+id/firstPassEditText"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textLayout1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="236dp"
-        android:ems="10"
-        android:inputType="textPassword"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/secondPassEditText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPassword"
+        android:hint="@string/enter_master_password"
+        app:counterEnabled="true"
+        app:counterMaxLength="@integer/password_max_length"
+        app:helperTextTextColor="@android:color/holo_red_dark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/firstPassEditText"
-        app:layout_constraintVertical_bias="0.252" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.286"
+        app:passwordToggleEnabled="true">
 
-    <TextView
-        android:id="@+id/textView1"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/firstPassEditText"
+            android:layout_width="245dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPassword"
+            android:maxLength="@integer/password_max_length"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textLayout2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:text="@string/first_pass_master"
-        app:layout_constraintBottom_toTopOf="@+id/firstPassEditText"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:text="@string/second_pass_master"
-        app:layout_constraintBottom_toTopOf="@+id/secondPassEditText"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/notMatchingTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@android:color/holo_red_light"
-        app:layout_constraintBottom_toTopOf="@+id/createDbBtn"
+        android:hint="@string/enter_password_again"
+        app:counterEnabled="true"
+        app:counterMaxLength="@integer/password_max_length"
+        app:helperTextTextColor="@android:color/holo_red_dark"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/secondPassEditText" />
+        app:layout_constraintTop_toBottomOf="@id/textLayout1"
+        app:layout_constraintVertical_bias="0.067"
+        app:passwordToggleEnabled="true">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/secondPassEditText"
+            android:layout_width="245dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPassword"
+            android:maxLength="@integer/password_max_length"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/createDbBtn"
@@ -68,8 +67,10 @@
         android:text="@string/create_database"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/secondPassEditText" />
+        app:layout_constraintTop_toBottomOf="@+id/textLayout2"
+        app:layout_constraintVertical_bias="0.344" />
 
     <com.google.android.gms.common.SignInButton
         android:id="@+id/syncDbBtn"
@@ -78,7 +79,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/createDbBtn" />
+        app:layout_constraintTop_toBottomOf="@id/createDbBtn"
+        app:layout_constraintVertical_bias="0.312" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

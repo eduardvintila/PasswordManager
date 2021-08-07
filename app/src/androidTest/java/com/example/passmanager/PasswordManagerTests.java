@@ -117,13 +117,14 @@ public class PasswordManagerTests {
                 .perform(scrollTo(), replaceText("testmail123@yahoo.com"),
                         closeSoftKeyboard());
 
-        onView(allOf(withId(R.id.categoriesSpinner))).perform(scrollTo(), click());
+        onView(allOf(withId(R.id.spinnerEditText))).perform(scrollTo(), click());
 
         DataInteraction appCompatCheckedTextView = onData(anything())
-                .inAdapterView(childAtPosition(
-                        withClassName(is("android.widget.PopupWindow$PopupBackgroundView")),
-                        0))
-                .atPosition(7); // Select the email category from the spinner.
+                .inAdapterView(allOf(withId(R.id.select_dialog_listview),
+                        childAtPosition(
+                                withId(R.id.contentPanel),
+                                0)))
+                .atPosition(7); // Click on the "email" category in the spinner.
         appCompatCheckedTextView.perform(click());
 
         ViewInteraction checkableImageButton = onView(
@@ -251,13 +252,7 @@ public class PasswordManagerTests {
 
         // Enter the master password in order to enable the option.
         ViewInteraction appCompatEditText2 = onView(
-                allOf(withId(R.id.editTextMasterPassword),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.custom),
-                                        0),
-                                0),
-                        isDisplayed()));
+                allOf(withId(R.id.editTextMasterPassword), isDisplayed()));
         appCompatEditText2.perform(replaceText("1Q2w3e4r5t6y#"), closeSoftKeyboard());
 
         ViewInteraction materialButton2 = onView(
@@ -307,13 +302,14 @@ public class PasswordManagerTests {
                 .perform(scrollTo(), replaceText("googletest123@gmail.com"),
                         closeSoftKeyboard());
 
-        onView(allOf(withId(R.id.categoriesSpinner)))
-                .perform(scrollTo(), click());
+        onView(allOf(withId(R.id.spinnerEditText))).perform(scrollTo(), click());
+
         DataInteraction appCompatCheckedTextView = onData(anything())
-                .inAdapterView(childAtPosition(
-                        withClassName(is("android.widget.PopupWindow$PopupBackgroundView")),
-                        0))
-                .atPosition(7); // Select the Email category.
+                .inAdapterView(allOf(withId(R.id.select_dialog_listview),
+                        childAtPosition(
+                                withId(R.id.contentPanel),
+                                0)))
+                .atPosition(7); // Click on the "Email" category in the spinner.
         appCompatCheckedTextView.perform(click());
 
         ViewInteraction checkableImageButton = onView(
@@ -352,13 +348,14 @@ public class PasswordManagerTests {
                 .perform(scrollTo(), replaceText("testnetflix"),
                         closeSoftKeyboard());
 
-        onView(allOf(withId(R.id.categoriesSpinner))).perform(scrollTo(), click());
+        onView(allOf(withId(R.id.spinnerEditText))).perform(scrollTo(), click());
 
         DataInteraction appCompatCheckedTextView2 = onData(anything())
-                .inAdapterView(childAtPosition(
-                        withClassName(is("android.widget.PopupWindow$PopupBackgroundView")),
-                        0))
-                .atPosition(1); // Select the "Streaming" category from the spinner.
+                .inAdapterView(allOf(withId(R.id.select_dialog_listview),
+                        childAtPosition(
+                                withId(R.id.contentPanel),
+                                0)))
+                .atPosition(1); // Click on the "Streaming" category in the spinner.
         appCompatCheckedTextView2.perform(click());
 
         ViewInteraction checkableImageButton2 = onView(
@@ -607,14 +604,15 @@ public class PasswordManagerTests {
                 .perform(scrollTo(), replaceText("testuser"),
                         closeSoftKeyboard());
 
-        onView(allOf(withId(R.id.categoriesSpinner))).perform(scrollTo(), click());
+        onView(allOf(withId(R.id.spinnerEditText))).perform(scrollTo(), click());
 
-        DataInteraction appCompatCheckedTextView2 = onData(anything())
-                .inAdapterView(childAtPosition(
-                        withClassName(is("android.widget.PopupWindow$PopupBackgroundView")),
-                        0))
-                .atPosition(10); // Select the "Test Category" category from the spinner.
-        appCompatCheckedTextView2.perform(click());
+        DataInteraction appCompatCheckedTextView = onData(anything())
+                .inAdapterView(allOf(withId(R.id.select_dialog_listview),
+                        childAtPosition(
+                                withId(R.id.contentPanel),
+                                0)))
+                .atPosition(10); // Click on the "Test Category" category in the spinner.
+        appCompatCheckedTextView.perform(click());
 
         ViewInteraction checkableImageButton2 = onView(
                 allOf(withId(R.id.text_input_end_icon), // Check the "show password" icon.

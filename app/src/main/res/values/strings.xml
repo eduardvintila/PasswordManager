@@ -7,8 +7,7 @@
     <string name="first_pass_master">Alege o parolă master</string>
     <string name="second_pass_master">Introdu din nou parola</string>
     <string name="create_database">Creează</string>
-    <string name="passwords_not_matching">Parolele nu se potrivesc sau nu sunt destul de
-        puternice!</string>
+    <string name="passwords_not_matching">Parolele nu se potrivesc!</string>
     <string name="title_activity_entries_menu">EntriesMenuActivity</string>
     <string name="entries_label">Înregistrări</string>
     <string name="username_prompt">Nume de utilizator/E-mail</string>
@@ -129,4 +128,14 @@
     <string name="confirmation_download_db_title">Descarci baza din cloud?</string>
     <string name="confirmation_upload_db_title">Încarci baza locală în cloud?</string>
     <string name="loading">Se incarcă</string>
+    <string name="category">Categorie</string>
+    <string name="pass_gen_character_sets">Set de caractere pentru generarea parolei: </string>
+    <string name="pass_gen_length">Lungimea parolei generate:</string>
+    <string name="pass_gen_length_slider">Slider lungime parolă generată</string>
+    <string name="entry_name_cannot_be_empty">Numele înregistrării nu poate fi gol!</string>
+    <string name="pass_cannot_be_empty">Parola nu poate fi goală!</string>
+    <string name="enter_master_password">Introdu parola master</string>
+    <string name="enter_password_again">Introdu din nou parola</string>
+    <string name="current_master_pass">Actuala parolă master</string>
+    <string name="new_master_password">Noua parolă master</string>
 </resources>

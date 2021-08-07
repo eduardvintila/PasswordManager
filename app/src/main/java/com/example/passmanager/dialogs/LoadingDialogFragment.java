@@ -12,6 +12,9 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.passmanager.R;
 
+/**
+ * Dialog Fragment which displays a loading animation.
+ */
 public class LoadingDialogFragment extends DialogFragment {
     @NonNull
     @Override
