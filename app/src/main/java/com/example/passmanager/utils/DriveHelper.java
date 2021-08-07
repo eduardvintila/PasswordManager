@@ -8,10 +8,13 @@ import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.util.Pair;
+import androidx.fragment.app.DialogFragment;
 
 import com.example.passmanager.R;
+import com.example.passmanager.dialogs.LoadingDialogFragment;
 import com.example.passmanager.model.ApplicationDatabase;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -21,9 +24,9 @@ import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.Scope;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.http.FileContent;
+import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.client.util.DateTime;
 import com.google.api.services.drive.Drive;
@@ -124,7 +127,7 @@ public class DriveHelper {
 
                         // Connect to Google Drive.
                         googleDriveService = new Drive.Builder(
-                                AndroidHttp.newCompatibleTransport(),
+                                new NetHttpTransport(),
                                 new GsonFactory(),
                                 credential)
                                 .setApplicationName("Password Manager")
@@ -301,9 +304,15 @@ public class DriveHelper {
                     ListenableFuture<Boolean> uploadFuture =
                             saveFile(localDbPath);
 
+                    DialogFragment uploadDbLoadingDialog = displayLoadingDialog(context);
                     if (uploadCallback != null) {
                         uploadFuture.addListener(() -> {
-                            // Upload finished, check if it was successful.
+                            // Upload finished.
+                            if (uploadDbLoadingDialog != null) {
+                                // Dismiss the loading dialog.
+                                uploadDbLoadingDialog.dismiss();
+                            }
+                            // Check if the upload was successful.
                             boolean success;
                             try {
                                 success = uploadFuture.get();
@@ -340,9 +349,15 @@ public class DriveHelper {
                     ListenableFuture<Boolean> downloadFuture =
                             getFile(driveDbId, downloadPath);
 
+                    DialogFragment downloadDbLoadingDialog = displayLoadingDialog(context);
                     if (downloadCallback != null) {
                         downloadFuture.addListener(() -> {
-                            // Download finished, check if it was successful.
+                            // Download finished.
+                            if (downloadDbLoadingDialog != null) {
+                                // Dismiss the loading dialog.
+                                downloadDbLoadingDialog.dismiss();
+                            }
+                            // Check if the download was successful.
                             boolean success;
                             try {
                                 success = downloadFuture.get();
@@ -379,8 +394,11 @@ public class DriveHelper {
 
             // Find an existing database in the Drive.
             ListenableFuture<Pair<String, DateTime>> futureSearch = findFile(localDbName);
+
+            DialogFragment findDbLoadingDialog = displayLoadingDialog(context);
             futureSearch.addListener(() -> {
                 // Search complete.
+                if (findDbLoadingDialog != null) { findDbLoadingDialog.dismiss(); }
                 try {
                     String dialogTitle;
                     String dialogMessage;
@@ -463,6 +481,20 @@ public class DriveHelper {
 
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private DialogFragment displayLoadingDialog(Context context) {
+        try {
+            // Display a loading dialog box.
+            AppCompatActivity activity = (AppCompatActivity) context;
+            DialogFragment loadingDialog = new LoadingDialogFragment();
+            loadingDialog.show(activity.getSupportFragmentManager(), "dialogLoading");
+            return loadingDialog;
+        } catch (ClassCastException e) {
+            // Could not cast context to AppCompatActivity
+            e.printStackTrace();
+            return null;
         }
     }
 

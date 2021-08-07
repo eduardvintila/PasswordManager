@@ -3,6 +3,7 @@ package com.example.passmanager;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.app.Activity;
@@ -15,6 +16,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.passmanager.dialogs.LoadingDialogFragment;
+import com.example.passmanager.dialogs.MasterPasswordDialogFragment;
 import com.example.passmanager.model.ApplicationDatabase;
 import com.example.passmanager.utils.CryptoHelper;
 import com.example.passmanager.utils.DriveHelper;
@@ -165,9 +168,14 @@ public class AuthActivity extends AppCompatActivity {
         if (pass.length == 0)
             return;
 
+        // Display a loading dialog box.
+        DialogFragment loadingDialog = new LoadingDialogFragment();
+        loadingDialog.show(getSupportFragmentManager(), "dialogLoading");
+
         if (!viewmodel.open(getApplication(), pass, false)) {
             // Authentication failed.
             failedAttempt();
+            loadingDialog.dismiss();
         } else {
             // Authentication successful.
             resetAttempts();

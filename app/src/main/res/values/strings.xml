@@ -128,4 +128,5 @@
     <string name="cancel">Închide</string>
     <string name="confirmation_download_db_title">Descarci baza din cloud?</string>
     <string name="confirmation_upload_db_title">Încarci baza locală în cloud?</string>
+    <string name="loading">Se incarcă</string>
 </resources>

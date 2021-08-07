@@ -90,17 +90,4 @@ public class Entry {
         this.lastModified = lastModified;
         this.categoryId = categoryId;
     }
-
-    // Old constructor used for testing.
-    @Ignore
-    public Entry(int entryId, String name, String description, String link, String username,
-                 String password, String passwordSalt) {
-        this.entryId = entryId;
-        this.name = name;
-        this.description = description;
-        this.link = link;
-        this.username = username;
-        this.password = password;
-        this.passwordSalt = passwordSalt;
-    }
 }

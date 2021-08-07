@@ -1,6 +1,7 @@
 package com.example.passmanager;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Context;
@@ -12,6 +13,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.passmanager.dialogs.LoadingDialogFragment;
 import com.example.passmanager.model.Entry;
 import com.example.passmanager.utils.CryptoHelper;
 import com.example.passmanager.viewmodel.ApplicationViewModel;
@@ -109,6 +111,10 @@ public class UpdateMasterPassActivity extends AppCompatActivity {
         if (Arrays.equals(inputPass, plaintextMaster)
                 && equalPasswords && passStrongness == CryptoHelper.PASS_MAX_STRONGNESS) {
             viewmodel.getAllEntries().observe(this, entries -> {
+
+                // Display a loading dialog box.
+                DialogFragment loadingDialog = new LoadingDialogFragment();
+                loadingDialog.show(getSupportFragmentManager(), "dialogLoading");
 
                 // Update the entries by encrypting the passwords using the new master password.
                 if (entries != null && canEnter) {

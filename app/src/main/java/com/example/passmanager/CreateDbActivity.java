@@ -3,6 +3,7 @@ package com.example.passmanager;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.app.Activity;
@@ -14,6 +15,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.passmanager.dialogs.LoadingDialogFragment;
 import com.example.passmanager.utils.CryptoHelper;
 import com.example.passmanager.utils.DriveHelper;
 import com.example.passmanager.utils.NetworkHelper;
@@ -137,6 +139,10 @@ public class CreateDbActivity extends AppCompatActivity {
      */
     public void create() {
         if (equalPasswords && passStrongness == CryptoHelper.PASS_MAX_STRONGNESS) {
+            // Display a loading dialog box.
+            DialogFragment loadingDialog = new LoadingDialogFragment();
+            loadingDialog.show(getSupportFragmentManager(), "dialogLoading");
+
             viewmodel.create(getApplication(), pass1, true);
             viewmodel.close();
             finish();

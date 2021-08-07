@@ -55,6 +55,7 @@ public class ApplicationRepository {
             categoryDao = db.categoryDao();
             return true;
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }
