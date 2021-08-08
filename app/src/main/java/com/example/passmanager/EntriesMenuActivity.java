@@ -354,6 +354,7 @@ public class EntriesMenuActivity extends AppCompatActivity implements
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             getMenuInflater().inflate(R.menu.contextual_action_bar, menu);
+            selectedCategoryBackgroundView.setVisibility(View.VISIBLE);
             selectedCategoryBackgroundView.setBackgroundColor(getColor(android.R.color.darker_gray));
             return true;
         }
@@ -381,7 +382,8 @@ public class EntriesMenuActivity extends AppCompatActivity implements
 
         @Override
         public void onDestroyActionMode(ActionMode mode) {
-            selectedCategoryBackgroundView.setBackgroundColor(getColor(android.R.color.white));
+            //selectedCategoryBackgroundView.setBackgroundColor(getColor(android.R.color.white));
+            selectedCategoryBackgroundView.setVisibility(View.GONE);
             actionMode = null;
         }
     }

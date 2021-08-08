@@ -19,11 +19,12 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.271"
         app:passwordToggleEnabled="true"
-        app:helperTextTextColor="@android:color/holo_red_dark">
+        app:helperTextTextColor="@android:color/holo_red_dark"
+        app:boxBackgroundColor="?android:colorBackground">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/masterPassEditText"
-            android:layout_width="245dp"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPassword"
@@ -46,11 +47,12 @@
         app:layout_constraintVertical_bias="0.03"
         app:passwordToggleEnabled="true"
         app:helperTextTextColor="@android:color/holo_red_dark"
+        app:boxBackgroundColor="?android:colorBackground"
         android:hint="@string/new_master_password">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/firstPassEditText"
-            android:layout_width="245dp"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPassword"
@@ -73,11 +75,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textLayout2"
         app:layout_constraintVertical_bias="0.071"
+        app:boxBackgroundColor="?android:colorBackground"
         app:passwordToggleEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/secondPassEditText"
-            android:layout_width="245dp"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPassword"

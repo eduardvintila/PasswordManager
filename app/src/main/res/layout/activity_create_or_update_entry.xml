@@ -62,20 +62,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/usernameEditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:ems="10"
-                android:hint="@string/username_prompt"
-                android:maxLength="@integer/username_max_length"
-                android:inputType="textPersonName" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/spinnerEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -94,11 +80,25 @@
             android:spinnerMode="dialog"
             android:layout_marginTop="10dp"/>
 
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/usernameEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:ems="10"
+                android:hint="@string/username_prompt"
+                android:maxLength="@integer/username_max_length"
+                android:inputType="textPersonName" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/entryPassTextLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:ems="10"
             android:hint="@string/password_prompt"
             app:helperTextEnabled="false"
@@ -120,6 +120,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
+            android:fontFamily="More Fonts..."
             android:text="@string/password_type" />
 
         <RadioGroup
