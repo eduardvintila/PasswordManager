@@ -48,6 +48,7 @@ public class CreateOrUpdateCategoryActivity extends AppCompatActivity {
         Intent prevIntent = getIntent();
         // Check whether we are updating an existing category or creating a new one.
         if (prevIntent.hasExtra(EntriesMenuActivity.EXTRA_CATEGORY_ID)) {
+            setTitle(R.string.modify_existing_category);
             int categoryId = prevIntent.getIntExtra(EntriesMenuActivity.EXTRA_CATEGORY_ID, 1);
             viewmodel.getCategory(categoryId).observe(this, category -> {
                 if (oldCategory == null && category != null) {
@@ -61,6 +62,8 @@ public class CreateOrUpdateCategoryActivity extends AppCompatActivity {
                     iconImageView.setImageURI(category.icon);
                 }
             });
+        } else {
+            setTitle(R.string.add_category);
         }
 
         // Used for launching an implicit intent to choose a picture.

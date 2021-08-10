@@ -29,7 +29,7 @@ public class CryptoHelper {
     public static final int IV_LENGTH = 16;
     public static final int KEY_LENGTH = 256;
     public static final String PBE_ALGORITHM = "PBEwithSHA256AND256BITAES-CBC-BC";
-    public static final int PBE_ITERATIONS = 126; // TODO: Too few iterations?
+    public static final int PBE_ITERATIONS = 10000;
     public static final String KEY_SPEC_ALGORITHM = "AES";
     public static final String CIPHER_ALGORITHM = "AES/CBC/PKCS7Padding";
 

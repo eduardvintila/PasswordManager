@@ -102,6 +102,7 @@ public class EntryActivity extends AppCompatActivity
                     this.entry = entry;
                     nameField.setText(entry.name);
                     usernameField.setText(entry.username);
+                    if (usernameField.length() == 0) { copyUserBtn.setVisibility(View.GONE); }
                     passwordField.setText(entry.password);
                     descriptionField.setText(entry.description);
                     linkField.setText(entry.link);

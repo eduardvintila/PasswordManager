@@ -17,7 +17,8 @@
             android:id="@+id/entryNameLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:helperTextTextColor="@android:color/holo_red_dark" >
+            app:helperTextTextColor="@android:color/holo_red_dark"
+            app:boxBackgroundColor="?android:colorBackground" >
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/entryNameEditText"
                 android:layout_width="match_parent"
@@ -31,7 +32,8 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:boxBackgroundColor="?android:colorBackground">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/entryDescriptionEditText"
                 android:layout_width="match_parent"
@@ -46,7 +48,8 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:boxBackgroundColor="?android:colorBackground">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/linkEditText"
                 android:layout_width="match_parent"
@@ -60,7 +63,8 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:boxBackgroundColor="?android:colorBackground">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/spinnerEditText"
                 android:layout_width="match_parent"
@@ -82,7 +86,8 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:boxBackgroundColor="?android:colorBackground">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/usernameEditText"
                 android:layout_width="match_parent"
@@ -105,7 +110,8 @@
             app:helperTextTextColor="@android:color/holo_red_dark"
             app:counterEnabled="true"
             app:counterMaxLength="@integer/password_max_length"
-            app:passwordToggleEnabled="true" >
+            app:passwordToggleEnabled="true"
+            app:boxBackgroundColor="?android:colorBackground">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/entryPassEditText"

@@ -13,9 +13,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.PassManager">
-        <activity android:name=".UpdateMasterPassActivity" />
+        <activity
+            android:name=".UpdateMasterPassActivity"
+            android:label="@string/title_activity_update_masterpass"/>
         <activity android:name=".CreateOrUpdateCategoryActivity" />
-        <activity android:name=".EntryActivity" />
+        <activity
+            android:name=".EntryActivity"
+            android:label="@string/title_activity_entry" />
         <activity android:name=".CreateOrUpdateEntryActivity" />
         <activity
             android:name=".EntriesMenuActivity"
@@ -26,11 +30,14 @@
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".EntriesMenuActivity"/>
-        <activity android:name=".CreateDbActivity" />
-        <activity android:name=".AuthActivity">
+        <activity
+            android:name=".CreateDbActivity"
+            android:label="@string/create_new_database"/>
+        <activity
+            android:name=".AuthActivity"
+            android:label="@string/title_activity_auth">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

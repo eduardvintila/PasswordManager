@@ -160,6 +160,7 @@ public class CreateOrUpdateEntryActivity extends AppCompatActivity {
         Intent prevIntent = getIntent();
         // Check whether we are updating an existing entry or creating a new one
         if (prevIntent.hasExtra(EntriesMenuActivity.EXTRA_ENTRY_ID)) {
+            setTitle(R.string.update_existing_entry);
             int oldEntryId = prevIntent.getIntExtra(EntriesMenuActivity.EXTRA_ENTRY_ID, 1);
             oldEntryCategoryId = prevIntent.getIntExtra(EntriesMenuActivity.EXTRA_CATEGORY_ID, -1);
             viewmodel.getEntry(oldEntryId).observe(this, entry -> {
@@ -178,6 +179,8 @@ public class CreateOrUpdateEntryActivity extends AppCompatActivity {
                     passwordField.setText(pass);
                 }
             });
+        } else {
+            setTitle(R.string.add_entry);
         }
 
         // Set a listener for when the password is changed.

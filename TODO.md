@@ -7,4 +7,5 @@
     When the database is deleted after multiple failed auth attempts, delete it from Drive, too?
     Use a checksum to see if the local and remote databases are identical.
     Possible deadlock in DriveHelper when waiting in file operations for sign in.
-    Fix helper text for password strongness in db creation menu not displaying correctly. 
+    Fix helper text for password strongness in db creation menu not displaying correctly.
+    Update the "view entry" menu's design.

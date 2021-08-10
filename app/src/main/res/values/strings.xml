@@ -3,12 +3,13 @@
     <string name="msg_insert_master_pass">Introdu parola master</string>
     <string name="auth">Autentifică-te</string>
     <string name="invalid_pass">Parolă master invalidă!</string>
-    <string name="create_new_database">Creează o noua bază</string>
+    <string name="create_new_database_short">Creează o nouă bază</string>
+    <string name="create_new_database">Creează o nouă bază de date</string>
     <string name="first_pass_master">Alege o parolă master</string>
     <string name="second_pass_master">Introdu din nou parola</string>
     <string name="create_database">Creează</string>
     <string name="passwords_not_matching">Parolele nu se potrivesc!</string>
-    <string name="title_activity_entries_menu">EntriesMenuActivity</string>
+    <string name="title_activity_entries_menu">Meniu principal</string>
     <string name="entries_label">Înregistrări</string>
     <string name="username_prompt">Nume de utilizator/E-mail</string>
     <string name="password_prompt">Parolă</string>
@@ -104,7 +105,7 @@
         Este necesară o nouă autentificare pentru a accesa-o.</string>
     <string name="download_failed">Descărcarea bazei de date din cloud a eșuat!</string>
     <string name="download_successful">Baza de date din cloud a fost descărcată cu succes!</string>
-    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="title_activity_settings">Setări</string>
     <string name="settings">Setări</string>
     <string name="passwords_header">Parole</string>
     <string name="entry_plaintext_passwords_title">Afișează parole în format clar</string>
@@ -138,4 +139,9 @@
     <string name="enter_password_again">Introdu din nou parola</string>
     <string name="current_master_pass">Actuala parolă master</string>
     <string name="new_master_password">Noua parolă master</string>
+    <string name="title_activity_update_masterpass">Schimbă parola master</string>
+    <string name="modify_existing_category">Modifică o categorie existentă</string>
+    <string name="title_activity_entry">Vizualizează o înregistrare</string>
+    <string name="title_activity_auth">Password Manager</string>
+    <string name="update_existing_entry">Modifică o înregistrare existentă</string>
 </resources>
