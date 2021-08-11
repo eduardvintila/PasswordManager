@@ -1,5 +1,7 @@
 package com.example.passmanager;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
@@ -12,12 +14,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,7 +28,13 @@ import com.example.passmanager.dialogs.MasterPasswordDialogFragment;
 import com.example.passmanager.model.Entry;
 import com.example.passmanager.utils.CryptoHelper;
 import com.example.passmanager.viewmodel.ApplicationViewModel;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.Arrays;
 
 import javax.crypto.SecretKey;
@@ -40,16 +49,20 @@ public class EntryActivity extends AppCompatActivity
     public static final String EXTRA_ENTRY_PASSWORD = BuildConfig.APPLICATION_ID +
             ".ENTRY_PASSWORD";
 
-    private TextView nameField;
-    private TextView usernameField;
-    private TextView passwordField;
-    private TextView descriptionField;
-    private TextView linkField;
-    private TextView entryLastModifiedField;
+    private TextInputEditText nameField;
+    private TextInputEditText usernameField;
+    private TextInputEditText passwordField;
+    private TextInputEditText descriptionField;
+    private TextInputEditText linkField;
+    private TextInputEditText entryLastModifiedField;
+
+    private TextView passwordPrompt;
+
+    private TextInputLayout usernameLayout;
+    private TextInputLayout passwordLayout;
+    private TextInputLayout linkLayout;
 
     private Button decryptBtn;
-    private ImageButton copyPassBtn;
-    private ImageButton copyUserBtn;
 
     private ApplicationViewModel viewmodel;
 
@@ -60,6 +73,7 @@ public class EntryActivity extends AppCompatActivity
     private Entry entry;
 
     private boolean entryPasswordDecrypted = false;
+    private ActivityResultLauncher<Intent> launcher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,21 +82,26 @@ public class EntryActivity extends AppCompatActivity
 
         viewmodel = new ViewModelProvider(this).get(ApplicationViewModel.class);
 
-        nameField = findViewById(R.id.entryNameTextView);
-        usernameField = findViewById(R.id.usernameTextView);
-        passwordField = findViewById(R.id.entryPassTextView);
-        descriptionField = findViewById(R.id.entryDescriptionTextView);
+        nameField = findViewById(R.id.entryNameField);
+        usernameField = findViewById(R.id.usernameTextField);
+        passwordField = findViewById(R.id.entryPassField);
+        passwordPrompt = findViewById(R.id.passwordPromptTextView);
+        descriptionField = findViewById(R.id.entryDescriptionField);
         linkField = findViewById(R.id.linkTextView);
-        entryLastModifiedField = findViewById(R.id.lastModifiedTextView);
+        entryLastModifiedField = findViewById(R.id.lastModifiedField);
+        usernameLayout = findViewById(R.id.usernameTextLayout);
+        passwordLayout = findViewById(R.id.passwordTextLayout);
+        linkLayout = findViewById(R.id.linkTextLayout);
         decryptBtn = findViewById(R.id.loadDialogBtn);
-        copyPassBtn = findViewById(R.id.copyPassBtn);
-        copyUserBtn = findViewById(R.id.copyUserBtn);
+
 
         decryptBtn.setOnClickListener(view -> loadDialog());
-        copyPassBtn.setOnClickListener(view -> copyPass());
-        copyUserBtn.setOnClickListener(view -> copyUser());
+        usernameLayout.setEndIconOnClickListener(view -> copyUser());
+        passwordLayout.setEndIconOnClickListener(view -> copyPass());
+        linkLayout.setEndIconOnClickListener(view -> launchLink());
         findViewById(R.id.modifyBtn).setOnClickListener(view -> modifyEntry());
         findViewById(R.id.deleteBtn).setOnClickListener(view -> deleteEntry());
+
 
         // Get the setting which indicates whether to automatically decrypt the entry pass or not.
         boolean autoDecrypt =
@@ -100,13 +119,62 @@ public class EntryActivity extends AppCompatActivity
                 if (entry != null) {
                     // Populate the fields with the entry information.
                     this.entry = entry;
-                    nameField.setText(entry.name);
-                    usernameField.setText(entry.username);
-                    if (usernameField.length() == 0) { copyUserBtn.setVisibility(View.GONE); }
-                    passwordField.setText(entry.password);
-                    descriptionField.setText(entry.description);
-                    linkField.setText(entry.link);
-                    entryLastModifiedField.setText(entry.lastModified.toString());
+                    if (entry.name.length() > 0) {
+                        nameField.setText(entry.name);
+                        nameField.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+                    }
+                    else {
+                        nameField.setText(R.string.missing);
+                        nameField.setTypeface(Typeface.defaultFromStyle(Typeface.ITALIC));
+                    }
+
+                    if (entry.username.length() > 0) { 
+                        usernameField.setText(entry.username);
+                        usernameField.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+                        usernameLayout.setEndIconVisible(true);
+                    } 
+                    else { 
+                        usernameField.setText(R.string.missing);
+                        usernameField.setTypeface(Typeface.defaultFromStyle(Typeface.ITALIC));
+                        usernameLayout.setEndIconVisible(false);
+                    }
+
+                    if (entry.password.length() > 0) {
+                        passwordField.setText(entry.password);
+                        passwordField.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+                        passwordPrompt.setText(R.string.password_encrypted_prompt);
+                    }
+                    else {
+                        passwordField.setText(R.string.missing);
+                        passwordField.setTypeface(Typeface.defaultFromStyle(Typeface.ITALIC));
+                    }
+                    // Hide the copy button until the password is decrypted.
+                    passwordLayout.setEndIconVisible(false);
+
+                    if (entry.description.length() > 0) {
+                        descriptionField.setText(entry.description);
+                        descriptionField.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+                    }
+                    else {
+                        descriptionField.setText(R.string.missing);
+                        descriptionField.setTypeface(Typeface.defaultFromStyle(Typeface.ITALIC));
+                    }
+
+                    if (entry.link.length() > 0) {
+                        linkField.setText(entry.link);
+                        linkField.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+                        linkLayout.setEndIconVisible(true);
+                    }
+                    else {
+                        linkField.setText(R.string.missing);
+                        linkField.setTypeface(Typeface.defaultFromStyle(Typeface.ITALIC));
+                        linkLayout.setEndIconVisible(false);
+                    }
+
+                    LocalDateTime lastModifiedTime =
+                            LocalDateTime.ofEpochSecond(entry.lastModified, 0, ZoneOffset.UTC);
+                    entryLastModifiedField.setText(lastModifiedTime
+                            .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)));
 
                     decryptBtn.setVisibility(View.VISIBLE);
                     entryPasswordDecrypted = false;
@@ -119,6 +187,21 @@ public class EntryActivity extends AppCompatActivity
         } else {
             // Kill the activity if it hasn't received an entry.
             finish();
+        }
+
+        launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                (result) -> {});
+    }
+
+    public void launchLink() {
+        String link = linkField.getText().toString();
+        Uri uri = Uri.parse(link);
+        if (uri.getScheme() == null) {
+            uri = Uri.parse("https://" + link);
+        }
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            launcher.launch(intent);
         }
     }
 
@@ -139,11 +222,12 @@ public class EntryActivity extends AppCompatActivity
             this.passwordField.setText(decryptedEntryPassword, 0, decryptedEntryPassword.length);
         }
         // Since the password has been decrypted, hide the "decrypt password" button.
-        decryptBtn.setVisibility(View.INVISIBLE);
+        decryptBtn.setVisibility(View.GONE);
         entryPasswordDecrypted = true;
 
         // And make the copy password button visible.
-        copyPassBtn.setVisibility(View.VISIBLE);
+        passwordLayout.setEndIconVisible(true);
+        passwordPrompt.setText(R.string.password_decrypted_prompt);
     }
 
     /**

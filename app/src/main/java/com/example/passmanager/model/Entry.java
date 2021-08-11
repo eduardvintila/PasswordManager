@@ -65,10 +65,10 @@ public class Entry {
     public String passwordSalt;
 
     /**
-     * Date of last modification.
+     * Timestamp of last modification.
      */
     @ColumnInfo(name = "lastModified")
-    public Date lastModified;
+    public long lastModified;
 
     /**
      * The default category of an entry is the first category in the database, which should be
@@ -80,7 +80,7 @@ public class Entry {
     public int categoryId;
 
     public Entry(String name, String description, String link, String username, String password,
-                 String passwordSalt, Date lastModified, int categoryId) {
+                 String passwordSalt, long lastModified, int categoryId) {
         this.name = name;
         this.description = description;
         this.link = link;

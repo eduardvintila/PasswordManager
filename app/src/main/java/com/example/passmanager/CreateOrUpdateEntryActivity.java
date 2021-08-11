@@ -32,7 +32,8 @@ import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.slider.Slider;
 import com.google.android.material.textfield.TextInputLayout;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -340,7 +341,7 @@ public class CreateOrUpdateEntryActivity extends AppCompatActivity {
             newEntry.username = usernameField.getText().toString();
             newEntry.password = encryptedEntryPassword;
             newEntry.passwordSalt = CryptoHelper.encode(saltBytes);
-            newEntry.lastModified = new Date(Calendar.getInstance().getTimeInMillis());
+            newEntry.lastModified = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
             newEntry.categoryId = categoryId;
 
             viewmodel.updateEntry(newEntry);
@@ -350,7 +351,7 @@ public class CreateOrUpdateEntryActivity extends AppCompatActivity {
                     descriptionField.getText().toString(),
                     linkField.getText().toString(), usernameField.getText().toString(),
                     encryptedEntryPassword, CryptoHelper.encode(saltBytes),
-                    new Date(Calendar.getInstance().getTimeInMillis()), categoryId);
+                    LocalDateTime.now().toEpochSecond(ZoneOffset.UTC), categoryId);
 
             viewmodel.insertEntry(entry);
         }

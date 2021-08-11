@@ -7,7 +7,6 @@ import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.longClick;
-import static androidx.test.espresso.action.ViewActions.pressImeActionButton;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -17,7 +16,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withParent;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anything;
@@ -41,8 +39,6 @@ import com.example.passmanager.model.ApplicationDatabase;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
-import org.hamcrest.core.IsInstanceOf;
-import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Rule;
@@ -171,14 +167,14 @@ public class PasswordManagerTests {
 
         // Check if the entry information is accurate.
         ViewInteraction textView3 = onView(
-                allOf(withId(R.id.entryNameTextView),
+                allOf(withId(R.id.entryNameField),
                         isDisplayed()));
         textView3.check(matches(withText("Yahoo")));
 
-        onView(allOf(withId(R.id.usernameTextView), isDisplayed()))
+        onView(allOf(withId(R.id.usernameTextField), isDisplayed()))
                 .check(matches(withText("testmail123@yahoo.com")));
 
-        onView(allOf(withId(R.id.entryDescriptionTextView), isDisplayed()))
+        onView(allOf(withId(R.id.entryDescriptionField), isDisplayed()))
                 .check(matches(withText("parola mail yahoo")));
 
         onView(allOf(withId(R.id.linkTextView), isDisplayed()))
@@ -199,7 +195,7 @@ public class PasswordManagerTests {
                                 3)));
         materialButton5.perform(scrollTo(), click());
 
-        onView(allOf(withId(R.id.entryPassTextView), isDisplayed()))
+        onView(allOf(withId(R.id.entryPassField), isDisplayed()))
                 .check(matches(withText("parolayahoo123")));
 
         pressBack();
@@ -477,11 +473,11 @@ public class PasswordManagerTests {
                                         5),
                                 0)));
         recyclerView2.perform(actionOnItemAtPosition(0, click()));
-        onView(allOf(withId(R.id.entryNameTextView), isDisplayed()))
+        onView(allOf(withId(R.id.entryNameField), isDisplayed()))
                 .check(matches(withText("Yahoo")));
-        onView(allOf(withId(R.id.usernameTextView), isDisplayed()))
+        onView(allOf(withId(R.id.usernameTextField), isDisplayed()))
                 .check(matches(withText("testmail123@yahoo.com")));
-        onView(allOf(withId(R.id.entryPassTextView), isDisplayed()))
+        onView(allOf(withId(R.id.entryPassField), isDisplayed()))
                 .check(matches(withText("parolayahoo123")));
         pressBack();
 
@@ -494,9 +490,9 @@ public class PasswordManagerTests {
                                         5),
                                 0)));
         recyclerView3.perform(actionOnItemAtPosition(1, click()));
-        onView(allOf(withId(R.id.entryNameTextView), isDisplayed()))
+        onView(allOf(withId(R.id.entryNameField), isDisplayed()))
                 .check(matches(withText("Gmail")));
-        onView(allOf(withId(R.id.usernameTextView), isDisplayed()))
+        onView(allOf(withId(R.id.usernameTextField), isDisplayed()))
                 .check(matches(withText("googletest123@gmail.com")));
         // TODO: Check that the entry password matches the generated one.
         /*onView(allOf(withId(R.id.entryPassTextView), isDisplayed()))
@@ -514,11 +510,11 @@ public class PasswordManagerTests {
                                         5),
                                 0)));
         recyclerView6.perform(actionOnItemAtPosition(0, click()));
-        onView(allOf(withId(R.id.entryNameTextView), isDisplayed()))
+        onView(allOf(withId(R.id.entryNameField), isDisplayed()))
                 .check(matches(withText("Netflix")));
-        onView(allOf(withId(R.id.usernameTextView), isDisplayed()))
+        onView(allOf(withId(R.id.usernameTextField), isDisplayed()))
                 .check(matches(withText("testnetflix")));
-        onView(allOf(withId(R.id.entryPassTextView), isDisplayed()))
+        onView(allOf(withId(R.id.entryPassField), isDisplayed()))
                 .check(matches(withText("parolanetflix")));
         pressBack();
 
@@ -533,11 +529,11 @@ public class PasswordManagerTests {
                                         5),
                                 0)));
         recyclerView8.perform(actionOnItemAtPosition(0, click()));
-        onView(allOf(withId(R.id.entryNameTextView), isDisplayed()))
+        onView(allOf(withId(R.id.entryNameField), isDisplayed()))
                 .check(matches(withText("Interfon bloc")));
-        onView(allOf(withId(R.id.usernameTextView), isDisplayed()))
+        onView(allOf(withId(R.id.usernameTextField), isDisplayed()))
                 .check(matches(withText("bloc2a")));
-        onView(allOf(withId(R.id.entryPassTextView), isDisplayed()))
+        onView(allOf(withId(R.id.entryPassField), isDisplayed()))
                 .check(matches(withText("1234")));
         pressBack();
     }
@@ -666,13 +662,13 @@ public class PasswordManagerTests {
                                         5),
                                 0)));
         recyclerView8.perform(actionOnItemAtPosition(1, click()));
-        onView(allOf(withId(R.id.entryNameTextView), isDisplayed()))
+        onView(allOf(withId(R.id.entryNameField), isDisplayed()))
                 .check(matches(withText("Test Entry")));
-        onView(allOf(withId(R.id.usernameTextView), isDisplayed()))
+        onView(allOf(withId(R.id.usernameTextField), isDisplayed()))
                 .check(matches(withText("testuser")));
-        onView(allOf(withId(R.id.entryPassTextView), isDisplayed()))
+        onView(allOf(withId(R.id.entryPassField), isDisplayed()))
                 .check(matches(withText("test123")));
-        onView(allOf(withId(R.id.entryDescriptionTextView), isDisplayed()))
+        onView(allOf(withId(R.id.entryDescriptionField), isDisplayed()))
                 .check(matches(withText("Description Test")));
         onView(allOf(withId(R.id.linkTextView), isDisplayed()))
                 .check(matches(withText("test.com")));

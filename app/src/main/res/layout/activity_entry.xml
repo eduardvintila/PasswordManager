@@ -17,114 +17,165 @@
             android:id="@+id/textView13"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/entry_name_prompt" />
+            android:text="@string/entry_name_prompt"
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/entryNameTextView"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            app:boxBackgroundMode="none"
+            app:hintEnabled="false">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/entryNameField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                android:focusable="false"
+                tools:text="@string/placeholder_entry_name"
+                android:textSize="20dp"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
             android:id="@+id/textView15"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="@string/username_prompt" />
+            android:text="@string/username_prompt"
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/usernameTextView"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/usernameTextLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:text="@string/placeholder_username" />
+                app:boxBackgroundMode="none"
+                app:endIconDrawable="@drawable/ic_baseline_content_copy_24"
+                app:endIconMode="custom"
+                app:hintEnabled="false">
 
-            <ImageButton
-                android:id="@+id/copyUserBtn"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_weight="1"
-                android:background="?android:colorBackground"
-                app:srcCompat="@drawable/ic_baseline_content_copy_24"
-                tools:visibility="invisible"
-                android:contentDescription="@string/copy_user" />
-        </LinearLayout>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/usernameTextField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:focusable="false"
+                    tools:text="@string/placeholder_username"
+                    android:textSize="20dp" />
+            </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
-            android:id="@+id/textView17"
+            android:id="@+id/passwordPromptTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="@string/password_prompt" />
+            android:text="@string/password_encrypted_prompt"
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/passwordTextLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            app:boxBackgroundMode="none"
+            app:endIconDrawable="@drawable/ic_baseline_content_copy_24"
+            app:endIconMode="custom"
+            app:hintEnabled="false">
 
-            <TextView
-                android:id="@+id/entryPassTextView"
-                android:layout_width="wrap_content"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/entryPassField"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:text="@string/placeholder_password" />
-
-            <ImageButton
-                android:id="@+id/copyPassBtn"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_weight="1"
-                android:background="?android:colorBackground"
-                android:contentDescription="@string/copy_password"
-                android:visibility="invisible"
-                app:srcCompat="@drawable/ic_baseline_content_copy_24" />
-        </LinearLayout>
+                android:inputType="none"
+                android:focusable="false"
+                tools:text="@string/placeholder_password"
+                android:textSize="20dp" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
             android:id="@+id/textView19"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="7dp"
-            android:text="@string/description_prompt" />
+            android:layout_marginTop="10dp"
+            android:text="@string/description_prompt"
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/entryDescriptionTextView"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            app:boxBackgroundMode="none"
+            app:hintEnabled="false">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/entryDescriptionField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                android:focusable="false"
+                tools:text="@string/description_placeholder"
+                android:textSize="20dp"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
             android:id="@+id/textView21"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="@string/link_prompt" />
+            android:text="@string/link_prompt"
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/linkTextView"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/linkTextLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            app:boxBackgroundMode="none"
+            app:endIconDrawable="@drawable/ic_baseline_send_24"
+            app:endIconMode="custom"
+            app:hintEnabled="false">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/linkTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                android:focusable="false"
+                tools:text="@string/placeholder_link"
+                android:textSize="20dp" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
             android:id="@+id/textView23"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="@string/last_modified" />
+            android:text="@string/last_modified"
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/lastModifiedTextView"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            app:boxBackgroundMode="none"
+            app:hintEnabled="false">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/lastModifiedField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                android:focusable="false"
+                tools:text="@string/placeholder_lastmodified"
+                android:textSize="20dp"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:id="@+id/loadDialogBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:text="@string/decrypt_password" />
 
         <Button

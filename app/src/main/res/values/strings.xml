@@ -12,7 +12,9 @@
     <string name="title_activity_entries_menu">Meniu principal</string>
     <string name="entries_label">Înregistrări</string>
     <string name="username_prompt">Nume de utilizator/E-mail</string>
-    <string name="password_prompt">Parolă</string>
+    <string name="password_prompt">Parola</string>
+    <string name="password_encrypted_prompt">Parola (criptată)</string>
+    <string name="password_decrypted_prompt">Parola</string>
     <string name="description_prompt">Descriere</string>
     <string name="link_prompt">Link</string>
     <string name="entry_name_prompt">Denumire</string>
@@ -144,4 +146,9 @@
     <string name="title_activity_entry">Vizualizează o înregistrare</string>
     <string name="title_activity_auth">Password Manager</string>
     <string name="update_existing_entry">Modifică o înregistrare existentă</string>
+    <string name="missing">lipsă</string>
+    <string name="placeholder_entry_name">denumire întregistrare</string>
+    <string name="description_placeholder">o descriere a înregistrării</string>
+    <string name="placeholder_lastmodified">1 Jan 1970</string>
+    <string name="placeholder_link">google.com</string>
 </resources>

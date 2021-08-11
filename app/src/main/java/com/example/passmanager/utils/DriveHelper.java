@@ -42,6 +42,8 @@ import java.io.OutputStream;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -424,7 +426,8 @@ public class DriveHelper {
                         dialogTitle = context.getString(R.string.db_drive_found);
                         dialogMessage =
                                 String.format(context.getString(R.string.db_drive_found_format),
-                                driveDbLastModified.toString());
+                                driveDbLastModified.format(DateTimeFormatter.
+                                        ofLocalizedDateTime(FormatStyle.MEDIUM)));
 
 
                     } else {
@@ -444,7 +447,8 @@ public class DriveHelper {
 
                         dialogMessage +=
                                 String.format(context.getString(R.string.db_found_locally_format),
-                                localDbLastModified.toString());
+                                localDbLastModified.format(DateTimeFormatter
+                                        .ofLocalizedDateTime(FormatStyle.MEDIUM)));
                     } else {
                         foundDbLocally = false;
                         dialogMessage += context.getString(R.string.db_not_found_locally);
