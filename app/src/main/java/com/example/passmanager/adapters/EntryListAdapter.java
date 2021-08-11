@@ -4,6 +4,8 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -44,9 +46,10 @@ public class EntryListAdapter extends RecyclerView.Adapter<EntryListAdapter.Entr
     public void onBindViewHolder(@NonNull EntryViewHolder holder, int position) {
         if (entries != null) {
             Entry current = entries.get(position);
-            holder.entryItemView.setText(current.name);
+            holder.entryNameItemView.setText(current.name);
+            holder.entryUsernameItemView.setText(current.username);
         } else {
-            holder.entryItemView.setText("");
+            holder.entryNameItemView.setText("");
         }
     }
 
@@ -66,11 +69,13 @@ public class EntryListAdapter extends RecyclerView.Adapter<EntryListAdapter.Entr
     }
 
     class EntryViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private final TextView entryItemView;
+        private final TextView entryNameItemView;
+        private final TextView entryUsernameItemView;
 
         private EntryViewHolder(View itemView) {
             super(itemView);
-            entryItemView = itemView.findViewById(R.id.entryNameField);
+            entryNameItemView = itemView.findViewById(R.id.entryNameField);
+            entryUsernameItemView = itemView.findViewById(R.id.entryUsernameField);
             itemView.setOnClickListener(this);
         }
 

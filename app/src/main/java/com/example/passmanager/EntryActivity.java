@@ -193,13 +193,18 @@ public class EntryActivity extends AppCompatActivity
                 (result) -> {});
     }
 
+    /**
+     * Use an implicit intent to launch a browser at the entry's link.
+     */
     public void launchLink() {
         String link = linkField.getText().toString();
         Uri uri = Uri.parse(link);
         if (uri.getScheme() == null) {
+            // Https header missing
             uri = Uri.parse("https://" + link);
         }
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        // Launch the intent if there is any browser that accepts it.
         if (intent.resolveActivity(getPackageManager()) != null) {
             launcher.launch(intent);
         }

@@ -31,6 +31,7 @@
                 android:layout_height="wrap_content"
                 android:padding="10dp"
                 android:text="@string/category_name"
+                android:textSize="20dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -68,6 +69,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginBottom="8dp"
+                android:textSize="15dp"
                 app:layout_constraintBottom_toTopOf="@+id/expandableLayout"
                 app:layout_constraintStart_toEndOf="@+id/categoryIconImageView"
                 tools:text="(4)" />
@@ -86,6 +88,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:padding="20dp"
+                    android:layoutAnimation="@anim/layout_entry_animation"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>

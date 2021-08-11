@@ -1,5 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/Edi/AndroidStudioProjects/PassManager/app/src/main/res/layout/activity_auth.xml" value="0.23229166666666667" />
+        <entry key="..\:/Users/Edi/AndroidStudioProjects/PassManager/app/src/main/res/layout/activity_create_db.xml" value="0.33" />
+        <entry key="..\:/Users/Edi/AndroidStudioProjects/PassManager/app/src/main/res/layout/activity_create_or_update_category.xml" value="0.1734375" />
+        <entry key="..\:/Users/Edi/AndroidStudioProjects/PassManager/app/src/main/res/layout/activity_create_or_update_entry.xml" value="0.3226744186046512" />
+        <entry key="..\:/Users/Edi/AndroidStudioProjects/PassManager/app/src/main/res/layout/activity_entries_menu.xml" value="0.1734375" />
+        <entry key="..\:/Users/Edi/AndroidStudioProjects/PassManager/app/src/main/res/layout/activity_entry.xml" value="0.35553168635875404" />
+        <entry key="..\:/Users/Edi/AndroidStudioProjects/PassManager/app/src/main/res/layout/activity_update_master_pass.xml" value="0.23229166666666667" />
+        <entry key="..\:/Users/Edi/AndroidStudioProjects/PassManager/app/src/main/res/layout/category_row.xml" value="0.4703703703703704" />
+        <entry key="..\:/Users/Edi/AndroidStudioProjects/PassManager/app/src/main/res/layout/content_entries_menu.xml" value="0.1734375" />
+        <entry key="..\:/Users/Edi/AndroidStudioProjects/PassManager/app/src/main/res/layout/dialog_layout.xml" value="0.25" />
+        <entry key="..\:/Users/Edi/AndroidStudioProjects/PassManager/app/src/main/res/layout/dialog_loading.xml" value="0.1734375" />
+        <entry key="..\:/Users/Edi/AndroidStudioProjects/PassManager/app/src/main/res/layout/dialog_masterpassword.xml" value="0.1734375" />
+        <entry key="..\:/Users/Edi/AndroidStudioProjects/PassManager/app/src/main/res/layout/entry_row.xml" value="0.5036710719530103" />
+        <entry key="..\:/Users/Edi/AndroidStudioProjects/PassManager/app/src/main/res/layout/fragment_first.xml" value="0.18722466960352424" />
+      </map>
+    </option>
+  </component>
   <component name="NullableNotNullManager">
     <option name="myDefaultNullable" value="org.jetbrains.annotations.Nullable" />
     <option name="myDefaultNotNull" value="androidx.annotation.NonNull" />

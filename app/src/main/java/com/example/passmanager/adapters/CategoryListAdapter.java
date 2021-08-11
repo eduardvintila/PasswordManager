@@ -5,6 +5,8 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -77,6 +79,7 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
                 // Setup the recycler view and it's adapter for entries in this category.
                 RecyclerView entriesRv = holder.itemView.findViewById(R.id.entriesRecyclerView);
                 Context context = entriesRv.getContext();
+                entriesRv.scheduleLayoutAnimation();
                 entriesRv.setLayoutManager(new LinearLayoutManager(context));
                 EntryListAdapter adapter = new EntryListAdapter(context, holder);
                 adapter.setEntries(entriesLists.get(position));
@@ -138,6 +141,8 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
                 categoryArrow.setImageResource(R.drawable.ic_baseline_arrow_down_24);
             } else {
                 layout.setVisibility(View.VISIBLE);
+                RecyclerView entriesRv = v.findViewById(R.id.entriesRecyclerView);
+                entriesRv.scheduleLayoutAnimation();
                 categoryArrow.setImageResource(R.drawable.ic_baseline_arrow_up_24);
             }
         }
