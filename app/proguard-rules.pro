@@ -15,6 +15,9 @@
 -verbose
 -keep class net.sqlcipher.** { *; }
 -keep interface net.sqlcipher.** { *; }
+-keepclassmembers class * {
+  @com.google.api.client.util.Key <fields>;
+}
 -flattenpackagehierarchy
 
 # If you keep the line number information, uncomment this to
