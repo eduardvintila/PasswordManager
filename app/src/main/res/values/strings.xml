@@ -151,4 +151,10 @@
     <string name="description_placeholder">o descriere a înregistrării</string>
     <string name="placeholder_lastmodified">1 Jan 1970</string>
     <string name="placeholder_link">google.com</string>
+    <string name="read_storage_permission_rationale">Este necesară permisiunea pentru a accesa imaginile de pe dispozitiv.</string>
+    <string name="permission_not_granted_image">Nu se poate alege o imagine.</string>
+    <string name="welcome">Bine ai venit.</string>
+    <string name="login_prompt">Autentifică-te pentru a avea acces la parolele tale.</string>
+    <string name="create_new_db">Creează o bază pentru parole.</string>
+    <string name="choose_a_strong_pass">Nu uita să alegi o parolă puternică.</string>
 </resources>

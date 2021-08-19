@@ -11,16 +11,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:hint="@string/enter_master_password"
+        app:boxBackgroundColor="?android:colorBackground"
         app:counterEnabled="true"
         app:counterMaxLength="@integer/password_max_length"
         app:helperTextTextColor="@android:color/holo_red_dark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.504"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.286"
-        app:passwordToggleEnabled="true"
-        app:boxBackgroundColor="?android:colorBackground">
+        app:layout_constraintVertical_bias="0.36"
+        app:passwordToggleEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/firstPassEditText"
@@ -39,16 +40,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:hint="@string/enter_password_again"
+        app:boxBackgroundColor="?android:colorBackground"
         app:counterEnabled="true"
         app:counterMaxLength="@integer/password_max_length"
         app:helperTextTextColor="@android:color/holo_red_dark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.504"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textLayout1"
-        app:layout_constraintVertical_bias="0.067"
-        app:passwordToggleEnabled="true"
-        app:boxBackgroundColor="?android:colorBackground">
+        app:layout_constraintVertical_bias="0.122"
+        app:passwordToggleEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/secondPassEditText"
@@ -69,10 +71,10 @@
         android:text="@string/create_database"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textLayout2"
-        app:layout_constraintVertical_bias="0.344" />
+        app:layout_constraintVertical_bias="0.295" />
 
     <com.google.android.gms.common.SignInButton
         android:id="@+id/syncDbBtn"
@@ -80,9 +82,35 @@
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/createDbBtn"
-        app:layout_constraintVertical_bias="0.312" />
+        app:layout_constraintVertical_bias="0.426" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        android:text="@string/create_new_db"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.494"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/choose_a_strong_pass"
+        app:layout_constraintBottom_toTopOf="@+id/textLayout1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView6"
+        app:layout_constraintVertical_bias="0.264" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

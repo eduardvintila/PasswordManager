@@ -27,8 +27,6 @@ public interface EntryDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     ListenableFuture<Long> insert(Entry e);
 
-    // TODO: Refactor hardcoded table name.
-
     @Query("SELECT * FROM entries;")
     LiveData<List<Entry>> getAllEntries();
 

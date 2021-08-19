@@ -8,16 +8,16 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import com.example.passmanager.databinding.FragmentFirstBinding;
+import com.example.passmanager.databinding.FragmentEntriesMenuBinding;
 
-public class FirstFragment extends Fragment {
+public class EntriesMenuFragment extends Fragment {
 
-    private FragmentFirstBinding binding;
+    private FragmentEntriesMenuBinding binding;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = FragmentFirstBinding.inflate(inflater, container, false);
+        binding = FragmentEntriesMenuBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 

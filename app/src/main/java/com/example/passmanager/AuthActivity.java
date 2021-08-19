@@ -13,11 +13,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.passmanager.dialogs.LoadingDialogFragment;
-import com.example.passmanager.dialogs.MasterPasswordDialogFragment;
 import com.example.passmanager.model.ApplicationDatabase;
 import com.example.passmanager.utils.CryptoHelper;
 import com.example.passmanager.utils.DriveHelper;

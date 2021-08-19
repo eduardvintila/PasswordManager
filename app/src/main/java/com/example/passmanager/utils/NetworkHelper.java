@@ -39,9 +39,7 @@ public class NetworkHelper {
 
         if (connMgr != null) {
             networkInfo = connMgr.getActiveNetworkInfo();
-            if (networkInfo != null && networkInfo.isConnected()) {
-                return true;
-            }
+            return networkInfo != null && networkInfo.isConnected();
         }
         return false;
     }

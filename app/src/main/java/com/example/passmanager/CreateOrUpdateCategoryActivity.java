@@ -5,22 +5,28 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.passmanager.model.Category;
 import com.example.passmanager.viewmodel.ApplicationViewModel;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.InputStream;
 
 public class CreateOrUpdateCategoryActivity extends AppCompatActivity {
 
     // For launching an implicit intent for an image chooser.
-    private ActivityResultLauncher<String[]> activityLauncher;
+    private ActivityResultLauncher<String[]> iconChooserLauncher;
+    private ActivityResultLauncher<String> readStoragePermissionLauncher;
 
     private EditText categoryNameField;
     private Uri iconUri;
@@ -40,7 +46,7 @@ public class CreateOrUpdateCategoryActivity extends AppCompatActivity {
 
         categoryNameField = findViewById(R.id.categoryNameEditText);
         iconImageView = findViewById(R.id.iconImageView);
-        findViewById(R.id.chooseIconBtn).setOnClickListener(view -> chooseIcon());
+        findViewById(R.id.chooseIconBtn).setOnClickListener(view -> chooseIcon(view));
         findViewById(R.id.saveCategoryBtn).setOnClickListener(view -> saveCategory());
 
         viewmodel = new ViewModelProvider(this).get(ApplicationViewModel.class);
@@ -67,7 +73,7 @@ public class CreateOrUpdateCategoryActivity extends AppCompatActivity {
         }
 
         // Used for launching an implicit intent to choose a picture.
-        activityLauncher = registerForActivityResult(new ActivityResultContracts.OpenDocument(),
+        iconChooserLauncher = registerForActivityResult(new ActivityResultContracts.OpenDocument(),
                 uri -> {
                     if (uri != null) {
                         iconUri = uri;
@@ -79,6 +85,20 @@ public class CreateOrUpdateCategoryActivity extends AppCompatActivity {
                         iconImageView.setImageURI(iconUri);
                     }
                 });
+
+        // Used for launching a prompt for granting permission.
+        readStoragePermissionLauncher = registerForActivityResult
+                (new ActivityResultContracts.RequestPermission(), isGranted -> {
+            if (isGranted) {
+                // Permission granted. Launch the image chooser.
+                String[] arr = {"image/*"};
+                iconChooserLauncher.launch(arr);
+            } else {
+                // Permission not granted. Show a warning message.
+                Toast.makeText(this, R.string.permission_not_granted_image, Toast.LENGTH_SHORT)
+                        .show();
+            }
+        });
     }
 
     public void saveCategory() {
@@ -97,11 +117,24 @@ public class CreateOrUpdateCategoryActivity extends AppCompatActivity {
     }
 
     /**
-     * Launch the implicit intent for choosing an image.
+     * Launch the implicit intent for choosing an image. Request a permission to browse the storage
+     * if it hasn't already been given.
+     *
+     * @param view The clicked button.
      */
-    void chooseIcon() {
-        String[] arr = {"image/*"};
-        activityLauncher.launch(arr);
+    void chooseIcon(View view) {
+        String permission = Manifest.permission.READ_EXTERNAL_STORAGE;
+        if (checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED) {
+            String[] arr = {"image/*"};
+            iconChooserLauncher.launch(arr);
+        } else if (shouldShowRequestPermissionRationale(permission)) {
+            Snackbar.make(view, R.string.read_storage_permission_rationale,
+                    Snackbar.LENGTH_INDEFINITE)
+                    .setAction("Ok", v -> readStoragePermissionLauncher.launch(permission))
+                    .show();
+        } else {
+            readStoragePermissionLauncher.launch(permission);
+        }
     }
 
     /**

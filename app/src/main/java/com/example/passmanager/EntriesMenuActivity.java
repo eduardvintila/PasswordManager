@@ -46,7 +46,6 @@ public class EntriesMenuActivity extends AppCompatActivity implements
 
 
     private AppBarConfiguration appBarConfiguration;
-    private ActivityEntriesMenuBinding binding;
     private ApplicationViewModel viewmodel;
 
     // Identifier for passing the entry id in an intent to another activity.
@@ -78,7 +77,7 @@ public class EntriesMenuActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivityEntriesMenuBinding.inflate(getLayoutInflater());
+        com.example.passmanager.databinding.ActivityEntriesMenuBinding binding = ActivityEntriesMenuBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setSupportActionBar(binding.topAppBar);
 
@@ -203,7 +202,6 @@ public class EntriesMenuActivity extends AppCompatActivity implements
 
     @Override
     protected void onDestroy() {
-        // TODO: This might not execute at all!
         // Close the connection with the data repository, since (most likely?) this activity is
         // destroyed when the application is terminated.
         super.onDestroy();
@@ -331,7 +329,7 @@ public class EntriesMenuActivity extends AppCompatActivity implements
         if (actionMode == null) {
             // Display a contextual action bar if it doesn't already exist.
             actionMode = startSupportActionMode(callback);
-            actionMode.setTitle(getString(R.string.category_selected));
+            if (actionMode != null) { actionMode.setTitle(getString(R.string.category_selected)); }
         }
 
     }
@@ -382,7 +380,6 @@ public class EntriesMenuActivity extends AppCompatActivity implements
 
         @Override
         public void onDestroyActionMode(ActionMode mode) {
-            //selectedCategoryBackgroundView.setBackgroundColor(getColor(android.R.color.white));
             selectedCategoryBackgroundView.setVisibility(View.GONE);
             actionMode = null;
         }

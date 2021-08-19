@@ -3,7 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/Edi/AndroidStudioProjects/PassManager/app/src/main/res/layout/activity_auth.xml" value="0.23229166666666667" />
+        <entry key="..\:/Users/Edi/AndroidStudioProjects/PassManager/app/src/main/res/layout/activity_auth.xml" value="0.27049180327868855" />
         <entry key="..\:/Users/Edi/AndroidStudioProjects/PassManager/app/src/main/res/layout/activity_create_db.xml" value="0.33" />
         <entry key="..\:/Users/Edi/AndroidStudioProjects/PassManager/app/src/main/res/layout/activity_create_or_update_category.xml" value="0.1734375" />
         <entry key="..\:/Users/Edi/AndroidStudioProjects/PassManager/app/src/main/res/layout/activity_create_or_update_entry.xml" value="0.3226744186046512" />
@@ -17,6 +17,7 @@
         <entry key="..\:/Users/Edi/AndroidStudioProjects/PassManager/app/src/main/res/layout/dialog_masterpassword.xml" value="0.1734375" />
         <entry key="..\:/Users/Edi/AndroidStudioProjects/PassManager/app/src/main/res/layout/entry_row.xml" value="0.5036710719530103" />
         <entry key="..\:/Users/Edi/AndroidStudioProjects/PassManager/app/src/main/res/layout/fragment_first.xml" value="0.18722466960352424" />
+        <entry key="..\:/Users/Edi/AndroidStudioProjects/PassManager/app/src/main/res/mipmap-anydpi-v26/app_icon.xml" value="0.21927083333333333" />
       </map>
     </option>
   </component>

@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.passmanager.dialogs.LoadingDialogFragment;
@@ -195,7 +194,7 @@ public class UpdateMasterPassActivity extends AppCompatActivity {
         } else if (!isMasterPassCorrect) {
             currentMasterPassLayout.setHelperTextEnabled(true);
             currentMasterPassLayout.setHelperText(getString(R.string.invalid_master_password));
-        } else if (isMasterPassCorrect) {
+        } else {
             currentMasterPassLayout.setHelperTextEnabled(false);
         }
     }

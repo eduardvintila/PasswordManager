@@ -4,8 +4,6 @@ import android.net.Uri;
 
 import androidx.room.TypeConverter;
 
-import java.sql.Date;
-
 public class Converters {
     @TypeConverter
     public static Uri fromUriString(String uriStr) {
